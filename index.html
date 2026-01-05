@@ -7,7 +7,6 @@
   <meta name="description" content="Sosein is a minimalist AI-powered search engine built to understand intent and deliver precise, relevant results.">
   <title>Sosein – A Minimalist Intelligent Search Engine</title>
   <link rel="icon" href="favicon.ico" />
-  <a href="/about.html">About</a>
   <link rel="stylesheet" href="style.css" />
   <script type="application/ld+json">
 {
@@ -21,15 +20,24 @@
 </head>
 <body>
   <header class="navbar">
+  <header class="navbar">
   <div class="nav-content">
+
     <div class="logo-group">
       <h1 class="logo"><i>Sosein</i></h1>
       <p class="credit-text"><i> - by Sattaksh Ratan</i></p>
     </div>
-    <button id="themeToggle" class="theme-toggle">🌓</button>
-  </div>
 
-</header>
+    <nav class="top-nav" aria-label="Primary">
+      <a href="/about.html" class="nav-link">About</a>
+    </nav>
+
+    <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">
+      🌓
+    </button>
+
+  </div>
+  </header>
 
   <main class="main-content">
     <section class="search-section">
