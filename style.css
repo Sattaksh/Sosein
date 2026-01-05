@@ -1090,3 +1090,74 @@ body {
 .about-content {
   letter-spacing: 0.01em;
 }
+
+.hero {
+  min-height: 85vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background: linear-gradient(
+    180deg,
+    rgba(0,0,0,0.03),
+    rgba(0,0,0,0)
+  );
+}
+
+body.dark .hero {
+  background: radial-gradient(
+    circle at top,
+    rgba(255,255,255,0.05),
+    transparent 60%
+  );
+}
+
+.hero-content {
+  max-width: 720px;
+  text-align: center;
+}
+
+.hero-title {
+  font-size: clamp(2.2rem, 5vw, 3.2rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 1rem;
+}
+
+.hero-subtitle {
+  font-size: 1.1rem;
+  color: var(--muted);
+  margin-bottom: 2.5rem;
+  line-height: 1.7;
+}
+.hero-search #searchBox {
+  font-size: 1.05rem;
+  padding: 1.2rem 1.4rem;
+  border-radius: 14px;
+}
+
+.hero-search .buttons {
+  margin-top: 1.25rem;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.history-section {
+  margin-top: 6rem;
+  opacity: 0.9;
+}
+/* Homepage-only hero navbar */
+.home .navbar {
+  background: transparent;
+  border-bottom: none;
+  box-shadow: none;
+}
+
+.home .nav-link {
+  font-size: 13px;
+  opacity: 0.6;
+}
+
+.home .nav-link:hover {
+  opacity: 1;
+}
