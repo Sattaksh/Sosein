@@ -3,38 +3,131 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <meta name="google-site-verification" content="qvWuMBRUlzo2SI0adHv-QXlzyIrYwd3NQgQHPV13aqc" />
-  <meta name="description" content="Sosein is a minimalist AI-powered search engine built to understand intent and deliver precise, relevant results.">
+  <meta name="description" content="Sosein is a minimalist AI-powered search engine focused on understanding intent, meaning, and relevance rather than noise." />
+
   <title>Sosein – A Minimalist Intelligent Search Engine</title>
+
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
   <link rel="icon" href="favicon.ico" />
   <link rel="stylesheet" href="style.css" />
+
+  <!-- Schema -->
   <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  "url": "https://sosein.netlify.app",
-  "name": "Sosein",
-  "logo": "https://sosein.netlify.app/logo.png"
-}
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Sosein",
+    "url": "https://sosein.netlify.app",
+    "logo": "https://sosein.netlify.app/logo.png"
+  }
   </script>
 </head>
+
 <body>
-  <header class="navbar">
-  <header class="navbar">
-  <div class="nav-content">
 
-    <div class="logo-group">
-      <h1 class="logo"><i>Sosein</i></h1>
-      <p class="credit-text"><i> - by Sattaksh Ratan</i></p>
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="nav-content">
+
+      <div class="logo-group">
+        <h1 class="logo"><i>Sosein</i></h1>
+        <p class="credit-text"><i>by Sattaksh Ratan</i></p>
+      </div>
+
+      <nav class="top-nav" aria-label="Primary navigation">
+        <a href="/about.html" class="nav-link">About</a>
+      </nav>
+
+      <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">
+        🌓
+      </button>
+
     </div>
+  </header>
 
-    <nav class="top-nav" aria-label="Primary">
-      <a href="/about.html" class="nav-link">About</a>
-    </nav>
+  <!-- HERO -->
+  <main>
 
+    <section class="hero">
+      <div class="hero-content">
+
+        <h1 class="hero-title">Search for meaning.</h1>
+        <p class="hero-subtitle">
+          Sosein is a minimalist AI-powered search engine designed to understand intent,
+          not just keywords.
+        </p>
+
+        <!-- SEARCH -->
+        <section class="search-section">
+          <div class="search-container">
+
+            <div class="search-wrapper">
+              <input
+                type="text"
+                id="searchBox"
+                placeholder="Ask anything..."
+                autocomplete="off"
+              />
+              <button id="clearBtn" title="Clear">✖</button>
+            </div>
+
+            <div class="buttons">
+              <div>
+                <label for="imageUpload" class="image-upload-btn">🖼️ Add Image</label>
+                <input type="file" id="imageUpload" accept="image/*" hidden>
+              </div>
+
+              <div class="right-buttons">
+                <button id="searchBtn" aria-label="Search">🔍</button>
+
+                <div class="voice-wrapper">
+                  <button id="voiceBtn" aria-label="Voice input">🎙️</button>
+                  <span id="speakPrompt" class="fade-text">Speak</span>
+                </div>
+              </div>
+            </div>
+
+            <ul id="suggestions" class="suggestions-list"></ul>
+
+          </div>
+        </section>
+
+      </div>
+    </section>
+
+    <!-- RESULTS -->
+    <section class="results-section">
+      <div id="loading" class="loading">Searching</div>
+      <div id="results"></div>
+    </section>
+
+    <!-- HISTORY -->
+    <section class="history-section">
+      <h3>Recent Searches</h3>
+      <ul id="history" class="history-list"></ul>
+      <button id="clearHistory" class="clear-btn">🗑️ Clear History</button>
+    </section>
+
+  </main>
+
+  <!-- SEO TEXT (Hidden but valid) -->
+  <p class="seo-text">
+    Sosein is an AI-powered search engine that focuses on semantic intent, clarity,
+    and meaningful results rather than advertising-driven ranking.
+  </p>
+
+  <button id="backToTop" class="back-to-top" aria-label="Back to top">⬆️</button>
+
+  <script src="script.js"></script>
+
+</body>
+</html>
     <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">
       🌓
     </button>
