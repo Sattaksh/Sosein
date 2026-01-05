@@ -1018,3 +1018,27 @@ body {
   width: 1px;
   overflow: hidden;
 }
+
+
+.nav-link {
+  font-size: 14px;
+  color: var(--muted);
+  text-decoration: none;
+  font-weight: 500;
+  opacity: 0.7;
+  padding: 6px 10px;
+  border-radius: 6px;
+  transition: color 0.2s ease, opacity 0.2s ease, background 0.2s ease;
+}
+
+.nav-link:hover {
+  color: var(--text);
+  opacity: 1;
+  background: var(--border-light);
+}
+
+.nav-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  }
