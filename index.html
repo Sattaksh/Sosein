@@ -64,40 +64,37 @@
         </p>
 
         <!-- SEARCH -->
-        <section class="search-section">
-          <div class="search-container">
+        <div class="hero-search">
 
-            <div class="search-wrapper">
-              <input
-                type="text"
-                id="searchBox"
-                placeholder="Ask anything..."
-                autocomplete="off"
-              />
-              <button id="clearBtn" title="Clear">✖</button>
-            </div>
-
-            <div class="buttons">
-              <div>
-                <label for="imageUpload" class="image-upload-btn">🖼️ Add Image</label>
-                <input type="file" id="imageUpload" accept="image/*" hidden>
-              </div>
-
-              <div class="right-buttons">
-                <button id="searchBtn" aria-label="Search">🔍</button>
-
-                <div class="voice-wrapper">
-                  <button id="voiceBtn" aria-label="Voice input">🎙️</button>
-                  <span id="speakPrompt" class="fade-text">Speak</span>
-                </div>
-              </div>
-            </div>
-
-            <ul id="suggestions" class="suggestions-list"></ul>
-
+          <div class="search-wrapper">
+            <input
+              type="text"
+              id="searchBox"
+              placeholder="Ask anything..."
+              autocomplete="off"
+            />
+            <button id="clearBtn" title="Clear">✖</button>
           </div>
-        </section>
 
+          <div class="buttons">
+            <div>
+              <label for="imageUpload" class="image-upload-btn">🖼️ Add Image</label>
+              <input type="file" id="imageUpload" accept="image/*" hidden>
+            </div>
+
+            <div class="right-buttons">
+              <button id="searchBtn" aria-label="Search">🔍</button>
+
+              <div class="voice-wrapper">
+                <button id="voiceBtn" aria-label="Voice input">🎙️</button>
+                <span id="speakPrompt" class="fade-text">Speak</span>
+              </div>
+            </div>
+          </div>
+
+          <ul id="suggestions" class="suggestions-list"></ul>
+
+        </div>
       </div>
     </section>
 
@@ -116,67 +113,14 @@
 
   </main>
 
-  <!-- SEO TEXT (Hidden but valid) -->
+  <!-- SEO TEXT -->
   <p class="seo-text">
-    Sosein is an AI-powered search engine that focuses on semantic intent, clarity,
-    and meaningful results rather than advertising-driven ranking.
+    Sosein is an AI-powered search engine that focuses on semantic intent,
+    clarity, and meaningful results rather than advertising-driven ranking.
   </p>
 
   <button id="backToTop" class="back-to-top" aria-label="Back to top">⬆️</button>
 
   <script src="script.js"></script>
-
-</body>
-</html>
-    <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">
-      🌓
-    </button>
-
-  </div>
-  </header>
-
-  <main class="main-content">
-    <section class="search-section">
-      <div class="search-container">
-        <div class="search-wrapper">
-          <input type="text" id="searchBox" placeholder="Ask me anything..." />
-            <button id="clearBtn" title="Clear">✖</button>
-        </div>
-        <div class="buttons">
-            <div>
-                <label for="imageUpload" class="image-upload-btn">🖼️ Add Image</label>
-                <input type="file" id="imageUpload" accept="image/*" style="display: none;">
-            </div>
-
-            <div class="right-buttons">
-                <button id="searchBtn">🔍</button>
-                <div class="voice-wrapper">
-                    <button id="voiceBtn">🎙️</button>
-                    <span id="speakPrompt" class="fade-text">Speak!</span>
-                </div>
-            </div>
-        </div>
-        <ul id="suggestions" class="suggestions-list"></ul>
-      </div>
-    </section>
-
-    <section class="results-section">
-      <div id="loading" class="loading">Searching...</div>
-      <div id="results"></div>
-    </section>
-
-    <section class="history-section">
-      <h3>Recent Searches</h3>
-      <ul id="history" class="history-list"></ul>
-      <button id="clearHistory" class="clear-btn">🗑️ Clear History</button>
-    </section>
-  </main>
-    <p class="seo-text">
-Sosein is an AI-powered search engine focused on understanding the essence of queries and delivering precise, meaningful results.
-    </p>
-
-  <button id="backToTop" class="back-to-top">⬆️</button>
-  <script src="script.js"></script>
-
 </body>
 </html>
