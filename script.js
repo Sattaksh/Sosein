@@ -200,7 +200,8 @@ searchBox.addEventListener("keypress", e => {
     // This check now prevents a search if both the text and image are empty
     if (!term && !uploadedImageData) return;
     document.body.classList.add("search-active");
-    
+    // Ensure suggestions never sit behind results
+    suggUL.style.display = "none";    
     suggUL.innerHTML = "";
     saveHistory(term);
     results.innerHTML = "";
@@ -657,8 +658,31 @@ searchBox.addEventListener("input", () => {
     return;
   }
 
-  // 👇 this line makes suggestions reappear
+  // 🔥 FORCE suggestions to the front
   suggUL.style.display = "block";
+  suggUL.style.zIndex = "99999";
+
+  if (searchWrapper && !searchWrapper.contains(suggUL)) {
+    searchWrapper.appendChild(suggUL);
+  }
+
+  fetch(`https://en.wikipedia.org/w/api.php?origin=*&action=opensearch&format=json&search=${encodeURIComponent(query)}`)
+    .then(r => r.json())
+    .then(data => {
+      const suggestions = data[1].slice(0, 7);
+      suggUL.innerHTML = suggestions.map(item => `<li>${item}</li>`).join("");
+      idx = -1;
+
+      [...suggUL.children].forEach(li => {
+        li.onclick = () => {
+          searchBox.value = li.textContent;
+          suggUL.innerHTML = "";
+          suggUL.style.display = "none";
+          triggerSearch(li.textContent);
+        };
+      });
+    });
+});
 
   fetch(`https://en.wikipedia.org/w/api.php?origin=*&action=opensearch&format=json&search=${encodeURIComponent(query)}`)
     .then(r => r.json())
