@@ -194,6 +194,7 @@ searchBox.addEventListener("keypress", e => {
   async function triggerSearch(term) {
     // This check now prevents a search if both the text and image are empty
     if (!term && !uploadedImageData) return;
+    document.body.classList.add("search-active");
     
     suggUL.innerHTML = "";
     saveHistory(term);
