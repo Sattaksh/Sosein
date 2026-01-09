@@ -194,7 +194,8 @@ body.dark.home .navbar {
   padding: 6rem 2rem 4rem;
   position: relative;
   background: var(--bg);
-  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: min-height 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+              padding 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* When search is active, hero shrinks */
@@ -244,7 +245,10 @@ body.searching .hero-content {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+              max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+              margin 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Hide title and subtitle when searching */
@@ -266,7 +270,10 @@ body.searching .hero-subtitle {
   max-width: 540px;
   margin-left: auto;
   margin-right: auto;
-  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+              max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+              margin 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 body.searching .hero-subtitle {
