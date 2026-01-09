@@ -368,7 +368,6 @@ body.searching .search-wrapper {
   display: flex;
   align-items: center;
   justify-content: space-between; /* THIS pushes Add Image left */
-  width: 100%;
   margin-top: 12px;
 }
 
@@ -1667,4 +1666,12 @@ body.search-active .hero-content {
 
 body.search-active {
   overflow-y: auto;
+}
+
+.hero-search {
+  width: 100%;
+}
+
+.buttons {
+  width: 100%;
 }
