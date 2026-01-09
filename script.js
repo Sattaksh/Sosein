@@ -788,54 +788,89 @@ document.addEventListener("click", async (e) => {
 
 // Add this code to your existing script.js file
 
-// Function to handle search initiation
+// Add this code to your existing script.js file
+
+// Function to handle search initiation - called from all search triggers
 function initiateSearch() {
-  // Add 'searching' class to body
+  // Add 'searching' class to body for CSS transitions
   document.body.classList.add('searching');
   
-  // Scroll to top smoothly after a brief delay to allow animation
+  // Scroll to top smoothly after a brief delay to allow the collapse animation
   setTimeout(() => {
     window.scrollTo({
       top: 0,
       behavior: 'smooth'
     });
-  }, 100);
+  }, 150);
 }
 
-// Function to reset search state
+// Function to reset search state (when clearing search or going back to home)
 function resetSearchState() {
-  // Remove 'searching' class from body
   document.body.classList.remove('searching');
 }
 
-// Example: Call initiateSearch() when search button is clicked
-// Add this to your existing search button click handler
+// ========================================
+// HOOK INTO ALL SEARCH TRIGGERS
+// ========================================
+
+// 1. Search Button Click
 const searchBtn = document.getElementById('searchBtn');
 if (searchBtn) {
-  searchBtn.addEventListener('click', function() {
-    // Your existing search logic here
-    // ...
-    
-    // Then call initiateSearch
+  // Store original click handler if it exists
+  const originalHandler = searchBtn.onclick;
+  
+  searchBtn.addEventListener('click', function(e) {
     initiateSearch();
-  });
-}
-
-// Example: Also call it when Enter key is pressed in search box
-const searchBox = document.getElementById('searchBox');
-if (searchBox) {
-  searchBox.addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') {
-      // Your existing search logic here
-      // ...
-      
-      // Then call initiateSearch
-      initiateSearch();
+    
+    // Call original handler if it exists
+    if (originalHandler) {
+      originalHandler.call(this, e);
     }
   });
 }
 
-// Optional: Reset when search is cleared or page is reloaded
+// 2. Enter Key Press in Search Box
+const searchBox = document.getElementById('searchBox');
+if (searchBox) {
+  searchBox.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter' || e.keyCode === 13) {
+      initiateSearch();
+      // Your existing search logic will be triggered automatically
+    }
+  });
+}
+
+// 3. Suggestion Click (hook into suggestions list)
+// This uses event delegation to catch clicks on suggestion items
+const suggestionsContainer = document.getElementById('suggestions');
+if (suggestionsContainer) {
+  suggestionsContainer.addEventListener('click', function(e) {
+    // Check if a suggestion item was clicked
+    const suggestionItem = e.target.closest('li');
+    if (suggestionItem) {
+      initiateSearch();
+      // Your existing suggestion click handler will be triggered
+    }
+  });
+}
+
+// Alternative: If you have a specific function that handles suggestions, wrap it
+// Example:
+/*
+function handleSuggestionClick(suggestion) {
+  initiateSearch(); // Add this line
+  
+  // Your existing suggestion handling code...
+  searchBox.value = suggestion;
+  performSearch(suggestion);
+}
+*/
+
+// ========================================
+// OPTIONAL: CLEAR/RESET HANDLERS
+// ========================================
+
+// Reset when clear button is clicked
 const clearBtn = document.getElementById('clearBtn');
 if (clearBtn) {
   clearBtn.addEventListener('click', function() {
@@ -843,23 +878,54 @@ if (clearBtn) {
   });
 }
 
-// Optional: Reset when no results
-function handleNoResults() {
-  resetSearchState();
+// Reset when clearing history
+const clearHistoryBtn = document.getElementById('clearHistory');
+if (clearHistoryBtn) {
+  clearHistoryBtn.addEventListener('click', function() {
+    resetSearchState();
+  });
 }
 
-// Example usage in your existing search function:
+// ========================================
+// INTEGRATE WITH YOUR EXISTING CODE
+// ========================================
+
 /*
-async function performSearch(query) {
-  initiateSearch(); // Call this at the start of search
+If you have an existing search function, you can also call initiateSearch() there:
+
+// Example 1: If you have a main search function
+function performSearch(query) {
+  if (!query) return;
+  
+  initiateSearch(); // Add this line at the start
   
   // Your existing search logic...
-  const results = await fetchSearchResults(query);
-  
-  if (results.length === 0) {
-    resetSearchState(); // Reset if no results
-  }
-  
-  displayResults(results);
+  showLoading();
+  fetchResults(query);
+  displayResults();
 }
+
+// Example 2: If suggestions trigger search differently
+document.querySelectorAll('.suggestion-item').forEach(item => {
+  item.addEventListener('click', function() {
+    initiateSearch(); // Add this line
+    
+    // Your existing code...
+    const query = this.textContent;
+    performSearch(query);
+  });
+});
+*/
+
+// ========================================
+// DEBUGGING (Remove in production)
+// ========================================
+
+// Uncomment to see when initiateSearch is called
+/*
+const originalInitiateSearch = initiateSearch;
+initiateSearch = function() {
+  console.log('🔍 Search initiated - scrolling up');
+  originalInitiateSearch();
+};
 */
