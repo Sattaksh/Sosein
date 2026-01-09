@@ -40,10 +40,19 @@ if (searchWrapper && suggUL) {
     recogniser = new webkitSpeechRecognition();
     recogniser.lang = "en-US";
     recogniser.onresult = e => {
-      const transcript = e.results[0][0].transcript.trim();
-      searchBox.value = transcript;
-      triggerSearch(transcript);
-    };
+  const transcript = e.results[0][0].transcript.trim();
+  searchBox.value = transcript;
+
+  // 👇 make mic behave EXACTLY like button / enter / suggestion
+  suggUL.style.display = "none";
+  document.body.classList.add("searching");
+
+  setTimeout(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, 150);
+
+  triggerSearch(transcript);
+};
   } else voiceBtn.style.display = "none";
 
   voiceBtn.onclick = () => {
