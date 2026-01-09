@@ -858,89 +858,15 @@ if (suggestionsContainer) {
   });
 }
 
-// 4. Voice/Mic Button - Hook into speech recognition
-const voiceBtn = document.getElementById('voiceBtn');
-if (voiceBtn) {
-  // Store original click handler if it exists
-  const originalVoiceHandler = voiceBtn.onclick;
-  
-  // Listen for when speech recognition completes
-  // This will trigger when voice input is processed
-  voiceBtn.addEventListener('click', function(e) {
-    // Call original handler first to start voice recognition
-    if (originalVoiceHandler) {
-      originalVoiceHandler.call(this, e);
-    }
-    
-    // We need to wait for speech recognition to complete and populate the search box
-    // Set up a listener for when the search box value changes from voice input
-    if (searchBox) {
-      // Use MutationObserver to detect when search box is populated by voice
-      const observer = new MutationObserver(function(mutations) {
-        if (searchBox.value.trim() !== '') {
-          // Voice input has populated the search box
-          // Small delay to ensure voice recognition has finished
-          setTimeout(() => {
-            initiateSearch();
-          }, 500);
-          
-          // Disconnect observer after first trigger
-          observer.disconnect();
-        }
-      });
-      
-      // Alternative: Listen for input event
-      const handleVoiceInput = function() {
-        if (searchBox.value.trim() !== '') {
-          // Voice has populated search box, initiate search after brief delay
-          setTimeout(() => {
-            initiateSearch();
-          }, 800);
-          
-          // Remove listener after first trigger
-          searchBox.removeEventListener('input', handleVoiceInput);
-        }
-      };
-      
-      // Add listener when voice button is clicked
-      searchBox.addEventListener('input', handleVoiceInput);
-      
-      // Clean up listener after 10 seconds if not triggered
-      setTimeout(() => {
-        searchBox.removeEventListener('input', handleVoiceInput);
-      }, 10000);
-    }
-  });
-}
-
-// Alternative approach: If you have a specific function that handles voice input completion
-// Hook into it like this:
+// Alternative: If you have a specific function that handles suggestions, wrap it
+// Example:
 /*
-function onVoiceInputComplete(transcript) {
+function handleSuggestionClick(suggestion) {
   initiateSearch(); // Add this line
   
-  // Your existing voice handling code...
-  searchBox.value = transcript;
-  performSearch(transcript);
-}
-*/
-
-// If your voice recognition triggers search automatically, you can also hook into
-// the SpeechRecognition API directly:
-/*
-if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-  // Your existing recognition setup...
-  
-  recognition.onresult = function(event) {
-    const transcript = event.results[0][0].transcript;
-    searchBox.value = transcript;
-    
-    // Add this line before or after your search logic
-    initiateSearch();
-    
-    // Your existing search logic...
-    performSearch(transcript);
-  };
+  // Your existing suggestion handling code...
+  searchBox.value = suggestion;
+  performSearch(suggestion);
 }
 */
 
@@ -969,35 +895,30 @@ if (clearHistoryBtn) {
 // ========================================
 
 /*
-RECOMMENDED APPROACH FOR VOICE:
+If you have an existing search function, you can also call initiateSearch() there:
 
-If you have a centralized function that gets called after voice recognition completes,
-add initiateSearch() there. For example:
-
-// Your existing voice recognition code
-recognition.onresult = function(event) {
-  const transcript = event.results[0][0].transcript;
-  searchBox.value = transcript;
-  
-  // Add this line
-  initiateSearch();
-  
-  // Then trigger your search
-  performSearch(transcript);
-};
-
-OR if voice automatically triggers search through your existing search function:
-
+// Example 1: If you have a main search function
 function performSearch(query) {
   if (!query) return;
   
-  initiateSearch(); // This will handle all search types including voice
+  initiateSearch(); // Add this line at the start
   
   // Your existing search logic...
   showLoading();
   fetchResults(query);
   displayResults();
 }
+
+// Example 2: If suggestions trigger search differently
+document.querySelectorAll('.suggestion-item').forEach(item => {
+  item.addEventListener('click', function() {
+    initiateSearch(); // Add this line
+    
+    // Your existing code...
+    const query = this.textContent;
+    performSearch(query);
+  });
+});
 */
 
 // ========================================
