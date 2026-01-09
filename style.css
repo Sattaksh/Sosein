@@ -503,7 +503,7 @@ body.searching .search-wrapper {
    ============================================ */
 .suggestions-list {
   position: absolute;
-  top: calc(100% + 0.5rem);
+  top: calc(100% + 6px);
   left: 0;
   right: 0;
   background: var(--card);
@@ -511,7 +511,7 @@ body.searching .search-wrapper {
   border-radius: 12px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
   overflow: hidden;
-  z-index: 10000;
+  z-index: 99999;
   max-height: 320px;
   overflow-y: auto;
   backdrop-filter: blur(20px);
