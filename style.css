@@ -366,10 +366,10 @@ body.searching .search-wrapper {
    ============================================ */
 .buttons {
   display: flex;
-  gap: 0.75rem;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between; /* THIS pushes Add Image left */
   width: 100%;
+  margin-top: 12px;
 }
 
 .buttons > div {
@@ -472,10 +472,18 @@ body.searching .search-wrapper {
   transform: translateY(0);
 }
 
+#voiceBtn {
+  order: 1;
+}
+
+#searchBtn {
+  order: 2;
+}
+
 .right-buttons {
   display: flex;
-  gap: 0.75rem;
   align-items: center;
+  gap: 10px;
 }
 
 .voice-wrapper {
