@@ -20,7 +20,12 @@ clearBtn.addEventListener("click", () => {
 
   const suggUL = q("suggestions"), results = q("results"), loading = q("loading");
   const historyUL = q("history"), clearHist = q("clearHistory"), themeTgl = q("themeToggle"), back2Top = q("backToTop");
-  
+  const searchWrapper = document.querySelector(".search-wrapper");
+
+// HARD guarantee: suggestions always belong to search wrapper
+if (searchWrapper && suggUL) {
+  searchWrapper.appendChild(suggUL);
+}
   
   // 🌗 Dark mode
   if (localStorage.theme === "dark") document.body.classList.add("dark");
