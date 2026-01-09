@@ -657,23 +657,8 @@ searchBox.addEventListener("input", () => {
     return;
   }
 
-  fetch(`https://en.wikipedia.org/w/api.php?origin=*&action=opensearch&format=json&search=${encodeURIComponent(query)}`)
-    .then(r => r.json())
-    .then(data => {
-      const suggestions = data[1].slice(0, 7);
-      suggUL.innerHTML = suggestions.map(item => `<li>${item}</li>`).join("");
-      idx = -1;
-
-      [...suggUL.children].forEach(li => {
-        li.onclick = () => {
-          searchBox.value = li.textContent;
-          suggUL.innerHTML = "";
-          suggUL.style.display = "none";
-          triggerSearch(li.textContent);
-        };
-      });
-    });
-});
+  // 👇 this line makes suggestions reappear
+  suggUL.style.display = "block";
 
   fetch(`https://en.wikipedia.org/w/api.php?origin=*&action=opensearch&format=json&search=${encodeURIComponent(query)}`)
     .then(r => r.json())
