@@ -1,4 +1,258 @@
 document.addEventListener("DOMContentLoaded", () => {
+  // ========================================
+// ADD THIS AT THE TOP OF YOUR SCRIPT.JS
+// (Right after DOMContentLoaded starts)
+// ========================================
+// ========================================
+// MODIFY YOUR EXISTING triggerSearch FUNCTION
+// Replace your current triggerSearch with this:
+// ========================================
+
+async function triggerSearch(term) {
+  // This check prevents a search if both the text and image are empty
+  if (!term && !uploadedImageData) return;
+  
+  // ✅ CALL initiateSearch() HERE - This triggers the scroll-up animation
+  initiateSearch();
+  
+  // Add small delay to let animation start before loading
+  await new Promise(resolve => setTimeout(resolve, 100));
+  
+  suggUL.innerHTML = "";
+  suggUL.style.display = "none";
+  saveHistory(term);
+  results.innerHTML = "";
+  loading.classList.add("show");
+
+  // Rest of your existing triggerSearch code stays exactly the same...
+  const isImageQuery = !!uploadedImageData;
+  const questionWords = ["is", "what", "how", "why", "would", "define", "if", "are", "can", "could", "should", "when", 
+    "who", "?", "write", "review", "summary", "give", "will", "where", "was", "which", "explain", 
+    "summarize", "compare", "list", "create", "generate", "suggest", "recommend", "calculate", 
+    "translate", "solve", "draft", "outline", "analyze", "how to", "what is the", "what are the","best", "top", "vs", "difference between", 
+    "meaning of", "facts about", "tell me", "meaning", "state", "is there"];
+  const isTextQuestion = questionWords.some(word => term.toLowerCase().startsWith(word) || term.includes("?"));
+  
+  if (isTextQuestion || isImageQuery) {
+    const aiAnswer = await fetchAIAnswer(term, uploadedImageData);
+    
+    if (aiAnswer && !aiAnswer.includes("Sorry")) {
+      const formattedAnswer = formatAIAnswer(aiAnswer);
+      results.innerHTML = `
+        <div class="card ai-answer-card">
+          <div class="ai-card-header">
+            <h3>✦︎ VoidAI</h3>
+            <div class="copy-container">
+              <span class="copy-btn" title="Copy Answer">🗒</span>
+            </div>
+          </div>
+          <div id="ai-answer-text">${formattedAnswer}</div>
+        </div>
+      `;
+
+      document.querySelector(".copy-btn").onclick = (e) => {
+        const copyButton = e.target;
+        const copyContainer = copyButton.parentElement;
+        const text = document.getElementById("ai-answer-text").innerText;
+
+        navigator.clipboard.writeText(text).then(() => {
+          if (copyContainer.querySelector('.copy-feedback')) return;
+
+          const feedback = document.createElement('div');
+          feedback.textContent = 'Copied!';
+          feedback.className = 'copy-feedback';
+          copyContainer.append(feedback);
+          
+          setTimeout(() => {
+            feedback.remove();
+          }, 2000);
+        });
+      };
+      
+      loading.classList.remove("show");
+      return;
+    }
+  }
+
+  // Normal search flow
+  await fetchAll(term);
+  
+  const lowerTerm = term.toLowerCase();
+  const bookKeywords = ["book", "novel", "by", "author", "volume", "literature"];
+  const isBookSearch = bookKeywords.some(k => lowerTerm.includes(k));
+  if (isBookSearch) detectAndFetchBook(term);
+
+  loading.classList.remove("show");
+}
+
+// ========================================
+// UPDATE YOUR CLEAR BUTTON HANDLER
+// ========================================
+
+clearBtn.addEventListener("click", () => {
+  searchBox.value = "";
+  clearBtn.style.display = "none";
+  suggUL.innerHTML = "";
+  suggUL.style.display = "none";
+  searchBox.focus();
+  
+  // ✅ Reset the searching state when clearing
+  resetSearchState();
+});
+
+// ========================================
+// UPDATE YOUR CLEAR HISTORY HANDLER
+// ========================================
+
+clearHist.onclick = () => {
+  localStorage.removeItem("searchHistory");
+  renderHistory();
+  
+  // ✅ Reset searching state when clearing history
+  resetSearchState();
+};
+
+// ========================================
+// REMOVE THE DUPLICATE CODE AT THE BOTTOM
+// ========================================
+// Delete everything from line "// Add this code to your existing script.js file"
+// to the end of your script.js - it's causing conflicts!
+
+// ========================================
+// INSTRUCTIONS:
+// ========================================
+// 1. Add initiateSearch() and resetSearchState() functions at the TOP of your script
+// 2. Update your triggerSearch() function with the version above
+// 3. Update clearBtn and clearHist handlers as shown above
+// 4. DELETE the duplicate initiateSearch code at the bottom of your file
+// 5. Your CSS is already correct - no changes needed there!
+  // Function to handle search initiation
+function initiateSearch() {
+  document.body.classList.add('searching');
+  setTimeout(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, 150);
+}
+
+// Function to reset search state
+function resetSearchState() {
+  document.body.classList.remove('searching');
+}
+  // 1. Search Button Click
+const searchBtn = document.getElementById('searchBtn');
+if (searchBtn) {
+  // Store original click handler if it exists
+  const originalHandler = searchBtn.onclick;
+  
+  searchBtn.addEventListener('click', function(e) {
+    initiateSearch();
+    
+    // Call original handler if it exists
+    if (originalHandler) {
+      originalHandler.call(this, e);
+    }
+  });
+}
+
+// 2. Enter Key Press in Search Box
+const searchBox = document.getElementById('searchBox');
+if (searchBox) {
+  searchBox.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter' || e.keyCode === 13) {
+      initiateSearch();
+      // Your existing search logic will be triggered automatically
+    }
+  });
+}
+// 3. Suggestion Click (hook into suggestions list)
+// This uses event delegation to catch clicks on suggestion items
+const suggestionsContainer = document.getElementById('suggestions');
+if (suggestionsContainer) {
+  suggestionsContainer.addEventListener('click', function(e) {
+    // Check if a suggestion item was clicked
+    const suggestionItem = e.target.closest('li');
+    if (suggestionItem) {
+      initiateSearch();
+      // Your existing suggestion click handler will be triggered
+    }
+  });
+}
+
+// 4. Voice/Mic Button - Hook into speech recognition
+const voiceBtn = document.getElementById('voiceBtn');
+if (voiceBtn) {
+  // Store original click handler if it exists
+  const originalVoiceHandler = voiceBtn.onclick;
+  
+  // Listen for when speech recognition completes
+  // This will trigger when voice input is processed
+  voiceBtn.addEventListener('click', function(e) {
+    // Call original handler first to start voice recognition
+    if (originalVoiceHandler) {
+      originalVoiceHandler.call(this, e);
+    }
+    
+    // We need to wait for speech recognition to complete and populate the search box
+    // Set up a listener for when the search box value changes from voice input
+    if (searchBox) {
+      // Use MutationObserver to detect when search box is populated by voice
+      const observer = new MutationObserver(function(mutations) {
+        if (searchBox.value.trim() !== '') {
+          // Voice input has populated the search box
+          // Small delay to ensure voice recognition has finished
+          setTimeout(() => {
+            initiateSearch();
+          }, 500);
+          
+          // Disconnect observer after first trigger
+          observer.disconnect();
+        }
+      });
+      
+      // Alternative: Listen for input event
+      const handleVoiceInput = function() {
+        if (searchBox.value.trim() !== '') {
+          // Voice has populated search box, initiate search after brief delay
+          setTimeout(() => {
+            initiateSearch();
+          }, 800);
+          
+          // Remove listener after first trigger
+          searchBox.removeEventListener('input', handleVoiceInput);
+        }
+      };
+      
+      // Add listener when voice button is clicked
+      searchBox.addEventListener('input', handleVoiceInput);
+      
+      // Clean up listener after 10 seconds if not triggered
+      setTimeout(() => {
+        searchBox.removeEventListener('input', handleVoiceInput);
+      }, 10000);
+    }
+  });
+}
+
+
+// ========================================
+
+// Reset when clear button is clicked
+const clearBtn = document.getElementById('clearBtn');
+if (clearBtn) {
+  clearBtn.addEventListener('click', function() {
+    resetSearchState();
+  });
+}
+
+// Reset when clearing history
+const clearHistoryBtn = document.getElementById('clearHistory');
+if (clearHistoryBtn) {
+  clearHistoryBtn.addEventListener('click', function() {
+    resetSearchState();
+  });
+}
+
+  
   const q = id => document.getElementById(id);
   const searchBox = q("searchBox"), searchBtn = q("searchBtn"), voiceBtn = q("voiceBtn");
   const clearBtn = document.getElementById("clearBtn");
@@ -40,10 +294,11 @@ if (searchWrapper && suggUL) {
     recogniser = new webkitSpeechRecognition();
     recogniser.lang = "en-US";
     recogniser.onresult = e => {
-      const transcript = e.results[0][0].transcript.trim();
-      searchBox.value = transcript;
-      triggerSearch(transcript);
-    };
+  const transcript = e.results[0][0].transcript.trim();
+  searchBox.value = transcript;
+  initiateSearch(); // ✅ ADD THIS LINE
+  triggerSearch(transcript);
+};
   } else voiceBtn.style.display = "none";
 
   voiceBtn.onclick = () => {
@@ -196,86 +451,6 @@ searchBox.addEventListener("keypress", e => {
   if (e.key === "Enter") triggerSearch(searchBox.value.trim());
 });
 
-  async function triggerSearch(term) {
-    // This check now prevents a search if both the text and image are empty
-    if (!term && !uploadedImageData) return;
-    document.body.classList.add("search-active");
-    
-    suggUL.innerHTML = "";
-    saveHistory(term);
-    results.innerHTML = "";
-    loading.classList.add("show");
-
-    // --- THIS IS THE UPDATED LOGIC ---
-    const isImageQuery = !!uploadedImageData; // Will be true if an image is uploaded
-    const questionWords = ["is", "what", "how", "why", "would", "define", "if", "are", "can", "could", "should", "when", 
-      "who", "?", "write", "review", "summary", "give", "will", "where", "was", "which", "explain", 
-      "summarize", "compare", "list", "create", "generate", "suggest", "recommend", "calculate", 
-      "translate", "solve", "draft", "outline", "analyze", "how to", "what is the", "what are the","best", "top", "vs", "difference between", 
-      "meaning of", "facts about", "tell me", "meaning", "state", "is there"];
-    const isTextQuestion = questionWords.includes(term.split(" ")[0].toLowerCase());
-    
-    // The AI will now be called if it's a text question OR if an image has been uploaded
-    if (isTextQuestion || isImageQuery) {
-        const aiAnswer = await fetchAIAnswer(term, uploadedImageData);
-        
-        // --- IMPORTANT: Reset image data after the search is done ---
-        
-        if (aiAnswer && !aiAnswer.includes("Sorry")) {
-            const formattedAnswer = formatAIAnswer(aiAnswer);
-            // Your complete AI card and copy button logic remains here
-            results.innerHTML = `
-                <div class="card ai-answer-card">
-                  <div class="ai-card-header">
-                    <h3>✦︎ VoidAI</h3>
-                    <div class="copy-container">
-                        <span class="copy-btn" title="Copy Answer">🗒</span>
-                    </div>
-                  </div>
-                  <div id="ai-answer-text">${formattedAnswer}</div>
-                </div>
-            `;
-
-      // This is the NEW code
-       document.querySelector(".copy-btn").onclick = (e) => {
-        const copyButton = e.target;
-        const copyContainer = copyButton.parentElement; // This is our new container
-        const text = document.getElementById("ai-answer-text").innerText;
-
-        navigator.clipboard.writeText(text).then(() => {
-            // Prevent multiple "Copied!" messages
-            if (copyContainer.querySelector('.copy-feedback')) return;
-
-            const feedback = document.createElement('div'); // Use a div for better layout
-            feedback.textContent = 'Copied!';
-            feedback.className = 'copy-feedback';
-            
-            // Add the feedback text inside the container
-            copyContainer.append(feedback);
-            
-            // Remove it after 2 seconds
-            setTimeout(() => {
-                feedback.remove();
-            }, 2000);
-        });
-    };
-      loading.classList.remove("show");
-      return; // ✅ Skip wiki, cricket, book, etc.
-    }
-  } //
-
-  // 📚 Normal search flow
-  await fetchAll(term);
-  
-  const lowerTerm = term.toLowerCase();
-  const bookKeywords = ["book", "novel", "by", "author", "volume", "literature"];
-  const isBookSearch = bookKeywords.some(k => lowerTerm.includes(k));
-  if (isBookSearch) detectAndFetchBook(term);
-
-  loading.classList.remove("show");
-}
-
-
 
 function formatAIAnswer(text) {
   const escaped = text
@@ -286,7 +461,6 @@ function formatAIAnswer(text) {
   const withItalics = withBold.replace(/\*(.*?)\*/g, "<em>$1</em>");
   return withItalics;
 }
-
 
 
 
@@ -795,220 +969,3 @@ document.addEventListener("click", async (e) => {
 // Add this code to your existing script.js file
 
 // Function to handle search initiation - called from all search triggers
-function initiateSearch() {
-  // Add 'searching' class to body for CSS transitions
-  document.body.classList.add('searching');
-  
-  // Scroll to top smoothly after a brief delay to allow the collapse animation
-  setTimeout(() => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
-    });
-  }, 150);
-}
-
-// Function to reset search state (when clearing search or going back to home)
-function resetSearchState() {
-  document.body.classList.remove('searching');
-}
-
-// ========================================
-// HOOK INTO ALL SEARCH TRIGGERS
-// ========================================
-
-// 1. Search Button Click
-const searchBtn = document.getElementById('searchBtn');
-if (searchBtn) {
-  // Store original click handler if it exists
-  const originalHandler = searchBtn.onclick;
-  
-  searchBtn.addEventListener('click', function(e) {
-    initiateSearch();
-    
-    // Call original handler if it exists
-    if (originalHandler) {
-      originalHandler.call(this, e);
-    }
-  });
-}
-
-// 2. Enter Key Press in Search Box
-const searchBox = document.getElementById('searchBox');
-if (searchBox) {
-  searchBox.addEventListener('keypress', function(e) {
-    if (e.key === 'Enter' || e.keyCode === 13) {
-      initiateSearch();
-      // Your existing search logic will be triggered automatically
-    }
-  });
-}
-
-// 3. Suggestion Click (hook into suggestions list)
-// This uses event delegation to catch clicks on suggestion items
-const suggestionsContainer = document.getElementById('suggestions');
-if (suggestionsContainer) {
-  suggestionsContainer.addEventListener('click', function(e) {
-    // Check if a suggestion item was clicked
-    const suggestionItem = e.target.closest('li');
-    if (suggestionItem) {
-      initiateSearch();
-      // Your existing suggestion click handler will be triggered
-    }
-  });
-}
-
-// 4. Voice/Mic Button - Hook into speech recognition
-const voiceBtn = document.getElementById('voiceBtn');
-if (voiceBtn) {
-  // Store original click handler if it exists
-  const originalVoiceHandler = voiceBtn.onclick;
-  
-  // Listen for when speech recognition completes
-  // This will trigger when voice input is processed
-  voiceBtn.addEventListener('click', function(e) {
-    // Call original handler first to start voice recognition
-    if (originalVoiceHandler) {
-      originalVoiceHandler.call(this, e);
-    }
-    
-    // We need to wait for speech recognition to complete and populate the search box
-    // Set up a listener for when the search box value changes from voice input
-    if (searchBox) {
-      // Use MutationObserver to detect when search box is populated by voice
-      const observer = new MutationObserver(function(mutations) {
-        if (searchBox.value.trim() !== '') {
-          // Voice input has populated the search box
-          // Small delay to ensure voice recognition has finished
-          setTimeout(() => {
-            initiateSearch();
-          }, 500);
-          
-          // Disconnect observer after first trigger
-          observer.disconnect();
-        }
-      });
-      
-      // Alternative: Listen for input event
-      const handleVoiceInput = function() {
-        if (searchBox.value.trim() !== '') {
-          // Voice has populated search box, initiate search after brief delay
-          setTimeout(() => {
-            initiateSearch();
-          }, 800);
-          
-          // Remove listener after first trigger
-          searchBox.removeEventListener('input', handleVoiceInput);
-        }
-      };
-      
-      // Add listener when voice button is clicked
-      searchBox.addEventListener('input', handleVoiceInput);
-      
-      // Clean up listener after 10 seconds if not triggered
-      setTimeout(() => {
-        searchBox.removeEventListener('input', handleVoiceInput);
-      }, 10000);
-    }
-  });
-}
-
-// Alternative approach: If you have a specific function that handles voice input completion
-// Hook into it like this:
-/*
-function onVoiceInputComplete(transcript) {
-  initiateSearch(); // Add this line
-  
-  // Your existing voice handling code...
-  searchBox.value = transcript;
-  performSearch(transcript);
-}
-*/
-
-// If your voice recognition triggers search automatically, you can also hook into
-// the SpeechRecognition API directly:
-/*
-if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-  // Your existing recognition setup...
-  
-  recognition.onresult = function(event) {
-    const transcript = event.results[0][0].transcript;
-    searchBox.value = transcript;
-    
-    // Add this line before or after your search logic
-    initiateSearch();
-    
-    // Your existing search logic...
-    performSearch(transcript);
-  };
-}
-*/
-
-// ========================================
-// OPTIONAL: CLEAR/RESET HANDLERS
-// ========================================
-
-// Reset when clear button is clicked
-const clearBtn = document.getElementById('clearBtn');
-if (clearBtn) {
-  clearBtn.addEventListener('click', function() {
-    resetSearchState();
-  });
-}
-
-// Reset when clearing history
-const clearHistoryBtn = document.getElementById('clearHistory');
-if (clearHistoryBtn) {
-  clearHistoryBtn.addEventListener('click', function() {
-    resetSearchState();
-  });
-}
-
-// ========================================
-// INTEGRATE WITH YOUR EXISTING CODE
-// ========================================
-
-/*
-RECOMMENDED APPROACH FOR VOICE:
-
-If you have a centralized function that gets called after voice recognition completes,
-add initiateSearch() there. For example:
-
-// Your existing voice recognition code
-recognition.onresult = function(event) {
-  const transcript = event.results[0][0].transcript;
-  searchBox.value = transcript;
-  
-  // Add this line
-  initiateSearch();
-  
-  // Then trigger your search
-  performSearch(transcript);
-};
-
-OR if voice automatically triggers search through your existing search function:
-
-function performSearch(query) {
-  if (!query) return;
-  
-  initiateSearch(); // This will handle all search types including voice
-  
-  // Your existing search logic...
-  showLoading();
-  fetchResults(query);
-  displayResults();
-}
-*/
-
-// ========================================
-// DEBUGGING (Remove in production)
-// ========================================
-
-// Uncomment to see when initiateSearch is called
-/*
-const originalInitiateSearch = initiateSearch;
-initiateSearch = function() {
-  console.log('🔍 Search initiated - scrolling up');
-  originalInitiateSearch();
-};
-*/
