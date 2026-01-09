@@ -658,14 +658,6 @@ searchBox.addEventListener("input", () => {
     return;
   }
 
-  // 🔥 FORCE suggestions to the front
-  suggUL.style.display = "block";
-  suggUL.style.zIndex = "99999";
-
-  if (searchWrapper && !searchWrapper.contains(suggUL)) {
-    searchWrapper.appendChild(suggUL);
-  }
-
   fetch(`https://en.wikipedia.org/w/api.php?origin=*&action=opensearch&format=json&search=${encodeURIComponent(query)}`)
     .then(r => r.json())
     .then(data => {
