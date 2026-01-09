@@ -1643,3 +1643,20 @@ body {
 main {
   flex: 1;
   }
+/* ============================================
+   SEARCH-ACTIVE STATE (FIXES STUCK HERO)
+   ============================================ */
+
+body.search-active .hero {
+  min-height: auto;
+  padding-top: 7rem; /* space for navbar */
+  padding-bottom: 3rem;
+}
+
+body.search-active .hero-content {
+  transform: none;
+}
+
+body.search-active {
+  overflow-y: auto;
+}
