@@ -194,6 +194,14 @@ body.dark.home .navbar {
   padding: 6rem 2rem 4rem;
   position: relative;
   background: var(--bg);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* When search is active, hero shrinks */
+body.searching .hero {
+  min-height: auto;
+  padding: 2rem 2rem 1.5rem;
+  align-items: flex-start;
 }
 
 body.dark .hero {
@@ -218,6 +226,12 @@ body.dark .hero {
   position: relative;
   z-index: 1;
   animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* When searching, hero content becomes compact */
+body.searching .hero-content {
+  max-width: 800px;
 }
 
 .hero-title {
@@ -230,6 +244,17 @@ body.dark .hero {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Hide title and subtitle when searching */
+body.searching .hero-title,
+body.searching .hero-subtitle {
+  opacity: 0;
+  max-height: 0;
+  margin: 0;
+  overflow: hidden;
+  transform: translateY(-20px);
 }
 
 .hero-subtitle {
@@ -241,6 +266,11 @@ body.dark .hero {
   max-width: 540px;
   margin-left: auto;
   margin-right: auto;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body.searching .hero-subtitle {
+  margin-bottom: 0;
 }
 
 /* ============================================
@@ -250,12 +280,23 @@ body.dark .hero {
   width: 100%;
   max-width: 600px;
   margin: 0 auto;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* When searching, search bar becomes compact and stays at top */
+body.searching .hero-search {
+  max-width: 800px;
 }
 
 .search-wrapper {
   position: relative;
   width: 100%;
   margin-bottom: 1.5rem;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body.searching .search-wrapper {
+  margin-bottom: 1rem;
 }
 
 #searchBox {
@@ -1594,4 +1635,4 @@ body {
 
 main {
   flex: 1;
-  }
+    }
