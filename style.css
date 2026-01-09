@@ -1675,3 +1675,28 @@ body.search-active {
 .buttons {
   width: 100%;
 }
+
+@media (max-width: 768px) {
+  .buttons {
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 0.5rem;
+    width: 100%;
+    flex-wrap: nowrap;
+  }
+}
+
+@media (max-width: 480px) {
+  .buttons {
+    justify-content: space-between;
+    gap: 0.5rem;
+    flex-wrap: nowrap;
+  }
+}
+
+/* FORCE Add Image to the far left on mobile */
+@media (max-width: 768px) {
+  .buttons > div:first-child {
+    margin-right: auto;
+  }
+}
