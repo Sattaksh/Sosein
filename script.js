@@ -863,4 +863,3 @@ async function performSearch(query) {
   displayResults(results);
 }
 */
-
