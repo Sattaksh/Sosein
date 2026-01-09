@@ -786,3 +786,81 @@ document.addEventListener("click", async (e) => {
   }
 });
 
+// Add this code to your existing script.js file
+
+// Function to handle search initiation
+function initiateSearch() {
+  // Add 'searching' class to body
+  document.body.classList.add('searching');
+  
+  // Scroll to top smoothly after a brief delay to allow animation
+  setTimeout(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  }, 100);
+}
+
+// Function to reset search state
+function resetSearchState() {
+  // Remove 'searching' class from body
+  document.body.classList.remove('searching');
+}
+
+// Example: Call initiateSearch() when search button is clicked
+// Add this to your existing search button click handler
+const searchBtn = document.getElementById('searchBtn');
+if (searchBtn) {
+  searchBtn.addEventListener('click', function() {
+    // Your existing search logic here
+    // ...
+    
+    // Then call initiateSearch
+    initiateSearch();
+  });
+}
+
+// Example: Also call it when Enter key is pressed in search box
+const searchBox = document.getElementById('searchBox');
+if (searchBox) {
+  searchBox.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+      // Your existing search logic here
+      // ...
+      
+      // Then call initiateSearch
+      initiateSearch();
+    }
+  });
+}
+
+// Optional: Reset when search is cleared or page is reloaded
+const clearBtn = document.getElementById('clearBtn');
+if (clearBtn) {
+  clearBtn.addEventListener('click', function() {
+    resetSearchState();
+  });
+}
+
+// Optional: Reset when no results
+function handleNoResults() {
+  resetSearchState();
+}
+
+// Example usage in your existing search function:
+/*
+async function performSearch(query) {
+  initiateSearch(); // Call this at the start of search
+  
+  // Your existing search logic...
+  const results = await fetchSearchResults(query);
+  
+  if (results.length === 0) {
+    resetSearchState(); // Reset if no results
+  }
+  
+  displayResults(results);
+}
+*/
+
