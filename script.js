@@ -200,8 +200,7 @@ searchBox.addEventListener("keypress", e => {
     // This check now prevents a search if both the text and image are empty
     if (!term && !uploadedImageData) return;
     document.body.classList.add("search-active");
-    // Ensure suggestions never sit behind results
-    suggUL.style.display = "none";    
+    
     suggUL.innerHTML = "";
     saveHistory(term);
     results.innerHTML = "";
