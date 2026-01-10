@@ -1825,4 +1825,40 @@ main,
   background: #fafafa;
 }
 
+/*FROM HEREEEEEEEEEEEEE ---------- TABLE BASE ----------  */
+.ai-markdown table {
+  width: 100%;
+  min-width: 700px;
+  border-collapse: collapse;
+  table-layout: fixed; /* 🔥 THIS IS THE KEY */
+}
 
+/* ---------- TABLE WRAPPER ---------- */
+.ai-markdown .table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 1rem 0;
+}
+
+/* ---------- CELLS ---------- */
+.ai-markdown th,
+.ai-markdown td {
+  border: 1px solid #ddd;
+  padding: 0.75rem;
+  text-align: left;
+  vertical-align: top;
+
+  white-space: normal;        /* allow wrapping */
+  word-break: normal;         /* DO NOT break letters */
+  overflow-wrap: break-word;  /* break long phrases only */
+}
+
+/* ---------- FIRST COLUMN (FEATURE / BASIS) ---------- */
+.ai-markdown th:first-child,
+.ai-markdown td:first-child {
+  width: 180px;          /* readable but compact */
+  min-width: 180px;
+
+  font-weight: 600;
+  background: #fafafa;
+}
