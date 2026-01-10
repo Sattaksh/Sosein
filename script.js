@@ -275,12 +275,16 @@ searchBox.addEventListener("keypress", e => {
             `;
           
   const aiContainer = document.getElementById("ai-answer-text");
+
 if (aiContainer) {
-  // 1️⃣ Let browser finish layout, THEN wrap tables
   requestAnimationFrame(() => {
+    // 1️⃣ Wrap tables so ONLY tables scroll
     wrapTables(aiContainer);
 
-    // 2️⃣ Render math AFTER tables are safely wrapped
+    // 2️⃣ FORCE layout reflow (THIS fixes dark mode + mobile)
+    aiContainer.offsetHeight;
+
+    // 3️⃣ Render math AFTER layout is locked
     if (window.renderMathInElement) {
       renderMathInElement(aiContainer, {
         delimiters: [
