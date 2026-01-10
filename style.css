@@ -1811,3 +1811,18 @@ main,
 .ai-markdown {
   overflow-x: hidden;
 }
+
+/* FORCE proper width for first column (feature/aspect column) */
+.ai-markdown table th:first-child,
+.ai-markdown table td:first-child {
+  width: 140px;
+  min-width: 140px;
+  max-width: 160px;
+
+  white-space: normal;
+  word-break: normal;
+  overflow-wrap: break-word;
+
+  font-weight: 600;
+  background: #fafafa;
+}
