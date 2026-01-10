@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const q = id => document.getElementById(id);
   const searchBox = q("searchBox"), searchBtn = q("searchBtn"), voiceBtn = q("voiceBtn");
   const clearBtn = document.getElementById("clearBtn");
-  let CURRENT_MODEL = "xiaomi/mimo-v2-flash:free";
+  let CURRENT_MODEL = "openai/gpt-oss-120b:free";
   let uploadedImageData = null;
 
 // Show/hide ✖ when typing
@@ -222,8 +222,8 @@ searchBox.addEventListener("keypress", e => {
       "summarize", "compare", "list", "create", "generate", "suggest", "recommend", "calculate", 
       "translate", "solve", "draft", "outline", "analyze", "how to", "what is the", "what are the","best", "top", "vs", "difference between", 
       "meaning of", "facts about", "tell me", "meaning", "state", "is there"];
-    const isTextQuestion = questionWords.includes(term.split(" ")[0].toLowerCase());
-    
+    const isTextQuestion = questionWords.some(w =>
+    term.toLowerCase().includes(w));
     // The AI will now be called if it's a text question OR if an image has been uploaded
     if (isTextQuestion || isImageQuery) {
         const aiAnswer = await fetchAIAnswer(term, uploadedImageData);
@@ -775,10 +775,6 @@ document.addEventListener("click", async (e) => {
 });
 
 
-// 🔁 On page load, render history if available
-document.addEventListener("DOMContentLoaded", () => {
-  renderHistory();
-});
 
 // 🔊 Handle 'Read the article' speak button
 // 🔊 Speak full Wikipedia extract when clicking "Read the article" button
