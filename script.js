@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const q = id => document.getElementById(id);
   const searchBox = q("searchBox"), searchBtn = q("searchBtn"), voiceBtn = q("voiceBtn");
   const clearBtn = document.getElementById("clearBtn");
-  let CURRENT_MODEL = "openai/gpt-oss-120b:free";
+  let CURRENT_MODEL = "openai/gpt-oss-120b";
   let uploadedImageData = null;
 
 // Show/hide ✖ when typing
