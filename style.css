@@ -1705,136 +1705,28 @@ body.search-active {
     margin-right: auto;
   }
   }
-#ai-answer-text {
-  line-height: 1.7;
-}
-
-#ai-answer-text h1,
-#ai-answer-text h2,
-#ai-answer-text h3 {
-  margin: 1.2rem 0 0.6rem;
-}
-
-#ai-answer-text table {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 1rem 0;
-}
-
-#ai-answer-text th,
-#ai-answer-text td {
-  border: 1px solid #ddd;
-  padding: 0.7rem;
-}
-
-/* AI answer base */
+/* ---------- AI ANSWER BASE ---------- */
 .ai-markdown {
   line-height: 1.7;
-  font-size: 1rem;           /* ✅ default, no sideways scroll */
+  font-size: 1rem;
 }
 
-/* Headings */
+/* ---------- HEADINGS ---------- */
 .ai-markdown h1,
 .ai-markdown h2,
 .ai-markdown h3 {
   margin: 1.2rem 0 0.6rem;
 }
 
-/* Tables */
+/* ---------- TABLE ---------- */
 .ai-markdown table {
   width: 100%;
-  min-width: 600px;                /* ✅ prevents squishing */
   border-collapse: collapse;
-  margin: 1rem 0;
 }
 
-/* Table cells */
-.ai-markdown th,
-.ai-markdown td {
-  border: 1px solid #ddd;
-  padding: 0.7rem;
-  text-align: left;
-  vertical-align: top;
-  white-space: normal;
-  word-break: break-word;/* ✅ clean columns */
-}
-/* Fix first column vertical text issue */
-.ai-markdown table th:first-child,
-.ai-markdown table td:first-child {
-  word-break: normal;
-  min-width: 120px;   /* tweak if needed */
-  font-weight: 600;
-  background: #fafafa;
-}
-
-/* Optional: nicer header */
-.ai-markdown th {
-  background: #f9fafb;
-  font-weight: 600;
-}
-
-/* Table scroll container */
+/* ---------- TABLE WRAPPER (SCROLL ONLY TABLE) ---------- */
 .ai-markdown .table-wrapper {
   width: 100%;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  overscroll-behavior-x: contain;
-  margin: 1rem 0;
-}
-
-/* Scroll hint ONLY for tables */
-.ai-markdown .table-wrapper::after {
-  content: "↔ Scroll";
-  display: block;
-  text-align: right;
-  font-size: 0.75rem;
-  color: #999;
-  margin-top: 0.25rem;
-}
-
-.katex {
-  font-size: 1.05em;
-}
-
-.katex-display {
-  overflow-x: auto;
-  overflow-y: hidden;
-  padding: 0.5rem 0;
-}
-
-main,
-.results-section,
-#results,
-.card,
-.ai-answer-card,
-.ai-markdown {
-  overflow-x: hidden;
-}
-
-/* FORCE proper width for first column (feature/aspect column) */
-.ai-markdown table th:first-child,
-.ai-markdown table td:first-child {
-  width: 140px;
-  min-width: 140px;
-
-  white-space: normal;
-  word-break: normal;
-  overflow-wrap: break-word;
-
-  font-weight: 600;
-  background: #fafafa;
-}
-
-/*FROM HEREEEEEEEEEEEEE ---------- TABLE BASE ----------  */
-.ai-markdown table {
-  width: 100%;
-  min-width: 700px;
-  border-collapse: collapse;
-  table-layout: fixed; /* 🔥 THIS IS THE KEY */
-}
-
-/* ---------- TABLE WRAPPER ---------- */
-.ai-markdown .table-wrapper {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   margin: 1rem 0;
@@ -1848,17 +1740,41 @@ main,
   text-align: left;
   vertical-align: top;
 
-  white-space: normal;        /* allow wrapping */
-  word-break: normal;         /* DO NOT break letters */
-  overflow-wrap: break-word;  /* break long phrases only */
+  white-space: normal;
+  word-break: normal;
+  overflow-wrap: break-word;
+}
+
+/* ---------- HEADER ---------- */
+.ai-markdown th {
+  background: #f9fafb;
+  font-weight: 600;
 }
 
 /* ---------- FIRST COLUMN (FEATURE / BASIS) ---------- */
 .ai-markdown th:first-child,
 .ai-markdown td:first-child {
-  width: 180px;          /* readable but compact */
-  min-width: 180px;
-
+  min-width: 140px;
   font-weight: 600;
   background: #fafafa;
+}
+
+/* ---------- KATEX ---------- */
+.katex {
+  font-size: 1.05em;
+}
+
+.katex-display {
+  overflow-x: auto;
+  padding: 0.5rem 0;
+}
+
+/* ---------- PREVENT PAGE SCROLL ---------- */
+main,
+.results-section,
+#results,
+.card,
+.ai-answer-card,
+.ai-markdown {
+  overflow-x: hidden;
 }
