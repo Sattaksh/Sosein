@@ -229,19 +229,34 @@ searchBox.addEventListener("keypress", e => {
         const aiAnswer = await fetchAIAnswer(term, uploadedImageData);
         
         // --- IMPORTANT: Reset image data after the search is done ---
-        
+  function formatAIAnswer(text) {
+  if (!text) return "";
+
+  let safeText = text
+    .replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, "")
+    .replace(/on\w+="[^"]*"/gi, "")
+    .replace(/<\/?(iframe|object|embed)[^>]*>/gi, "");
+
+  return marked.parse(safeText, {
+    gfm: true,
+    breaks: true,
+    headerIds: false,
+    mangle: false
+  });
+  }  
         if (aiAnswer && !aiAnswer.includes("Sorry")) {
             const formattedAnswer = formatAIAnswer(aiAnswer);
             // Your complete AI card and copy button logic remains here
             results.innerHTML = `
                 <div class="card ai-answer-card">
                   <div class="ai-card-header">
-                    <h3>✦︎ VoidAI</h3>
+                    <h3>✦︎ Sosein AI</h3>
                     <div class="copy-container">
                         <span class="copy-btn" title="Copy Answer">🗒</span>
                     </div>
                   </div>
-                  <div id="ai-answer-text">${formattedAnswer}</div>
+                  <div id="ai-answer-text" 
+                  class="ai-markdown">${formattedAnswer}</div>
                 </div>
             `;
 
@@ -283,23 +298,6 @@ searchBox.addEventListener("keypress", e => {
 
   loading.classList.remove("show");
 }
-
-
-
-function formatAIAnswer(text) {
-  if (!text) return "";
-
-  // Sanitize ONLY script tags (safe + preserves markdown)
-  const safeText = text.replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, "");
-
-  return marked.parse(safeText, {
-    gfm: true,        // GitHub-flavored markdown (tables, lists)
-    breaks: true,    // Newlines → <br>
-    headerIds: false // Cleaner HTML
-  });
-}
-
-
 
 
   // 📦 Fetch Wikipedia + Entity + YouTube + News
