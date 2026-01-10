@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const q = id => document.getElementById(id);
   const searchBox = q("searchBox"), searchBtn = q("searchBtn"), voiceBtn = q("voiceBtn");
   const clearBtn = document.getElementById("clearBtn");
-
+  let CURRENT_MODEL = "gemini-2.5-flash-lite-preview-09-2025";
   let uploadedImageData = null;
 
 // Show/hide ✖ when typing
@@ -539,36 +539,47 @@ if (enhance) {
 
 // In your main script.js
 
+// examples later:
+// "deepseek/deepseek-r1"
+// "openai/gpt-4o-mini"
+// "anthropic/claude-3.5-sonnet"
+
 async function fetchAIAnswer(question, imageData) {
-    try {
-        const payload = { question };
-        if (imageData) {
-            payload.imageBase64 = imageData.base64;
-            payload.imageMimeType = imageData.mimeType;
-        }
+  try {
+    const payload = {
+      question,
+      modelName: CURRENT_MODEL
+    };
 
-        const response = await fetch("/.netlify/functions/ask-ai", {
-            method: "POST",
-            body: JSON.stringify(payload)
-        });
-        
-        // Check if the response itself is okay
-        if (!response.ok) {
-            throw new Error(`Server function failed with status ${response.status}`);
-        }
-        
-        const data = await response.json();
-        
-        // Now we look for our simple "answer" property
-        if (data.answer) {
-            return data.answer.trim();
-        }
-    } catch (err) {
-        console.error("Error fetching AI answer:", err);
+    if (imageData) {
+      payload.imageBase64 = imageData.base64;
+      payload.imageMimeType = imageData.mimeType;
     }
-    return "❌ Sorry, the AI could not answer your question right now.";
-}
 
+    const response = await fetch("/.netlify/functions/ask-ai", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if (!response.ok) {
+      throw new Error(`Server function failed with status ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    if (data.answer) {
+      return data.answer.trim();
+    }
+  } catch (err) {
+    console.error("Error fetching AI answer:", err);
+  }
+
+  return "❌ Sorry, the AI could not answer your question right now.";
+}
+  
 async function fetchYouTube(term) {
     try {
         const url = `/.netlify/functions/youtube?q=${encodeURIComponent(term)}`;
