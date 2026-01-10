@@ -196,6 +196,18 @@ function clearImageOnNewSearch() {
         }
     }
 }
+function wrapTables(container) {
+  const tables = container.querySelectorAll("table");
+
+  tables.forEach(table => {
+    if (!table.parentElement.classList.contains("table-wrapper")) {
+      const wrapper = document.createElement("div");
+      wrapper.className = "table-wrapper";
+      table.parentNode.insertBefore(wrapper, table);
+      wrapper.appendChild(table);
+    }
+  });
+}
 
   // 🔍 Trigger search
   searchBtn.onclick = () => triggerSearch(searchBox.value.trim());
@@ -245,6 +257,8 @@ searchBox.addEventListener("keypress", e => {
             `;
           
   const aiContainer = document.getElementById("ai-answer-text");
+  // Wrap tables ONLY
+  wrapTables(aiContainer);
   if (window.renderMathInElement && aiContainer) {
   renderMathInElement(aiContainer, {
     delimiters: [
