@@ -1761,7 +1761,6 @@ body.search-active {
 /* Fix first column vertical text issue */
 .ai-markdown table th:first-child,
 .ai-markdown table td:first-child {
-  white-space: nowrap;
   word-break: normal;
   min-width: 120px;   /* tweak if needed */
   font-weight: 600;
@@ -1817,7 +1816,6 @@ main,
 .ai-markdown table td:first-child {
   width: 140px;
   min-width: 140px;
-  max-width: 160px;
 
   white-space: normal;
   word-break: normal;
@@ -1826,3 +1824,5 @@ main,
   font-weight: 600;
   background: #fafafa;
 }
+
+
