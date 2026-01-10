@@ -287,13 +287,16 @@ searchBox.addEventListener("keypress", e => {
 
 
 function formatAIAnswer(text) {
-  const escaped = text
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;");
-  const withLineBreaks = escaped.replace(/\n/g, "<br>");
-  const withBold = withLineBreaks.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
-  const withItalics = withBold.replace(/\*(.*?)\*/g, "<em>$1</em>");
-  return withItalics;
+  if (!text) return "";
+
+  // Sanitize ONLY script tags (safe + preserves markdown)
+  const safeText = text.replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, "");
+
+  return marked.parse(safeText, {
+    gfm: true,        // GitHub-flavored markdown (tables, lists)
+    breaks: true,    // Newlines → <br>
+    headerIds: false // Cleaner HTML
+  });
 }
 
 
