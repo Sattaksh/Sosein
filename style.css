@@ -1778,3 +1778,36 @@ main,
 .ai-markdown {
   overflow-x: hidden;
 }
+/* ===============================
+   DARK MODE TABLE FIX
+   =============================== */
+
+body.dark .ai-markdown table {
+  background: #121212;
+}
+
+body.dark .ai-markdown th,
+body.dark .ai-markdown td {
+  background: #1a1a1a;
+  color: #e6e6e6;
+  border-color: #333;
+}
+
+/* Header row */
+body.dark .ai-markdown th {
+  background: #222;
+  color: #ffffff;
+}
+
+/* First column (Feature / Aspect) */
+body.dark .ai-markdown th:first-child,
+body.dark .ai-markdown td:first-child {
+  background: #181818;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+/* Scroll hint text */
+body.dark .ai-markdown .table-wrapper::after {
+  color: #aaa;
+}
