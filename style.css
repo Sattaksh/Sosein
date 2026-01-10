@@ -1768,3 +1768,13 @@ body.search-active {
   color: #999;
   margin-top: 0.25rem;
 }
+
+.katex {
+  font-size: 1.05em;
+}
+
+.katex-display {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.5rem 0;
+}
