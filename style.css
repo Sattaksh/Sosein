@@ -1767,26 +1767,7 @@ body.search-active {
 .katex-display {
   overflow-x: auto;
   padding: 0.5rem 0;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: thin;
 }
-/* ---------- KATEX DARK MODE FIX ---------- */
-body.dark .katex,
-body.dark .katex-display {
-  color: #eaeaea;
-}
-
-body.dark .katex .mord,
-body.dark .katex .mop,
-body.dark .katex .mbin,
-body.dark .katex .mrel,
-body.dark .katex .mopen,
-body.dark .katex .mclose,
-body.dark .katex .mpunct,
-body.dark .katex .minner {
-  color: #eaeaea;
-}
-
 
 /* ---------- PREVENT PAGE SCROLL ---------- */
 main,
