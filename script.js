@@ -229,21 +229,7 @@ searchBox.addEventListener("keypress", e => {
         const aiAnswer = await fetchAIAnswer(term, uploadedImageData);
         
         // --- IMPORTANT: Reset image data after the search is done ---
-  function formatAIAnswer(text) {
-  if (!text) return "";
-
-  let safeText = text
-    .replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, "")
-    .replace(/on\w+="[^"]*"/gi, "")
-    .replace(/<\/?(iframe|object|embed)[^>]*>/gi, "");
-
-  return marked.parse(safeText, {
-    gfm: true,
-    breaks: true,
-    headerIds: false,
-    mangle: false
-  });
-  }  
+  
         if (aiAnswer && !aiAnswer.includes("Sorry")) {
             const formattedAnswer = formatAIAnswer(aiAnswer);
             // Your complete AI card and copy button logic remains here
@@ -259,7 +245,21 @@ searchBox.addEventListener("keypress", e => {
                   class="ai-markdown">${formattedAnswer}</div>
                 </div>
             `;
+function formatAIAnswer(text) {
+  if (!text) return "";
 
+  let safeText = text
+    .replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, "")
+    .replace(/on\w+="[^"]*"/gi, "")
+    .replace(/<\/?(iframe|object|embed)[^>]*>/gi, "");
+
+  return marked.parse(safeText, {
+    gfm: true,
+    breaks: true,
+    headerIds: false,
+    mangle: false
+  });
+  }  
       // This is the NEW code
        document.querySelector(".copy-btn").onclick = (e) => {
         const copyButton = e.target;
