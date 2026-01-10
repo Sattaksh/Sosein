@@ -1722,28 +1722,49 @@ body.search-active {
   padding: 0.7rem;
 }
 
+/* AI answer base */
 .ai-markdown {
   line-height: 1.7;
   font-size: 1rem;
-  word-wrap: break-word;
+  overflow-x: auto;                /* ✅ scroll container */
+  -webkit-overflow-scrolling: touch;
 }
 
-.ai-markdown table {
-  width: 100%;
-  border-collapse: collapse;
-  overflow-x: auto;
-  display: block;
-}
-
-.ai-markdown th,
-.ai-markdown td {
-  border: 1px solid #ddd;
-  padding: 0.6rem;
-  text-align: left;
-}
-
+/* Headings */
 .ai-markdown h1,
 .ai-markdown h2,
 .ai-markdown h3 {
   margin: 1.2rem 0 0.6rem;
+}
+
+/* Tables */
+.ai-markdown table {
+  width: 100%;
+  min-width: 600px;                /* ✅ prevents squishing */
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+
+/* Table cells */
+.ai-markdown th,
+.ai-markdown td {
+  border: 1px solid #ddd;
+  padding: 0.7rem;
+  text-align: left;
+  vertical-align: top;
+  white-space: nowrap;             /* ✅ clean columns */
+}
+
+/* Optional: nicer header */
+.ai-markdown th {
+  background: #f9fafb;
+  font-weight: 600;
+}
+.ai-markdown::after {
+  content: "↔ Scroll";
+  display: block;
+  text-align: right;
+  font-size: 0.75rem;
+  color: #999;
+  margin-top: 0.25rem;
 }
