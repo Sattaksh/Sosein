@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const q = id => document.getElementById(id);
   const searchBox = q("searchBox"), searchBtn = q("searchBtn"), voiceBtn = q("voiceBtn");
   const clearBtn = document.getElementById("clearBtn");
-  let CURRENT_MODEL = "xiaomi/mimo-v2-flash:free";
+  let CURRENT_MODEL = "gemini-gemma-3-12b";
   let uploadedImageData = null;
 
 // Show/hide ✖ when typing
