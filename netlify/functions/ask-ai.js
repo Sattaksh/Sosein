@@ -5,32 +5,29 @@ exports.handler = async function (event) {
   try {
     const { question, imageBase64, imageMimeType, modelName } = JSON.parse(event.body);
 
+    if (!modelName) {
+      return {
+        statusCode: 400,
+        body: JSON.stringify({ error: "modelName is required" })
+      };
+    }
+
     const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
     const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
 
-    // ✅ HARD DEFAULT (NO GEMINI FALLBACK)
-    const forcedModel = modelName || "openai/gpt-oss-120b";
+    console.log("MODEL USED:", modelName);
 
-    console.log("MODEL USED:", forcedModel);
+    /* ===================== GEMINI ===================== */
+    if (modelName.startsWith("gemini")) {
+      if (!GEMINI_API_KEY) throw new Error("Missing GEMINI_API_KEY");
 
-    /* ======================================================
-       🔹 GEMINI MODELS
-       ====================================================== */
-    if (forcedModel.startsWith("gemini")) {
-      if (!GEMINI_API_KEY) {
-        throw new Error("Missing GEMINI_API_KEY");
-      }
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${GEMINI_API_KEY}`;
 
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/${forcedModel}:generateContent?key=${GEMINI_API_KEY}`;
-
-      const parts = [{ text: question || "Describe this image in detail." }];
+      const parts = [{ text: question || "Describe this image." }];
 
       if (imageBase64 && imageMimeType) {
         parts.unshift({
-          inline_data: {
-            mime_type: imageMimeType,
-            data: imageBase64
-          }
+          inline_data: { mime_type: imageMimeType, data: imageBase64 }
         });
       }
 
@@ -41,11 +38,7 @@ exports.handler = async function (event) {
       });
 
       const data = await response.json();
-
-      if (!response.ok || !data.candidates) {
-        console.error("Gemini API Error:", data);
-        throw new Error("Gemini API failed");
-      }
+      if (!response.ok || !data.candidates) throw new Error("Gemini API failed");
 
       return {
         statusCode: 200,
@@ -55,12 +48,8 @@ exports.handler = async function (event) {
       };
     }
 
-    /* ======================================================
-       🔹 OPENROUTER MODELS (DEFAULT)
-       ====================================================== */
-    if (!OPENROUTER_API_KEY) {
-      throw new Error("Missing OPENROUTER_API_KEY");
-    }
+    /* ===================== OPENROUTER ===================== */
+    if (!OPENROUTER_API_KEY) throw new Error("Missing OPENROUTER_API_KEY");
 
     const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
       method: "POST",
@@ -71,19 +60,13 @@ exports.handler = async function (event) {
         "X-Title": "Sosein Search"
       },
       body: JSON.stringify({
-        model: forcedModel,
-        messages: [
-          { role: "user", content: question || "Explain clearly." }
-        ]
+        model: modelName,
+        messages: [{ role: "user", content: question || "Explain clearly." }]
       })
     });
 
     const data = await response.json();
-
-    if (!response.ok || !data.choices) {
-      console.error("OpenRouter API Error:", data);
-      throw new Error("OpenRouter API failed");
-    }
+    if (!response.ok || !data.choices) throw new Error("OpenRouter API failed");
 
     return {
       statusCode: 200,
