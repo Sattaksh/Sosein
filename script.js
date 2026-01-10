@@ -546,6 +546,8 @@ if (enhance) {
 
 async function fetchAIAnswer(question, imageData) {
   try {
+    // 🔍 DEBUG — THIS IS THE SOURCE OF TRUTH
+    alert("FRONTEND MODEL: " + CURRENT_MODEL);
     const payload = {
       question,
       modelName: CURRENT_MODEL
