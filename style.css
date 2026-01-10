@@ -194,8 +194,9 @@ body.dark.home .navbar {
   padding: 6rem 2rem 4rem;
   position: relative;
   background: var(--bg);
-  transition: min-height 0.5s cubic-bezier(0.4, 0, 0.2, 1),
-              padding 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: min-height 0.6s ease-in-out,
+              padding 0.6s ease-in-out,
+              align-items 0.6s ease-in-out;
 }
 
 /* When search is active, hero shrinks */
@@ -227,7 +228,7 @@ body.dark .hero {
   position: relative;
   z-index: 1;
   animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: max-width 0.6s ease-in-out;
 }
 
 /* When searching, hero content becomes compact */
@@ -245,19 +246,20 @@ body.searching .hero-content {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-              max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-              margin 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-              transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: opacity 0.5s ease-in-out,
+              max-height 0.5s ease-in-out,
+              margin 0.5s ease-in-out,
+              transform 0.5s ease-in-out;
+  max-height: 500px;
+  overflow: hidden;
 }
 
 /* Hide title and subtitle when searching */
-body.searching .hero-title,
-body.searching .hero-subtitle {
+body.searching .hero-title {
   opacity: 0;
   max-height: 0;
-  margin: 0;
-  overflow: hidden;
+  margin-top: 0;
+  margin-bottom: 0;
   transform: translateY(-20px);
 }
 
@@ -270,14 +272,20 @@ body.searching .hero-subtitle {
   max-width: 540px;
   margin-left: auto;
   margin-right: auto;
-  transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-              max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-              margin 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-              transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: opacity 0.5s ease-in-out,
+              max-height 0.5s ease-in-out,
+              margin 0.5s ease-in-out,
+              transform 0.5s ease-in-out;
+  max-height: 500px;
+  overflow: hidden;
 }
 
 body.searching .hero-subtitle {
+  opacity: 0;
+  max-height: 0;
+  margin-top: 0;
   margin-bottom: 0;
+  transform: translateY(-20px);
 }
 
 /* ============================================
@@ -287,7 +295,7 @@ body.searching .hero-subtitle {
   width: 100%;
   max-width: 600px;
   margin: 0 auto;
-  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: max-width 0.6s ease-in-out;
 }
 
 /* When searching, search bar becomes compact and stays at top */
@@ -299,7 +307,7 @@ body.searching .hero-search {
   position: relative;
   width: 100%;
   margin-bottom: 1.5rem;
-  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: margin-bottom 0.6s ease-in-out;
 }
 
 body.searching .search-wrapper {
@@ -366,9 +374,10 @@ body.searching .search-wrapper {
    ============================================ */
 .buttons {
   display: flex;
+  gap: 0.75rem;
   align-items: center;
-  justify-content: space-between; /* THIS pushes Add Image left */
-  margin-top: 12px;
+  justify-content: flex-end;
+  width: 100%;
 }
 
 .buttons > div {
@@ -471,18 +480,10 @@ body.searching .search-wrapper {
   transform: translateY(0);
 }
 
-#voiceBtn {
-  order: 1;
-}
-
-#searchBtn {
-  order: 2;
-}
-
 .right-buttons {
   display: flex;
+  gap: 0.75rem;
   align-items: center;
-  gap: 10px;
 }
 
 .voice-wrapper {
@@ -510,7 +511,7 @@ body.searching .search-wrapper {
    ============================================ */
 .suggestions-list {
   position: absolute;
-  top: calc(100% + 6px);
+  top: calc(100% + 0.5rem);
   left: 0;
   right: 0;
   background: var(--card);
@@ -518,7 +519,7 @@ body.searching .search-wrapper {
   border-radius: 12px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
   overflow: hidden;
-  z-index: 99999;
+  z-index: 10000;
   max-height: 320px;
   overflow-y: auto;
   backdrop-filter: blur(20px);
@@ -1375,7 +1376,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Reduced motion support */
+/* Reduced motion support - UPDATED */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -1384,6 +1385,46 @@ body {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* Force hardware acceleration for smooth animations */
+.hero,
+.hero-content,
+.hero-title,
+.hero-subtitle,
+.hero-search,
+.search-wrapper {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Ensure animations work in all scenarios */
+body.searching .hero,
+body.searching .hero-content,
+body.searching .hero-title,
+body.searching .hero-subtitle {
+  will-change: auto;
+}
+
+/* Override any browser defaults that might interfere */
+html {
+  scroll-behavior: smooth !important;
+}
+
+/* Ensure smooth transitions even with DevTools open */
+* {
+  transform: translateZ(0);
+}
+
+.hero-title,
+.hero-subtitle {
+  will-change: opacity, max-height, transform, margin;
+}
+
+body.searching .hero-title,
+body.searching .hero-subtitle {
+  will-change: auto;
 }
 
 /* Print styles */
@@ -1650,53 +1691,3 @@ body {
 main {
   flex: 1;
   }
-/* ============================================
-   SEARCH-ACTIVE STATE (FIXES STUCK HERO)
-   ============================================ */
-
-body.search-active .hero {
-  min-height: auto;
-  padding-top: 7rem; /* space for navbar */
-  padding-bottom: 3rem;
-}
-
-body.search-active .hero-content {
-  transform: none;
-}
-
-body.search-active {
-  overflow-y: auto;
-}
-
-.hero-search {
-  width: 100%;
-}
-
-.buttons {
-  width: 100%;
-}
-
-@media (max-width: 768px) {
-  .buttons {
-    flex-direction: row;
-    justify-content: space-between;
-    gap: 0.5rem;
-    width: 100%;
-    flex-wrap: nowrap;
-  }
-}
-
-@media (max-width: 480px) {
-  .buttons {
-    justify-content: space-between;
-    gap: 0.5rem;
-    flex-wrap: nowrap;
-  }
-}
-
-/* FORCE Add Image to the far left on mobile */
-@media (max-width: 768px) {
-  .buttons > div:first-child {
-    margin-right: auto;
-  }
-}
