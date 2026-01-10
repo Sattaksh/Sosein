@@ -1,5 +1,12 @@
 // netlify/functions/ask-ai.js
 const fetch = require("node-fetch");
+const GEMINI_MODEL_MAP = {
+  "gemini-2.5-flash": "gemini-2.5-flash",
+  "gemini-2.5-flash-lite": "gemini-2.5-flash-lite",
+  "gemini-gemma-3-12b": "gemma-3-12b",
+  "gemini-gemma-3-27b": "gemma-3-27b",
+  "gemini-gemma-3-4b" : "gemma-3-4b"
+};
 
 exports.handler = async function (event) {
   try {
@@ -18,35 +25,44 @@ exports.handler = async function (event) {
     console.log("MODEL USED:", modelName);
 
     /* ===================== GEMINI ===================== */
-    if (modelName.startsWith("gemini")) {
-      if (!GEMINI_API_KEY) throw new Error("Missing GEMINI_API_KEY");
+  if (modelName.startsWith("gemini")) {
+  if (!GEMINI_API_KEY) throw new Error("Missing GEMINI_API_KEY");
 
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${GEMINI_API_KEY}`;
+  const geminiModel =
+    GEMINI_MODEL_MAP[modelName] || modelName.replace(/^gemini-/, "");
 
-      const parts = [{ text: question || "Describe this image." }];
+  console.log("GEMINI MODEL RESOLVED:", geminiModel);
 
-      if (imageBase64 && imageMimeType) {
-        parts.unshift({
-          inline_data: { mime_type: imageMimeType, data: imageBase64 }
-        });
-      }
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${geminiModel}:generateContent?key=${GEMINI_API_KEY}`;
 
-      const response = await fetch(url, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ contents: [{ parts }] })
-      });
+  const parts = [{ text: question || "Describe this image." }];
 
-      const data = await response.json();
-      if (!response.ok || !data.candidates) throw new Error("Gemini API failed");
+  if (imageBase64 && imageMimeType) {
+    parts.unshift({
+      inline_data: { mime_type: imageMimeType, data: imageBase64 }
+    });
+  }
 
-      return {
-        statusCode: 200,
-        body: JSON.stringify({
-          answer: data.candidates[0].content.parts[0].text
-        })
-      };
-    }
+  const response = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ contents: [{ parts }] })
+  });
+
+  const data = await response.json();
+
+  if (!response.ok || !data.candidates) {
+    console.error("Gemini API Error:", data);
+    throw new Error("Gemini API failed");
+  }
+
+  return {
+    statusCode: 200,
+    body: JSON.stringify({
+      answer: data.candidates[0].content.parts[0].text
+    })
+  };
+}
 
     /* ===================== OPENROUTER ===================== */
     if (!OPENROUTER_API_KEY) throw new Error("Missing OPENROUTER_API_KEY");
