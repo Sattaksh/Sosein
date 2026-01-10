@@ -1758,6 +1758,15 @@ body.search-active {
   white-space: normal;
   word-break: break-word;/* ✅ clean columns */
 }
+/* Fix first column vertical text issue */
+.ai-markdown table th:first-child,
+.ai-markdown table td:first-child {
+  white-space: nowrap;
+  word-break: normal;
+  min-width: 120px;   /* tweak if needed */
+  font-weight: 600;
+  background: #fafafa;
+}
 
 /* Optional: nicer header */
 .ai-markdown th {
