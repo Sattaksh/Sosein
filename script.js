@@ -276,24 +276,27 @@ searchBox.addEventListener("keypress", e => {
           
   const aiContainer = document.getElementById("ai-answer-text");
 
-if (aiContainer) {
+  if (aiContainer) {
   requestAnimationFrame(() => {
-    // 1️⃣ Wrap tables so ONLY tables scroll
-    wrapTables(aiContainer);
+    requestAnimationFrame(() => {
+      // 1️⃣ Wrap tables so ONLY tables scroll
+      wrapTables(aiContainer);
 
-    // 2️⃣ FORCE layout reflow (THIS fixes dark mode + mobile)
-    aiContainer.offsetHeight;
+      // 2️⃣ Force layout reflow (mobile + dark mode fix)
+      aiContainer.offsetHeight;
 
-    // 3️⃣ Render math AFTER layout is locked
-    if (window.renderMathInElement) {
-      renderMathInElement(aiContainer, {
-        delimiters: [
-          { left: "$$", right: "$$", display: true },
-          { left: "$", right: "$", display: false }
-        ],
-        throwOnError: false
-      });
-    }
+      // 3️⃣ Render math LAST
+      if (window.renderMathInElement) {
+        renderMathInElement(aiContainer, {
+          delimiters: [
+            { left: "$$", right: "$$", display: true },
+            { left: "\\[", right: "\\]", display: true },
+            { left: "$", right: "$", display: false }
+          ],
+          throwOnError: false
+        });
+      }
+    });
   });
 }
           
