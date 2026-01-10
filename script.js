@@ -838,7 +838,6 @@ function resetSearchState() {
 // ========================================
 
 // 1. Search Button Click
-const searchBtn = document.getElementById('searchBtn');
 if (searchBtn) {
   // Store original click handler if it exists
   const originalHandler = searchBtn.onclick;
@@ -854,7 +853,6 @@ if (searchBtn) {
 }
 
 // 2. Enter Key Press in Search Box
-const searchBox = document.getElementById('searchBox');
 if (searchBox) {
   searchBox.addEventListener('keypress', function(e) {
     if (e.key === 'Enter' || e.keyCode === 13) {
@@ -969,7 +967,6 @@ if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
 // ========================================
 
 // Reset when clear button is clicked
-const clearBtn = document.getElementById('clearBtn');
 if (clearBtn) {
   clearBtn.addEventListener('click', function() {
     resetSearchState();
