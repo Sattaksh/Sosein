@@ -1,3 +1,8 @@
+html, body {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
 :root {
   --bg: #ffffff;
   --text: #1a1a1a;
@@ -1725,8 +1730,7 @@ body.search-active {
 /* AI answer base */
 .ai-markdown {
   line-height: 1.7;
-  font-size: 1rem;
-  overflow-x: visible;             /* ✅ default, no sideways scroll */
+  font-size: 1rem;           /* ✅ default, no sideways scroll */
 }
 
 /* Headings */
@@ -1751,7 +1755,8 @@ body.search-active {
   padding: 0.7rem;
   text-align: left;
   vertical-align: top;
-  white-space: nowrap;             /* ✅ clean columns */
+  white-space: normal;
+  word-break: break-word;/* ✅ clean columns */
 }
 
 /* Optional: nicer header */
@@ -1765,6 +1770,7 @@ body.search-active {
   width: 100%;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
   margin: 1rem 0;
 }
 
@@ -1786,4 +1792,13 @@ body.search-active {
   overflow-x: auto;
   overflow-y: hidden;
   padding: 0.5rem 0;
+}
+
+main,
+.results-section,
+#results,
+.card,
+.ai-answer-card,
+.ai-markdown {
+  overflow-x: hidden;
 }
