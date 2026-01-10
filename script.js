@@ -257,15 +257,21 @@ searchBox.addEventListener("keypress", e => {
             `;
           
   const aiContainer = document.getElementById("ai-answer-text");
-  // Wrap tables ONLY
-  wrapTables(aiContainer);
-  if (window.renderMathInElement && aiContainer) {
-  renderMathInElement(aiContainer, {
-    delimiters: [
-      { left: "$$", right: "$$", display: true },
-      { left: "$", right: "$", display: false }
-    ],
-    throwOnError: false
+if (aiContainer) {
+  // 1️⃣ Let browser finish layout, THEN wrap tables
+  requestAnimationFrame(() => {
+    wrapTables(aiContainer);
+
+    // 2️⃣ Render math AFTER tables are safely wrapped
+    if (window.renderMathInElement) {
+      renderMathInElement(aiContainer, {
+        delimiters: [
+          { left: "$$", right: "$$", display: true },
+          { left: "$", right: "$", display: false }
+        ],
+        throwOnError: false
+      });
+    }
   });
 }
           
