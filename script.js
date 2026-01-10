@@ -196,15 +196,33 @@ function clearImageOnNewSearch() {
         }
     }
 }
+  
 function wrapTables(container) {
   const tables = container.querySelectorAll("table");
 
   tables.forEach(table => {
+    // Wrap table
     if (!table.parentElement.classList.contains("table-wrapper")) {
       const wrapper = document.createElement("div");
       wrapper.className = "table-wrapper";
       table.parentNode.insertBefore(wrapper, table);
       wrapper.appendChild(table);
+    }
+
+    // Count columns (use first row)
+    const firstRow = table.querySelector("tr");
+    if (!firstRow) return;
+
+    const colCount = firstRow.children.length;
+
+    // ✅ ONLY fix layout for 2-column tables
+    if (colCount <= 2) {
+      table.style.tableLayout = "fixed";
+      table.style.minWidth = "0";
+    } else {
+      // ✅ Multi-column tables scroll naturally
+      table.style.tableLayout = "auto";
+      table.style.minWidth = "max-content";
     }
   });
 }
