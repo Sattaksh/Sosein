@@ -196,22 +196,6 @@ function clearImageOnNewSearch() {
         }
     }
 }
-function formatAIAnswer(text) {
-  if (!text) return "";
-
-  let safeText = text
-    .replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, "")
-    .replace(/on\w+="[^"]*"/gi, "")
-    .replace(/<\/?(iframe|object|embed)[^>]*>/gi, "");
-
-  return marked.parse(safeText, {
-    gfm: true,
-    breaks: true,
-    headerIds: false,
-    mangle: false
-  });
-  }  
-
 
   // 🔍 Trigger search
   searchBtn.onclick = () => triggerSearch(searchBox.value.trim());
@@ -259,9 +243,9 @@ searchBox.addEventListener("keypress", e => {
                   class="ai-markdown">${formattedAnswer}</div>
                 </div>
             `;
+          
   const aiContainer = document.getElementById("ai-answer-text");
-
-if (window.renderMathInElement && aiContainer) {
+  if (window.renderMathInElement && aiContainer) {
   renderMathInElement(aiContainer, {
     delimiters: [
       { left: "$$", right: "$$", display: true },
@@ -270,6 +254,22 @@ if (window.renderMathInElement && aiContainer) {
     throwOnError: false
   });
 }
+          
+function formatAIAnswer(text) {
+  if (!text) return "";
+
+  let safeText = text
+    .replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, "")
+    .replace(/on\w+="[^"]*"/gi, "")
+    .replace(/<\/?(iframe|object|embed)[^>]*>/gi, "");
+
+  return marked.parse(safeText, {
+    gfm: true,
+    breaks: true,
+    headerIds: false,
+    mangle: false
+  });
+  }  
           
 
       // This is the NEW code
