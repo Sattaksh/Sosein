@@ -601,8 +601,6 @@ if (enhance) {
 
 async function fetchAIAnswer(question, imageData) {
   try {
-    window.alert("AI model used: " + (data.modelUsed || "unknown"));
-  
     const payload = {
       question,
       modelName: CURRENT_MODEL
