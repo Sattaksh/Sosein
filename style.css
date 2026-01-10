@@ -1700,3 +1700,50 @@ body.search-active {
     margin-right: auto;
   }
   }
+#ai-answer-text {
+  line-height: 1.7;
+}
+
+#ai-answer-text h1,
+#ai-answer-text h2,
+#ai-answer-text h3 {
+  margin: 1.2rem 0 0.6rem;
+}
+
+#ai-answer-text table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+
+#ai-answer-text th,
+#ai-answer-text td {
+  border: 1px solid #ddd;
+  padding: 0.7rem;
+}
+
+.ai-markdown {
+  line-height: 1.7;
+  font-size: 1rem;
+  word-wrap: break-word;
+}
+
+.ai-markdown table {
+  width: 100%;
+  border-collapse: collapse;
+  overflow-x: auto;
+  display: block;
+}
+
+.ai-markdown th,
+.ai-markdown td {
+  border: 1px solid #ddd;
+  padding: 0.6rem;
+  text-align: left;
+}
+
+.ai-markdown h1,
+.ai-markdown h2,
+.ai-markdown h3 {
+  margin: 1.2rem 0 0.6rem;
+}
