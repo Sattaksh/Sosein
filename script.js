@@ -245,6 +245,16 @@ searchBox.addEventListener("keypress", e => {
                   class="ai-markdown">${formattedAnswer}</div>
                 </div>
             `;
+  renderMathInElement(
+  document.getElementById("ai-answer-text"),
+  {
+    delimiters: [
+      { left: "$$", right: "$$", display: true },
+      { left: "$", right: "$", display: false }
+    ],
+    throwOnError: false
+  }
+);
 function formatAIAnswer(text) {
   if (!text) return "";
 
