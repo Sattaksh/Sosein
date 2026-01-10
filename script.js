@@ -546,6 +546,7 @@ if (enhance) {
 
 async function fetchAIAnswer(question, imageData) {
   try {
+    alert("FRONTEND MODEL: " + CURRENT_MODEL);
     const payload = {
       question,
       modelName: CURRENT_MODEL
