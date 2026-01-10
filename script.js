@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const q = id => document.getElementById(id);
   const searchBox = q("searchBox"), searchBtn = q("searchBtn"), voiceBtn = q("voiceBtn");
   const clearBtn = document.getElementById("clearBtn");
-  let CURRENT_MODEL = "gemini-gemma-3-12b";
+  let CURRENT_MODEL = "google/gemma-3-12b-it:free";
   let uploadedImageData = null;
 
 // Show/hide ✖ when typing
