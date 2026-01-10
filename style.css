@@ -1760,7 +1760,17 @@ body.search-active {
   background: #f9fafb;
   font-weight: 600;
 }
-.ai-markdown::after {
+
+/* Table scroll container */
+.ai-markdown .table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 1rem 0;
+}
+
+/* Scroll hint ONLY for tables */
+.ai-markdown .table-wrapper::after {
   content: "↔ Scroll";
   display: block;
   text-align: right;
