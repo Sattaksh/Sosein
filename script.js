@@ -649,10 +649,11 @@ if (enhance) {
 
 async function fetchAIAnswer(question, imageData) {
   const FALLBACK_MODELS = [
-    CURRENT_MODEL,                  // whatever user selected
+    CURRENT_MODEL,// whatever user selected
+    "z-ai/glm-4.5-air:free",
     "xiaomi/mimo-v2-flash:free",     // fast & reliable
-    "openai/gpt-oss-120b:free",
-    "mistralai/mistral-7b-instruct:free"// last-resort thinker
+    "mistralai/mistral-7b-instruct:free",
+    "openai/gpt-oss-120b:free"// last-resort thinker
   ];
 
   const modelsToTry = [...new Set(FALLBACK_MODELS)].filter(Boolean);
