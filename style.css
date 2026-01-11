@@ -1813,14 +1813,24 @@ body.dark .ai-markdown .table-wrapper::after {
   color: #aaa;
 }
 
+/* Smooth typewriter cursor */
 .typewriter-cursor {
   display: inline-block;
-  margin-left: 2px;
-  animation: blink 1s step-end infinite;
-  opacity: 1;
+  width: 2px;
+  height: 1em;
+  margin-left: 4px;
+  vertical-align: bottom;
+  background-color: currentColor;
+
+  /* Smoothness */
+  animation: cursorBlink 1s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
+/* Smooth blinking (not harsh on/off) */
+@keyframes cursorBlink {
+  0%   { opacity: 1; }
+  45%  { opacity: 1; }
+  50%  { opacity: 0; }
+  95%  { opacity: 0; }
+  100% { opacity: 1; }
 }
