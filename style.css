@@ -1813,13 +1813,25 @@ body.dark .ai-markdown .table-wrapper::after {
   color: #aaa;
 }
 
-/* Typewriter cursor */
+/* Smooth typewriter cursor */
 .typewriter-cursor {
   display: inline-block;
   width: 2px;
   height: 1em;
-  background: currentColor;
   margin-left: 4px;
   vertical-align: bottom;
-  opacity: 1;
+  background-color: currentColor;
+
+  /* Smoothness */
+  animation: cursorBlink 1s ease-in-out infinite;
+  border-radius: 1px;
+}
+
+/* Smooth blinking (not harsh on/off) */
+@keyframes cursorBlink {
+  0%   { opacity: 1; }
+  45%  { opacity: 1; }
+  50%  { opacity: 0; }
+  95%  { opacity: 0; }
+  100% { opacity: 1; }
 }
