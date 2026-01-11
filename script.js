@@ -16,30 +16,26 @@ if (heroTitle && !document.body.classList.contains('searching')) {
   
   const typewriterSpan = heroTitle.querySelector('.typewriter-text');
   
-  // After typing completes (0.5s delay + 3s typing = 3.5s), switch to limited blink
+  // Remove cursor and add period after animation completes
+  // Total: 0.5s delay + 2.5s typing + 3s blinking = 6s
   setTimeout(() => {
-    typewriterSpan.classList.add('typing-complete');
+    typewriterSpan.classList.add('animation-complete');
     
-    // After 4 blinks complete (4 blinks × 0.75s = 3s), add period and remove cursor
-    setTimeout(() => {
-      typewriterSpan.classList.add('animation-complete');
-      
-      // Add the period with a subtle fade-in
-      const period = document.createElement('span');
-      period.textContent = '.';
-      period.style.opacity = '0';
-      period.style.transition = 'opacity 0.4s ease';
-      period.style.display = 'inline';
-      typewriterSpan.appendChild(period);
-      
-      // Fade in the period
-      requestAnimationFrame(() => {
-        period.style.opacity = '1';
-      });
-    }, 3000); // 4 blinks × 0.75s = 3s
+    // Add the period with a subtle fade-in
+    const period = document.createElement('span');
+    period.textContent = '.';
+    period.style.opacity = '0';
+    period.style.transition = 'opacity 0.3s ease';
+    period.style.display = 'inline';
+    typewriterSpan.appendChild(period);
     
-  }, 3500); // 0.5s delay + 3s typing = 3.5s
+    // Fade in the period
+    requestAnimationFrame(() => {
+      period.style.opacity = '1';
+    });
+  }, 6000);
 }
+
 // Continue with your existing code below...
 // const q = id => document.getElementById(id);
 // etc...
