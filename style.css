@@ -1823,17 +1823,11 @@ body.dark .ai-markdown .table-wrapper::after {
   overflow: hidden;
   border-right: 3px solid var(--text);
   white-space: nowrap;
-  width: 0;
-  animation: typing 3s steps(21, end) 0.5s 1 normal forwards,
-             blink 0.75s step-end infinite;
+  animation: typing 2.5s steps(20) 0.5s 1 normal both,
+             blink 0.75s step-end 3s 4;
 }
 
-/* Stop blinking after typing completes and during the 4-blink period */
-.hero-title .typewriter-text.typing-complete {
-  animation: blink-limited 0.75s step-end 0s 4;
-}
-
-/* Typing animation - smooth character by character */
+/* Typing animation */
 @keyframes typing {
   from {
     width: 0;
@@ -1843,41 +1837,13 @@ body.dark .ai-markdown .table-wrapper::after {
   }
 }
 
-/* Continuous blinking cursor during typing */
+/* Blinking cursor */
 @keyframes blink {
-  0%, 50% {
-    border-right-color: var(--text);
+  0%, 100% {
+    border-color: var(--text);
   }
-  51%, 100% {
-    border-right-color: transparent;
-  }
-}
-
-/* Limited blinks after typing (exactly 4 times) */
-@keyframes blink-limited {
-  0%, 12.5% {
-    border-right-color: var(--text);
-  }
-  12.6%, 25% {
-    border-right-color: transparent;
-  }
-  25.1%, 37.5% {
-    border-right-color: var(--text);
-  }
-  37.6%, 50% {
-    border-right-color: transparent;
-  }
-  50.1%, 62.5% {
-    border-right-color: var(--text);
-  }
-  62.6%, 75% {
-    border-right-color: transparent;
-  }
-  75.1%, 87.5% {
-    border-right-color: var(--text);
-  }
-  87.6%, 100% {
-    border-right-color: transparent;
+  50% {
+    border-color: transparent;
   }
 }
 
