@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
   const heroTitle = document.querySelector(".hero-title");
+
   if (heroTitle && !document.body.classList.contains("searching")) {
   const fullText = "Search for meaning";
   heroTitle.textContent = "";
@@ -8,14 +9,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const cursor = document.createElement("span");
 
   cursor.className = "typewriter-cursor";
-  cursor.textContent = "|";
 
   heroTitle.appendChild(textSpan);
   heroTitle.appendChild(cursor);
 
   let index = 0;
 
-  // ⏳ START AFTER PAGE LOAD DELAY
+  // ⏱ Delay start (so text doesn’t appear instantly)
   setTimeout(() => {
     const typingInterval = setInterval(() => {
       textSpan.textContent += fullText[index];
@@ -24,23 +24,14 @@ document.addEventListener("DOMContentLoaded", () => {
       if (index === fullText.length) {
         clearInterval(typingInterval);
 
-        // ✨ BLINK CURSOR 3–4 TIMES
-        let blinks = 0;
-        const blinkInterval = setInterval(() => {
-          cursor.style.visibility =
-            cursor.style.visibility === "hidden" ? "visible" : "hidden";
-          blinks++;
-
-          if (blinks === 7) {
-            clearInterval(blinkInterval);
-            cursor.style.visibility = "visible";
-            textSpan.textContent += ".";
-            cursor.remove();
-          }
-        }, 450);
+        // Let CSS handle blinking, then finish
+        setTimeout(() => {
+          textSpan.textContent += ".";
+          cursor.remove();
+        }, 2200);
       }
-    }, 90); // smoother typing
-  }, 1200); // 1.2s delay before typing starts
+    }, 85); // smooth typing speed
+  }, 1000); // start after page load
 }
 // Continue with your existing code below...
 // const q = id => document.getElementById(id);
