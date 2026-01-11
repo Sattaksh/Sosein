@@ -1823,8 +1823,7 @@ body.dark .ai-markdown .table-wrapper::after {
   background-color: currentColor;
 
   /* Smoothness */
-  animation: cursorBlink 1s ease-in-out infinite;
-  border-radius: 1px;
+  animation: cursorBlink 1.2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
 /* Smooth blinking (not harsh on/off) */
