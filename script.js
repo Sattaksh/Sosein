@@ -249,7 +249,7 @@ searchBox.addEventListener("keypress", e => {
       "who", "?", "write", "review", "summary", "give", "will", "where", "was", "which", "explain", 
       "summarize", "compare", "list", "create", "generate", "suggest", "recommend", "calculate", 
       "translate", "solve", "draft", "outline", "analyze", "how to", "what is the", "what are the","best", "top", "vs", "difference between", 
-      "meaning of", "facts about", "tell me", "meaning", "state", "is there"];
+      "meaning of", "facts about", "tell me", "meaning", "state", "is there", "*"];
      const isTextQuestion = questionWords.includes(term.split(" ")[0].toLowerCase());                       
     
     //const isTextQuestion = questionWords.some(w => term.toLowerCase().includes(w));
