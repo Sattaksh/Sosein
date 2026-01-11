@@ -1,4 +1,47 @@
 document.addEventListener("DOMContentLoaded", () => {
+  const heroTitle = document.querySelector(".hero-title");
+  if (heroTitle && !document.body.classList.contains("searching")) {
+  const fullText = "Search for meaning";
+  heroTitle.textContent = "";
+
+  const textSpan = document.createElement("span");
+  const cursor = document.createElement("span");
+
+  cursor.className = "typewriter-cursor";
+  cursor.textContent = "|";
+
+  heroTitle.appendChild(textSpan);
+  heroTitle.appendChild(cursor);
+
+  let index = 0;
+
+  // ⏳ START AFTER PAGE LOAD DELAY
+  setTimeout(() => {
+    const typingInterval = setInterval(() => {
+      textSpan.textContent += fullText[index];
+      index++;
+
+      if (index === fullText.length) {
+        clearInterval(typingInterval);
+
+        // ✨ BLINK CURSOR 3–4 TIMES
+        let blinks = 0;
+        const blinkInterval = setInterval(() => {
+          cursor.style.visibility =
+            cursor.style.visibility === "hidden" ? "visible" : "hidden";
+          blinks++;
+
+          if (blinks === 7) {
+            clearInterval(blinkInterval);
+            cursor.style.visibility = "visible";
+            textSpan.textContent += ".";
+            cursor.remove();
+          }
+        }, 450);
+      }
+    }, 90); // smoother typing
+  }, 1200); // 1.2s delay before typing starts
+}
 // Continue with your existing code below...
 // const q = id => document.getElementById(id);
 // etc...
@@ -1039,8 +1082,6 @@ if (clearHistoryBtn) {
   });
 }
 
-  initHeroTypewriter(); // 👈 ADD THIS LINE
-});
 // ========================================
 // INTEGRATE WITH YOUR EXISTING CODE
 // ========================================
@@ -1090,46 +1131,3 @@ initiateSearch = function() {
 };
 */
 
-function initHeroTypewriter() {
-  const heroTitle = document.querySelector(".hero-title");
-  if (!heroTitle) return;
-  if (document.body.classList.contains("searching")) return;
-
-  const fullText = "Search for meaning";
-  heroTitle.textContent = "";
-
-  const textSpan = document.createElement("span");
-  const cursor = document.createElement("span");
-
-  cursor.className = "typewriter-cursor";
-  cursor.textContent = "|";
-
-  heroTitle.appendChild(textSpan);
-  heroTitle.appendChild(cursor);
-
-  let index = 0;
-
-  setTimeout(() => {
-    const typingInterval = setInterval(() => {
-      textSpan.textContent += fullText[index];
-      index++;
-
-      if (index === fullText.length) {
-        clearInterval(typingInterval);
-
-        let blinks = 0;
-        const blinkInterval = setInterval(() => {
-          cursor.style.opacity =
-            cursor.style.opacity === "0" ? "1" : "0";
-          blinks++;
-
-          if (blinks === 7) {
-            clearInterval(blinkInterval);
-            textSpan.textContent += ".";
-            cursor.remove();
-          }
-        }, 450);
-      }
-    }, 85);
-  }, 1200);
-}
