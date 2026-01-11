@@ -6,7 +6,6 @@ if (heroTitle && !document.body.classList.contains("searching")) {
 
   const textSpan = document.createElement("span");
   const cursor = document.createElement("span");
-
   cursor.className = "typewriter-cursor";
 
   heroTitle.appendChild(textSpan);
@@ -14,28 +13,32 @@ if (heroTitle && !document.body.classList.contains("searching")) {
 
   let index = 0;
 
-  const typingInterval = setInterval(() => {
-    textSpan.textContent += fullText[index];
-    index++;
+  // ⏳ delay typing start (THIS GOES HERE)
+  setTimeout(() => {
+    const typingInterval = setInterval(() => {
+      textSpan.textContent += fullText[index];
+      index++;
 
-    if (index === fullText.length) {
-      clearInterval(typingInterval);
+      if (index === fullText.length) {
+        clearInterval(typingInterval);
 
-      let blinks = 0;
-      const blinkInterval = setInterval(() => {
-        cursor.style.opacity =
-          cursor.style.opacity === "0" ? "1" : "0";
-        blinks++;
+        let blinks = 0;
+        const blinkInterval = setInterval(() => {
+          cursor.style.opacity =
+            cursor.style.opacity === "0" ? "1" : "0";
+          blinks++;
 
-        if (blinks === 7) {
-          clearInterval(blinkInterval);
-          textSpan.textContent += ".";
-          cursor.remove();
-        }
-      }, 450);
-    }
-  }, 85);
+          if (blinks === 7) {
+            clearInterval(blinkInterval);
+            textSpan.textContent += ".";
+            cursor.remove();
+          }
+        }, 450);
+      }
+    }, 85);
+  }, 1200); // 👈 delay before typing starts
 }
+  
 // Continue with your existing code below...
 // const q = id => document.getElementById(id);
 // etc...
