@@ -660,7 +660,6 @@ async function fetchAIAnswer(question, imageData) {
 
   for (const model of modelsToTry) {
     try {
-      alert("FRONTEND MODEL: " + CURRENT_MODEL);
       console.log("🤖 Trying model:", model);
 
       const payload = {
