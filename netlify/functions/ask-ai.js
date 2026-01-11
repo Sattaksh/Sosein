@@ -18,36 +18,45 @@ const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
 console.log("MODEL USED:", modelName);  
 
 /* ===================== GEMINI ===================== */  
-if (modelName.startsWith("gemini")) {  
-  if (!GEMINI_API_KEY) throw new Error("Missing GEMINI_API_KEY");  
+if (modelName.startsWith("gemini") || modelName.startsWith("gemma")) {
+  if (!GEMINI_API_KEY) throw new Error("Missing GEMINI_API_KEY");
 
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${GEMINI_API_KEY}`;  
+  const url =
+    `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${GEMINI_API_KEY}`;
 
-  const parts = [{ text: question || "Describe this image." }];  
+  const parts = [{ text: question || "Explain clearly." }];
 
-  if (imageBase64 && imageMimeType) {  
-    parts.unshift({  
-      inline_data: { mime_type: imageMimeType, data: imageBase64 }  
-    });  
-  }  
+  if (imageBase64 && imageMimeType) {
+    parts.unshift({
+      inline_data: {
+        mime_type: imageMimeType,
+        data: imageBase64
+      }
+    });
+  }
 
-  const response = await fetch(url, {  
-    method: "POST",  
-    headers: { "Content-Type": "application/json" },  
-    body: JSON.stringify({ contents: [{ parts }] })  
-  });  
+  const response = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      contents: [{ parts }]
+    })
+  });
 
-  const data = await response.json();  
-  if (!response.ok || !data.candidates) throw new Error("Gemini API failed");  
+  const data = await response.json();
 
-  return {  
-    statusCode: 200,  
-    body: JSON.stringify({  
-      answer: data.candidates[0].content.parts[0].text  
-    })  
-  };  
-}  
+  if (!response.ok || !data.candidates?.length) {
+    throw new Error("Gemini/Gemma API failed");
+  }
 
+  return {
+    statusCode: 200,
+    body: JSON.stringify({
+      answer: data.candidates[0].content.parts[0].text
+    })
+  };
+}
+  
 /* ===================== OPENROUTER ===================== */  
 if (!OPENROUTER_API_KEY) throw new Error("Missing OPENROUTER_API_KEY");  
 
