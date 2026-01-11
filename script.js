@@ -650,10 +650,10 @@ if (enhance) {
 async function fetchAIAnswer(question, imageData) {
   const FALLBACK_MODELS = [
     CURRENT_MODEL,// whatever user selected
-    "xiaomi/mimo-v2-flash:free",
+    "gemini-3-flash-preview",
     "gemini-2.5-flash",
     "gemini-2.5-flash-lite",
-    "gemini-3-flash-preview",
+    "xiaomi/mimo-v2-flash:free",
     "nvidia/nemotron-3-nano-30b-a3b:free",     // fast & reliable
     "tngtech/deepseek-r1t2-chimera:free",
     // last-resort thinker
