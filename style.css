@@ -1,3 +1,8 @@
+html, body {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
 :root {
   --bg: #ffffff;
   --text: #1a1a1a;
@@ -194,9 +199,8 @@ body.dark.home .navbar {
   padding: 6rem 2rem 4rem;
   position: relative;
   background: var(--bg);
-  transition: min-height 0.6s ease-in-out,
-              padding 0.6s ease-in-out,
-              align-items 0.6s ease-in-out;
+  transition: min-height 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+              padding 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* When search is active, hero shrinks */
@@ -228,7 +232,7 @@ body.dark .hero {
   position: relative;
   z-index: 1;
   animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-  transition: max-width 0.6s ease-in-out;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* When searching, hero content becomes compact */
@@ -246,20 +250,19 @@ body.searching .hero-content {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  transition: opacity 0.5s ease-in-out,
-              max-height 0.5s ease-in-out,
-              margin 0.5s ease-in-out,
-              transform 0.5s ease-in-out;
-  max-height: 500px;
-  overflow: hidden;
+  transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+              max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+              margin 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Hide title and subtitle when searching */
-body.searching .hero-title {
+body.searching .hero-title,
+body.searching .hero-subtitle {
   opacity: 0;
   max-height: 0;
-  margin-top: 0;
-  margin-bottom: 0;
+  margin: 0;
+  overflow: hidden;
   transform: translateY(-20px);
 }
 
@@ -272,20 +275,14 @@ body.searching .hero-title {
   max-width: 540px;
   margin-left: auto;
   margin-right: auto;
-  transition: opacity 0.5s ease-in-out,
-              max-height 0.5s ease-in-out,
-              margin 0.5s ease-in-out,
-              transform 0.5s ease-in-out;
-  max-height: 500px;
-  overflow: hidden;
+  transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+              max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+              margin 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 body.searching .hero-subtitle {
-  opacity: 0;
-  max-height: 0;
-  margin-top: 0;
   margin-bottom: 0;
-  transform: translateY(-20px);
 }
 
 /* ============================================
@@ -295,7 +292,7 @@ body.searching .hero-subtitle {
   width: 100%;
   max-width: 600px;
   margin: 0 auto;
-  transition: max-width 0.6s ease-in-out;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* When searching, search bar becomes compact and stays at top */
@@ -307,7 +304,7 @@ body.searching .hero-search {
   position: relative;
   width: 100%;
   margin-bottom: 1.5rem;
-  transition: margin-bottom 0.6s ease-in-out;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 body.searching .search-wrapper {
@@ -374,10 +371,9 @@ body.searching .search-wrapper {
    ============================================ */
 .buttons {
   display: flex;
-  gap: 0.75rem;
   align-items: center;
-  justify-content: flex-end;
-  width: 100%;
+  justify-content: space-between; /* THIS pushes Add Image left */
+  margin-top: 12px;
 }
 
 .buttons > div {
@@ -480,10 +476,18 @@ body.searching .search-wrapper {
   transform: translateY(0);
 }
 
+#voiceBtn {
+  order: 1;
+}
+
+#searchBtn {
+  order: 2;
+}
+
 .right-buttons {
   display: flex;
-  gap: 0.75rem;
   align-items: center;
+  gap: 10px;
 }
 
 .voice-wrapper {
@@ -511,7 +515,7 @@ body.searching .search-wrapper {
    ============================================ */
 .suggestions-list {
   position: absolute;
-  top: calc(100% + 0.5rem);
+  top: calc(100% + 6px);
   left: 0;
   right: 0;
   background: var(--card);
@@ -519,7 +523,7 @@ body.searching .search-wrapper {
   border-radius: 12px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
   overflow: hidden;
-  z-index: 10000;
+  z-index: 99999;
   max-height: 320px;
   overflow-y: auto;
   backdrop-filter: blur(20px);
@@ -675,7 +679,7 @@ body.searching .search-wrapper {
 }
 
 .card.ai-card h3::before {
-  content: "🤖";
+  content: "Ã°Å¸Â¤â€“";
   font-size: 1.5rem;
   animation: bounce 2s ease-in-out infinite;
 }
@@ -1376,7 +1380,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Reduced motion support - UPDATED */
+/* Reduced motion support */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -1385,46 +1389,6 @@ body {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
-}
-
-/* Force hardware acceleration for smooth animations */
-.hero,
-.hero-content,
-.hero-title,
-.hero-subtitle,
-.hero-search,
-.search-wrapper {
-  transform: translateZ(0);
-  backface-visibility: hidden;
-  perspective: 1000px;
-}
-
-/* Ensure animations work in all scenarios */
-body.searching .hero,
-body.searching .hero-content,
-body.searching .hero-title,
-body.searching .hero-subtitle {
-  will-change: auto;
-}
-
-/* Override any browser defaults that might interfere */
-html {
-  scroll-behavior: smooth !important;
-}
-
-/* Ensure smooth transitions even with DevTools open */
-* {
-  transform: translateZ(0);
-}
-
-.hero-title,
-.hero-subtitle {
-  will-change: opacity, max-height, transform, margin;
-}
-
-body.searching .hero-title,
-body.searching .hero-subtitle {
-  will-change: auto;
 }
 
 /* Print styles */
@@ -1502,7 +1466,7 @@ img {
 }
 
 .about-content li::before {
-  content: "→";
+  content: "Ã¢â€ â€™";
   position: absolute;
   left: 0;
   color: var(--accent);
@@ -1691,3 +1655,160 @@ body {
 main {
   flex: 1;
   }
+/* ============================================
+   SEARCH-ACTIVE STATE (FIXES STUCK HERO)
+   ============================================ */
+
+body.search-active .hero {
+  min-height: auto;
+  padding-top: 7rem; /* space for navbar */
+  padding-bottom: 3rem;
+}
+
+body.search-active .hero-content {
+  transform: none;
+}
+
+body.search-active {
+  overflow-y: auto;
+}
+
+.hero-search {
+  width: 100%;
+}
+
+.buttons {
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .buttons {
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 0.5rem;
+    width: 100%;
+    flex-wrap: nowrap;
+  }
+}
+
+@media (max-width: 480px) {
+  .buttons {
+    justify-content: space-between;
+    gap: 0.5rem;
+    flex-wrap: nowrap;
+  }
+}
+
+/* FORCE Add Image to the far left on mobile */
+@media (max-width: 768px) {
+  .buttons > div:first-child {
+    margin-right: auto;
+  }
+  }
+/* ---------- AI ANSWER BASE ---------- */
+.ai-markdown {
+  line-height: 1.7;
+  font-size: 1rem;
+}
+
+/* ---------- HEADINGS ---------- */
+.ai-markdown h1,
+.ai-markdown h2,
+.ai-markdown h3 {
+  margin: 1.2rem 0 0.6rem;
+}
+
+/* ---------- TABLE ---------- */
+.ai-markdown table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* ---------- TABLE WRAPPER (SCROLL ONLY TABLE) ---------- */
+.ai-markdown .table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 1rem 0;
+}
+
+/* ---------- CELLS ---------- */
+.ai-markdown th,
+.ai-markdown td {
+  border: 1px solid #ddd;
+  padding: 0.75rem;
+  text-align: left;
+  vertical-align: top;
+
+  white-space: normal;
+  word-break: normal;
+  overflow-wrap: break-word;
+}
+
+/* ---------- HEADER ---------- */
+.ai-markdown th {
+  background: #f9fafb;
+  font-weight: 600;
+}
+
+/* ---------- FIRST COLUMN (FEATURE / BASIS) ---------- */
+.ai-markdown th:first-child,
+.ai-markdown td:first-child {
+  min-width: 140px;
+  font-weight: 600;
+  background: #fafafa;
+}
+
+/* ---------- KATEX ---------- */
+.katex {
+  font-size: 1.05em;
+}
+
+.katex-display {
+  overflow-x: auto;
+  padding: 0.5rem 0;
+}
+
+/* ---------- PREVENT PAGE SCROLL ---------- */
+main,
+.results-section,
+#results,
+.card,
+.ai-answer-card,
+.ai-markdown {
+  overflow-x: hidden;
+}
+
+/* ===============================
+   DARK MODE TABLE FIX
+   =============================== */
+
+body.dark .ai-markdown table {
+  background: #121212;
+}
+
+body.dark .ai-markdown th,
+body.dark .ai-markdown td {
+  background: #1a1a1a;
+  color: #e6e6e6;
+  border-color: #333;
+}
+
+/* Header row */
+body.dark .ai-markdown th {
+  background: #222;
+  color: #ffffff;
+}
+
+/* First column (Feature / Aspect) */
+body.dark .ai-markdown th:first-child,
+body.dark .ai-markdown td:first-child {
+  background: #181818;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+/* Scroll hint text */
+body.dark .ai-markdown .table-wrapper::after {
+  color: #aaa;
+}
