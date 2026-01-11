@@ -644,42 +644,54 @@ if (enhance) {
 // "deepseek/deepseek-r1"
 // "openai/gpt-4o-mini"
 // "anthropic/claude-3.5-sonnet"
+  //alert("FRONTEND MODEL: " + CURRENT_MODEL);
+  
 
 async function fetchAIAnswer(question, imageData) {
-  try {
-    //alert("FRONTEND MODEL: " + CURRENT_MODEL);
-    const payload = {
-      question,
-      modelName: CURRENT_MODEL
-    };
+  const FALLBACK_MODELS = [
+    CURRENT_MODEL,
+    "xiaomi/mimo-v2-flash:free"
+  ];
 
-    if (imageData) {
-      payload.imageBase64 = imageData.base64;
-      payload.imageMimeType = imageData.mimeType;
+  // remove duplicates (in case CURRENT_MODEL already is mimo)
+  const modelsToTry = [...new Set(FALLBACK_MODELS)];
+
+  for (const model of modelsToTry) {
+    try {
+      const payload = {
+        question,
+        modelName: model
+      };
+
+      if (imageData) {
+        payload.imageBase64 = imageData.base64;
+        payload.imageMimeType = imageData.mimeType;
+      }
+
+      const response = await fetch("/.netlify/functions/ask-ai", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+
+      if (!response.ok) {
+        console.warn(`⚠️ Model failed: ${model}`);
+        continue;
+      }
+
+      const data = await response.json();
+
+      if (data.answer) {
+        console.log(`✅ Answered by: ${model}`);
+        CURRENT_MODEL = model; // 👈 THIS is why CURRENT_MODEL exists
+        return data.answer.trim();
+      }
+    } catch (err) {
+      console.warn(`🔥 Error with model ${model}`, err);
     }
-
-    const response = await fetch("/.netlify/functions/ask-ai", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(payload)
-    });
-
-    if (!response.ok) {
-      throw new Error(`Server function failed with status ${response.status}`);
-    }
-
-    const data = await response.json();
-
-    if (data.answer) {
-      return data.answer.trim();
-    }
-  } catch (err) {
-    console.error("Error fetching AI answer:", err);
   }
 
-  return "❌ Sorry, the AI could not answer your question right now.";
+  return "❌ The AI is currently overloaded. Please try again in a moment.";
 }
   
 async function fetchYouTube(term) {
