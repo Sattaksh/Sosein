@@ -1,48 +1,4 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const heroTitle = document.querySelector(".hero-title");
-  if (heroTitle && !document.body.classList.contains("searching")) {
-  const fullText = "Search for meaning";
-  heroTitle.textContent = "";
-
-  const textSpan = document.createElement("span");
-  const cursor = document.createElement("span");
-
-  cursor.className = "typewriter-cursor";
-
-  heroTitle.appendChild(textSpan);
-  heroTitle.appendChild(cursor);
-
-  let index = 0;
-
-  // --- TYPE CHARACTER BY CHARACTER ---
-  const typingInterval = setInterval(() => {
-    textSpan.textContent += fullText[index];
-    index++;
-
-    if (index === fullText.length) {
-      clearInterval(typingInterval);
-
-      // --- CURSOR BLINK (3–4 times) ---
-      let blinks = 0;
-      const blinkInterval = setInterval(() => {
-        cursor.style.opacity =
-          cursor.style.opacity === "0" ? "1" : "0";
-        blinks++;
-
-        if (blinks === 7) { // ~3.5 blinks
-          clearInterval(blinkInterval);
-
-          // --- ADD PERIOD ---
-          textSpan.textContent += ".";
-          cursor.remove();
-        }
-      }, 450);
-    }
-  }, 85); // typing speed (adjust 70–100 if you want)
-}
-    
-    
-
 // Continue with your existing code below...
 // const q = id => document.getElementById(id);
 // etc...
@@ -51,6 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const clearBtn = document.getElementById("clearBtn");
   let CURRENT_MODEL = "nvidia/nemotron-3-nano-30b-a3b:free"; //xiaomi/mimo-v2-flash:free
   let uploadedImageData = null;
+  
 
 // Show/hide ✖ when typing
 searchBox.addEventListener("input", () => {
@@ -1082,6 +1039,8 @@ if (clearHistoryBtn) {
   });
 }
 
+  initHeroTypewriter(); // 👈 ADD THIS LINE
+});
 // ========================================
 // INTEGRATE WITH YOUR EXISTING CODE
 // ========================================
@@ -1130,3 +1089,47 @@ initiateSearch = function() {
   originalInitiateSearch();
 };
 */
+
+function initHeroTypewriter() {
+  const heroTitle = document.querySelector(".hero-title");
+  if (!heroTitle) return;
+  if (document.body.classList.contains("searching")) return;
+
+  const fullText = "Search for meaning";
+  heroTitle.textContent = "";
+
+  const textSpan = document.createElement("span");
+  const cursor = document.createElement("span");
+
+  cursor.className = "typewriter-cursor";
+  cursor.textContent = "|";
+
+  heroTitle.appendChild(textSpan);
+  heroTitle.appendChild(cursor);
+
+  let index = 0;
+
+  setTimeout(() => {
+    const typingInterval = setInterval(() => {
+      textSpan.textContent += fullText[index];
+      index++;
+
+      if (index === fullText.length) {
+        clearInterval(typingInterval);
+
+        let blinks = 0;
+        const blinkInterval = setInterval(() => {
+          cursor.style.opacity =
+            cursor.style.opacity === "0" ? "1" : "0";
+          blinks++;
+
+          if (blinks === 7) {
+            clearInterval(blinkInterval);
+            textSpan.textContent += ".";
+            cursor.remove();
+          }
+        }, 450);
+      }
+    }, 85);
+  }, 1200);
+}
