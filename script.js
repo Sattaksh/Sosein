@@ -5,8 +5,8 @@ document.addEventListener("DOMContentLoaded", () => {
 // ========================================
 
 // Typewriter animation for hero title
- const heroTitle = document.querySelector('.hero-title');
- if (heroTitle && !document.body.classList.contains('searching')) {
+const heroTitle = document.querySelector('.hero-title');
+if (heroTitle && !document.body.classList.contains('searching')) {
   // Store original text
   const originalText = heroTitle.textContent.trim();
   
@@ -16,26 +16,30 @@ document.addEventListener("DOMContentLoaded", () => {
   
   const typewriterSpan = heroTitle.querySelector('.typewriter-text');
   
-  // Remove cursor and add period after animation completes
-  // Total: 0.5s delay + 2.5s typing + 3s blinking = 6s
+  // After typing completes (0.5s delay + 3s typing = 3.5s), switch to limited blink
   setTimeout(() => {
-    typewriterSpan.classList.add('animation-complete');
+    typewriterSpan.classList.add('typing-complete');
     
-    // Add the period with a subtle fade-in
-    const period = document.createElement('span');
-    period.textContent = '.';
-    period.style.opacity = '0';
-    period.style.transition = 'opacity 0.3s ease';
-    period.style.display = 'inline';
-    typewriterSpan.appendChild(period);
+    // After 4 blinks complete (4 blinks × 0.75s = 3s), add period and remove cursor
+    setTimeout(() => {
+      typewriterSpan.classList.add('animation-complete');
+      
+      // Add the period with a subtle fade-in
+      const period = document.createElement('span');
+      period.textContent = '.';
+      period.style.opacity = '0';
+      period.style.transition = 'opacity 0.4s ease';
+      period.style.display = 'inline';
+      typewriterSpan.appendChild(period);
+      
+      // Fade in the period
+      requestAnimationFrame(() => {
+        period.style.opacity = '1';
+      });
+    }, 3000); // 4 blinks × 0.75s = 3s
     
-    // Fade in the period
-    requestAnimationFrame(() => {
-      period.style.opacity = '1';
-    });
-  }, 6000);
+  }, 3500); // 0.5s delay + 3s typing = 3.5s
 }
-
 // Continue with your existing code below...
 // const q = id => document.getElementById(id);
 // etc...
