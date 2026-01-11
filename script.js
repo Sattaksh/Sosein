@@ -649,15 +649,18 @@ if (enhance) {
 
 async function fetchAIAnswer(question, imageData) {
   const FALLBACK_MODELS = [
-    CURRENT_MODEL,
-    "xiaomi/mimo-v2-flash:free"
+    CURRENT_MODEL,                  // whatever user selected
+    "xiaomi/mimo-v2-flash:free",     // fast & reliable
+    "openai/gpt-oss-120b:free",
+    "mistralai/mistral-7b-instruct:free"// last-resort thinker
   ];
 
-  // remove duplicates (in case CURRENT_MODEL already is mimo)
-  const modelsToTry = [...new Set(FALLBACK_MODELS)];
+  const modelsToTry = [...new Set(FALLBACK_MODELS)].filter(Boolean);
 
   for (const model of modelsToTry) {
     try {
+      console.log("🤖 Trying model:", model);
+
       const payload = {
         question,
         modelName: model
@@ -675,23 +678,24 @@ async function fetchAIAnswer(question, imageData) {
       });
 
       if (!response.ok) {
-        console.warn(`⚠️ Model failed: ${model}`);
+        console.warn("❌ Model failed:", model);
         continue;
       }
 
       const data = await response.json();
 
-      if (data.answer) {
-        console.log(`✅ Answered by: ${model}`);
-        CURRENT_MODEL = model; // 👈 THIS is why CURRENT_MODEL exists
+      if (data?.answer) {
+        console.log("✅ Answered by:", model);
+        CURRENT_MODEL = model; // promote winner
         return data.answer.trim();
       }
+
     } catch (err) {
-      console.warn(`🔥 Error with model ${model}`, err);
+      console.warn("🔥 Error with model:", model, err.message);
     }
   }
 
-  return "❌ The AI is currently overloaded. Please try again in a moment.";
+  return "❌ The AI is currently overloaded. Please try again later.";
 }
   
 async function fetchYouTube(term) {
