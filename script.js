@@ -36,7 +36,7 @@ if (heroTitle && !document.body.classList.contains("searching")) {
         }, 450);
       }
     }, 85);
-  }, 800); // 👈 delay before typing starts
+  }, 400); // 👈 delay before typing starts
 }
   
 // Continue with your existing code below...
