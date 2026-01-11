@@ -644,13 +644,13 @@ if (enhance) {
 // "deepseek/deepseek-r1"
 // "openai/gpt-4o-mini"
 // "anthropic/claude-3.5-sonnet"
-  //alert("FRONTEND MODEL: " + CURRENT_MODEL);
+  
   
 
 async function fetchAIAnswer(question, imageData) {
   const FALLBACK_MODELS = [
     CURRENT_MODEL,// whatever user selected
-    "mistralai/mistral-7b-instruct:free",
+    "arcee-ai/trinity-mini:free",
     "xiaomi/mimo-v2-flash:free",     // fast & reliable
     "tngtech/deepseek-r1t2-chimera:free",
     "z-ai/glm-4.5-air:free"// last-resort thinker
@@ -660,6 +660,7 @@ async function fetchAIAnswer(question, imageData) {
 
   for (const model of modelsToTry) {
     try {
+      alert("FRONTEND MODEL: " + CURRENT_MODEL);
       console.log("🤖 Trying model:", model);
 
       const payload = {
