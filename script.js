@@ -1,36 +1,45 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const q = id => document.getElementById(id);
-  // Typewriter animation for hero title
-  const heroTitle = document.querySelector('.hero-title');
-  if (heroTitle && !document.body.classList.contains('searching')) {
+  // ========================================
+// ADD THIS AT THE VERY TOP OF YOUR DOMContentLoaded
+// Place it right after: document.addEventListener("DOMContentLoaded", () => {
+// ========================================
+
+// Typewriter animation for hero title
+ const heroTitle = document.querySelector('.hero-title');
+ if (heroTitle && !document.body.classList.contains('searching')) {
   // Store original text
-  const originalText = heroTitle.textContent;
+  const originalText = heroTitle.textContent.trim();
   
-  // Wrap text in typewriter container
-  heroTitle.innerHTML = `<span class="typewriter-text">${originalText}</span>`;
+  // Wrap text in typewriter container (without the period)
+  const textWithoutPeriod = originalText.replace(/\.$/, '');
+  heroTitle.innerHTML = `<span class="typewriter-text">${textWithoutPeriod}</span>`;
   
   const typewriterSpan = heroTitle.querySelector('.typewriter-text');
   
   // Remove cursor and add period after animation completes
-  // Total: 2.5s typing + 0.5s delay + (0.75s × 4 blinks) = 6s
+  // Total: 0.5s delay + 2.5s typing + 3s blinking = 6s
   setTimeout(() => {
     typewriterSpan.classList.add('animation-complete');
     
     // Add the period with a subtle fade-in
-    if (!originalText.endsWith('.')) {
-      const period = document.createElement('span');
-      period.textContent = '.';
-      period.style.opacity = '0';
-      period.style.transition = 'opacity 0.3s ease';
-      typewriterSpan.appendChild(period);
-      
-      // Fade in the period
-      requestAnimationFrame(() => {
-        period.style.opacity = '1';
-      });
-    }
+    const period = document.createElement('span');
+    period.textContent = '.';
+    period.style.opacity = '0';
+    period.style.transition = 'opacity 0.3s ease';
+    period.style.display = 'inline';
+    typewriterSpan.appendChild(period);
+    
+    // Fade in the period
+    requestAnimationFrame(() => {
+      period.style.opacity = '1';
+    });
   }, 6000);
 }
+
+// Continue with your existing code below...
+// const q = id => document.getElementById(id);
+// etc...
+  const q = id => document.getElementById(id);
   const searchBox = q("searchBox"), searchBtn = q("searchBtn"), voiceBtn = q("voiceBtn");
   const clearBtn = document.getElementById("clearBtn");
   let CURRENT_MODEL = "nvidia/nemotron-3-nano-30b-a3b:free"; //xiaomi/mimo-v2-flash:free
