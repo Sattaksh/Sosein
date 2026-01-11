@@ -51,28 +51,29 @@ if (modelName.startsWith("gemini")) {
 /* ===================== OPENROUTER ===================== */  
 if (!OPENROUTER_API_KEY) throw new Error("Missing OPENROUTER_API_KEY");  
 
-const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {  
-  method: "POST",  
-  headers: {  
-    "Content-Type": "application/json",  
-    "Authorization": `Bearer ${OPENROUTER_API_KEY}`,  
-    "HTTP-Referer": "https://sosein.netlify.app",  
-    "X-Title": "Sosein Search"  
-  },  
-  body: JSON.stringify({  
-    model: modelName,  
-    messages: [
-  {
-    role: "system",
-    content: "Answer clearly and directly. Do not show reasoning or step-by-step thinking."
+const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    "Authorization": `Bearer ${OPENROUTER_API_KEY}`,
+    "HTTP-Referer": "https://sosein.netlify.app",
+    "X-Title": "Sosein Search"
   },
-  {
-    role: "user",
-    content: question || "Explain clearly."
-  }
-]  
-});  
-
+  body: JSON.stringify({
+    model: modelName,
+    messages: [
+      {
+        role: "system",
+        content: "Answer clearly and directly. Do not show reasoning or step-by-step thinking."
+      },
+      {
+        role: "user",
+        content: question || "Explain clearly."
+      }
+    ]
+  })
+});
+  
 const data = await response.json();  
 if (!response.ok || !data.choices) throw new Error("OpenRouter API failed");  
 
