@@ -1812,3 +1812,52 @@ body.dark .ai-markdown td:first-child {
 body.dark .ai-markdown .table-wrapper::after {
   color: #aaa;
 }
+
+/* ============================================
+   TYPEWRITER ANIMATION - ADD THIS TO END OF YOUR EXISTING CSS
+   ============================================ */
+
+/* Typewriter effect for hero title */
+.hero-title .typewriter-text {
+  display: inline-block;
+  overflow: hidden;
+  border-right: 3px solid var(--text);
+  white-space: nowrap;
+  animation: typing 2.5s steps(20) 0.5s 1 normal both,
+             blink 0.75s step-end 3s 4;
+}
+
+/* Typing animation */
+@keyframes typing {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+/* Blinking cursor */
+@keyframes blink {
+  0%, 100% {
+    border-color: var(--text);
+  }
+  50% {
+    border-color: transparent;
+  }
+}
+
+/* Remove cursor after animation completes */
+.hero-title .typewriter-text.animation-complete {
+  border-right: none;
+  animation: none;
+}
+
+/* Dark mode cursor color */
+body.dark .hero-title .typewriter-text {
+  border-right-color: var(--text);
+}
+
+body.dark .hero-title .typewriter-text.animation-complete {
+  border-right: none;
+}
