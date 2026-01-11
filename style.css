@@ -1834,3 +1834,27 @@ body.dark .ai-markdown .table-wrapper::after {
   95%  { opacity: 0; }
   100% { opacity: 1; }
 }
+
+/* Clean arrow list style for content */
+.ai-markdown ul {
+  list-style: none;          /* remove default bullets */
+  padding-left: 0;
+  margin: 1rem 0;
+}
+
+.ai-markdown li {
+  position: relative;
+  padding-left: 1.6rem;
+  margin-bottom: 0.6rem;
+  line-height: 1.6;
+}
+
+/* Arrow bullet */
+.ai-markdown li::before {
+  content: "→";
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: var(--text);
+  font-weight: 600;
+}
