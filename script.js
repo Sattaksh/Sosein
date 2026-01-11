@@ -1,40 +1,47 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // ========================================
-// ADD THIS AT THE VERY TOP OF YOUR DOMContentLoaded
-// Place it right after: document.addEventListener("DOMContentLoaded", () => {
-// ========================================
+  const heroTitle = document.querySelector(".hero-title");
+  if (heroTitle && !document.body.classList.contains("searching")) {
+  const fullText = "Search for meaning";
+  heroTitle.textContent = "";
 
-// Typewriter animation for hero title
-const heroTitle = document.querySelector('.hero-title');
-if (heroTitle && !document.body.classList.contains('searching')) {
-  // Store original text
-  const originalText = heroTitle.textContent.trim();
-  
-  // Wrap text in typewriter container (without the period)
-  const textWithoutPeriod = originalText.replace(/\.$/, '');
-  heroTitle.innerHTML = `<span class="typewriter-text">${textWithoutPeriod}</span>`;
-  
-  const typewriterSpan = heroTitle.querySelector('.typewriter-text');
-  
-  // Remove cursor and add period after animation completes
-  // Total: 0.5s delay + 2.5s typing + 3s blinking = 6s
-  setTimeout(() => {
-    typewriterSpan.classList.add('animation-complete');
-    
-    // Add the period with a subtle fade-in
-    const period = document.createElement('span');
-    period.textContent = '.';
-    period.style.opacity = '0';
-    period.style.transition = 'opacity 0.3s ease';
-    period.style.display = 'inline';
-    typewriterSpan.appendChild(period);
-    
-    // Fade in the period
-    requestAnimationFrame(() => {
-      period.style.opacity = '1';
-    });
-  }, 6000);
+  const textSpan = document.createElement("span");
+  const cursor = document.createElement("span");
+
+  cursor.className = "typewriter-cursor";
+
+  heroTitle.appendChild(textSpan);
+  heroTitle.appendChild(cursor);
+
+  let index = 0;
+
+  // --- TYPE CHARACTER BY CHARACTER ---
+  const typingInterval = setInterval(() => {
+    textSpan.textContent += fullText[index];
+    index++;
+
+    if (index === fullText.length) {
+      clearInterval(typingInterval);
+
+      // --- CURSOR BLINK (3–4 times) ---
+      let blinks = 0;
+      const blinkInterval = setInterval(() => {
+        cursor.style.opacity =
+          cursor.style.opacity === "0" ? "1" : "0";
+        blinks++;
+
+        if (blinks === 7) { // ~3.5 blinks
+          clearInterval(blinkInterval);
+
+          // --- ADD PERIOD ---
+          textSpan.textContent += ".";
+          cursor.remove();
+        }
+      }, 450);
+    }
+  }, 85); // typing speed (adjust 70–100 if you want)
 }
+    
+    
 
 // Continue with your existing code below...
 // const q = id => document.getElementById(id);
