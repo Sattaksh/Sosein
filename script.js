@@ -650,9 +650,10 @@ if (enhance) {
 async function fetchAIAnswer(question, imageData) {
   const FALLBACK_MODELS = [
     CURRENT_MODEL,// whatever user selected
-    "arcee-ai/trinity-mini:free",
-    "xiaomi/mimo-v2-flash:free",     // fast & reliable
     "tngtech/deepseek-r1t2-chimera:free",
+    "tngtech/tng-r1t-chimera:free",
+    "xiaomi/mimo-v2-flash:free",     // fast & reliable
+    "arcee-ai/trinity-mini:free",
     "z-ai/glm-4.5-air:free"// last-resort thinker
   ];
 
