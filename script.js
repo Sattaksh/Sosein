@@ -650,12 +650,11 @@ if (enhance) {
 async function fetchAIAnswer(question, imageData) {
   const FALLBACK_MODELS = [
     CURRENT_MODEL,// whatever user selected
-    "gemini-2.0-flash-lite-001",
-    "gemini-2.0-flash-001",
-    "tngtech/deepseek-r1t2-chimera:free",
+    "gemini-3-flash-preview",
+    "z-ai/glm-4.5-air:free",
     "xiaomi/mimo-v2-flash:free",     // fast & reliable
-    "arcee-ai/trinity-mini:free",
-    "z-ai/glm-4.5-air:free"// last-resort thinker
+    "tngtech/deepseek-r1t2-chimera:free",
+    // last-resort thinker
   ];
 
   const modelsToTry = [...new Set(FALLBACK_MODELS)].filter(Boolean);
