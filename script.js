@@ -45,7 +45,7 @@ if (heroTitle && !document.body.classList.contains("searching")) {
   const q = id => document.getElementById(id);
   const searchBox = q("searchBox"), searchBtn = q("searchBtn"), voiceBtn = q("voiceBtn");
   const clearBtn = document.getElementById("clearBtn");
-  let CURRENT_MODEL = "gemini-3-flash-preview"; //xiaomi/mimo-v2-flash:free
+  let CURRENT_MODEL = "google/gemma-3-12b-it:free"; //xiaomi/mimo-v2-flash:free
   let uploadedImageData = null;
   
 
@@ -650,6 +650,7 @@ if (enhance) {
 async function fetchAIAnswer(question, imageData) {
   const FALLBACK_MODELS = [
     CURRENT_MODEL,// whatever user selected
+    "gemini-3-flash-preview",
     "nvidia/nemotron-3-nano-30b-a3b:free",
     "gemini-2.5-flash",
     "gemini-2.5-flash-lite",
