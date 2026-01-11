@@ -1,7 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
   const heroTitle = document.querySelector(".hero-title");
-
-  if (heroTitle && !document.body.classList.contains("searching")) {
+if (heroTitle && !document.body.classList.contains("searching")) {
   const fullText = "Search for meaning";
   heroTitle.textContent = "";
 
@@ -15,23 +14,27 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let index = 0;
 
-  // ⏱ Delay start (so text doesn’t appear instantly)
-  setTimeout(() => {
-    const typingInterval = setInterval(() => {
-      textSpan.textContent += fullText[index];
-      index++;
+  const typingInterval = setInterval(() => {
+    textSpan.textContent += fullText[index];
+    index++;
 
-      if (index === fullText.length) {
-        clearInterval(typingInterval);
+    if (index === fullText.length) {
+      clearInterval(typingInterval);
 
-        // Let CSS handle blinking, then finish
-        setTimeout(() => {
+      let blinks = 0;
+      const blinkInterval = setInterval(() => {
+        cursor.style.opacity =
+          cursor.style.opacity === "0" ? "1" : "0";
+        blinks++;
+
+        if (blinks === 7) {
+          clearInterval(blinkInterval);
           textSpan.textContent += ".";
           cursor.remove();
-        }, 2200);
-      }
-    }, 85); // smooth typing speed
-  }, 1000); // start after page load
+        }
+      }, 450);
+    }
+  }, 85);
 }
 // Continue with your existing code below...
 // const q = id => document.getElementById(id);
