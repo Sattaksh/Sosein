@@ -45,7 +45,7 @@ if (heroTitle && !document.body.classList.contains("searching")) {
   const q = id => document.getElementById(id);
   const searchBox = q("searchBox"), searchBtn = q("searchBtn"), voiceBtn = q("voiceBtn");
   const clearBtn = document.getElementById("clearBtn");
-  let CURRENT_MODEL = "gemma-3-27b"; //xiaomi/mimo-v2-flash:free
+  let CURRENT_MODEL = "gemma-3-12b-it"; //xiaomi/mimo-v2-flash:free
   let uploadedImageData = null;
   
 
