@@ -250,8 +250,9 @@ searchBox.addEventListener("keypress", e => {
       "summarize", "compare", "list", "create", "generate", "suggest", "recommend", "calculate", 
       "translate", "solve", "draft", "outline", "analyze", "how to", "what is the", "what are the","best", "top", "vs", "difference between", 
       "meaning of", "facts about", "tell me", "meaning", "state", "is there"];
-    const isTextQuestion = questionWords.some(w =>
-    term.toLowerCase().includes(w));
+     const isTextQuestion = questionWords.includes(term.split(" ")[0].toLowerCase());                       
+    
+    //const isTextQuestion = questionWords.some(w => term.toLowerCase().includes(w));
     // The AI will now be called if it's a text question OR if an image has been uploaded
     if (isTextQuestion || isImageQuery) {
         const aiAnswer = await fetchAIAnswer(term, uploadedImageData);
