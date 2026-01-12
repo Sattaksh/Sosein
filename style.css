@@ -1881,3 +1881,68 @@ button:hover {
     transition: none !important;
   }
   }
+
+/* ============================================
+   AI CODE BLOCK — CHATGPT / CLAUDE STYLE
+   ============================================ */
+
+.ai-markdown pre {
+  background: #0f172a;
+  color: #e5e7eb;
+  border-radius: 14px;
+  padding: 1.25rem 1.5rem;
+  margin: 1.5rem 0;
+  overflow-x: auto;
+  overflow-y: auto;
+  max-height: 420px;
+
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+               "Liberation Mono", "Courier New", monospace;
+  font-size: 0.95rem;
+  line-height: 1.6;
+
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.06),
+              0 10px 30px rgba(0,0,0,0.35);
+}
+
+.ai-markdown pre code {
+  display: block;
+  white-space: pre;
+  word-wrap: normal;
+  tab-size: 2;
+}
+
+.ai-markdown pre::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
+}
+
+.ai-markdown pre::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.ai-markdown pre::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.15);
+  border-radius: 6px;
+}
+
+.ai-markdown pre::-webkit-scrollbar-thumb:hover {
+  background: rgba(255,255,255,0.25);
+}
+
+.ai-markdown code:not(pre code) {
+  background: rgba(0,0,0,0.08);
+  padding: 0.2em 0.45em;
+  border-radius: 6px;
+  font-size: 0.95em;
+  font-family: ui-monospace, monospace;
+}
+
+body.dark .ai-markdown pre {
+  background: #020617;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08),
+              0 12px 40px rgba(0,0,0,0.6);
+}
