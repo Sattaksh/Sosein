@@ -1954,3 +1954,48 @@ body.dark .ai-markdown pre {
   height: auto !important;
   display: block;
 }
+
+/* ===============================
+   CODE BLOCK COPY BUTTON
+   =============================== */
+
+.ai-markdown pre {
+  position: relative; /* anchor for button */
+}
+
+/* Copy button */
+.code-copy-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+
+  background: rgba(255, 255, 255, 0.08);
+  color: #e5e7eb;
+
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 8px;
+
+  padding: 6px 10px;
+  font-size: 0.75rem;
+  font-weight: 600;
+
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s ease, background 0.2s ease;
+}
+
+/* Show on hover (ChatGPT behavior) */
+.ai-markdown pre:hover .code-copy-btn {
+  opacity: 1;
+}
+
+/* Hover effect */
+.code-copy-btn:hover {
+  background: rgba(255,255,255,0.18);
+}
+
+/* Copied state */
+.code-copy-btn.copied {
+  color: #22c55e;
+  border-color: #22c55e;
+}
