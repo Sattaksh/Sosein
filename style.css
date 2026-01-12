@@ -48,6 +48,9 @@ html {
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Ultra-smooth scrolling momentum */
+  scroll-padding-top: 80px;
+  -webkit-overflow-scrolling: touch;
 }
 
 body {
@@ -58,6 +61,13 @@ body {
   overflow-x: hidden;
   transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
               color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  /* GPU acceleration for ultra-smooth rendering */
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+  /* iOS momentum scrolling */
+  -webkit-overflow-scrolling: touch;
 }
 
 /* Elegant scrollbar */
@@ -92,6 +102,11 @@ body {
   border-bottom: 1px solid var(--border);
   z-index: 1000;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  /* Ultra-smooth GPU acceleration */
+  will-change: transform, backdrop-filter;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 body.dark .navbar {
@@ -323,6 +338,11 @@ body.searching .search-wrapper {
   font-family: inherit;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+  /* Smooth input rendering */
+  will-change: transform, box-shadow, border-color;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 #searchBox::placeholder {
@@ -604,6 +624,11 @@ body.searching .search-wrapper {
   position: relative;
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  /* Ultra-smooth transform acceleration */
+  will-change: transform, box-shadow;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 .card::before {
@@ -679,7 +704,7 @@ body.searching .search-wrapper {
 }
 
 .card.ai-card h3::before {
-  content: "Ã°Å¸Â¤â€“";
+  content: "🤖";
   font-size: 1.5rem;
   animation: bounce 2s ease-in-out infinite;
 }
@@ -1362,15 +1387,18 @@ body.dark #searchBox:focus {
 
 /* Prevent layout shift */
 .navbar {
-  will-change: backdrop-filter;
+  will-change: backdrop-filter, transform;
+  contain: layout style paint;
 }
 
 .card {
-  will-change: transform;
+  will-change: transform, box-shadow;
+  contain: layout style paint;
 }
 
 #searchBox:focus {
-  will-change: transform;
+  will-change: transform, box-shadow, border-color;
+  contain: layout style;
 }
 
 /* Better text rendering */
@@ -1378,6 +1406,19 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Force high refresh rate rendering */
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+}
+
+/* Ultra-smooth animations with hardware acceleration */
+* {
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-perspective: 1000;
+  perspective: 1000;
 }
 
 /* Reduced motion support */
@@ -1655,7 +1696,8 @@ body {
 
 main {
   flex: 1;
-  }
+}
+
 /* ============================================
    SEARCH-ACTIVE STATE (FIXES STUCK HERO)
    ============================================ */
@@ -1705,7 +1747,8 @@ body.search-active {
   .buttons > div:first-child {
     margin-right: auto;
   }
-  }
+}
+
 /* ---------- AI ANSWER BASE ---------- */
 .ai-markdown {
   line-height: 1.7;
@@ -1740,7 +1783,6 @@ body.search-active {
   padding: 0.75rem;
   text-align: left;
   vertical-align: top;
-
   white-space: normal;
   word-break: normal;
   overflow-wrap: break-word;
@@ -1822,7 +1864,6 @@ body.dark .ai-markdown .table-wrapper::after {
   margin-left: 4px;
   vertical-align: bottom;
   background-color: currentColor;
-
   /* Smoothness */
   animation: cursorBlink 1s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
@@ -1835,49 +1876,250 @@ body.dark .ai-markdown .table-wrapper::after {
   95%  { opacity: 0; }
   100% { opacity: 1; }
 }
+
 /* ============================================
-   REAL APPLE-LIKE SMOOTHNESS (SAFE VERSION)
+   ULTRA-SMOOTH 120Hz APPLE-LIKE RENDERING
    ============================================ */
 
-:root {
-  --apple-ease: cubic-bezier(0.22, 1, 0.36, 1);
+/* Global smooth rendering optimization */
+*,
+*::before,
+*::after {
+  /* Hardware acceleration for all elements */
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-perspective: 1000px;
+  perspective: 1000px;
+  /* Smooth compositing */
+  -webkit-font-smoothing: subpixel-antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Smooth scrolling */
-html {
-  scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
-}
-
-/* Promote ONLY moving elements */
-.hero,
-.hero-content,
-.navbar,
-.card,
-#searchBox {
-  will-change: transform, opacity;
-}
-
-/* Consistent Apple-style easing */
-.hero,
-.hero-content,
-.card,
+/* Optimize interactive elements */
 button,
 a,
-.nav-link {
-  transition-timing-function: var(--apple-ease);
+input,
+textarea,
+select,
+.nav-link,
+.card,
+.history-list li,
+.suggestions-list li {
+  /* Force GPU layer for smooth interactions */
+  -webkit-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+  will-change: transform, opacity;
+  /* Optimize paint performance */
+  contain: layout style paint;
 }
 
-/* Avoid layout thrashing */
+/* Smooth scroll container optimization */
+html,
+body,
+.hero,
+.results-section {
+  /* Enable momentum scrolling */
+  -webkit-overflow-scrolling: touch;
+  /* Optimize scroll performance */
+  scroll-behavior: smooth;
+  overscroll-behavior: contain;
+}
+
+/* Ultra-smooth transitions for all interactive elements */
+.nav-link,
+.theme-toggle,
+#voiceBtn,
+.image-upload-btn,
+#searchBtn,
+#clearBtn,
+.copy-btn,
+.speak-btn,
+.read-more-btn,
+.collapse-btn,
+.clear-btn,
+.back-to-top,
+.history-list li,
+.suggestions-list li {
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  -webkit-transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Smoother hover states with Apple's easing */
 .card:hover,
-button:hover {
-  transform: translateY(-2px);
+#searchBox:focus,
+.history-list li:hover,
+.suggestions-list li:hover {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  -webkit-transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Respect reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  * {
-    animation: none !important;
-    transition: none !important;
+/* Optimize animation performance */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 30px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
   }
 }
+
+@keyframes fadeInPulse {
+  0%, 100% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate3d(0, 0, 1, 360deg);
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -5px, 0);
+  }
+}
+
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, -5px, 0);
+  }
+  20%, 80% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    background-position: 200% 0;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+/* Optimize scrollbar rendering */
+::-webkit-scrollbar {
+  width: 10px;
+  /* Smooth scrollbar rendering */
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 5px;
+  transition: background 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Ultra-smooth backdrop filters */
+.navbar,
+.suggestions-list {
+  /* Optimize backdrop filter performance */
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  backdrop-filter: blur(20px) saturate(180%);
+  will-change: backdrop-filter, transform;
+  isolation: isolate;
+}
+
+/* Optimize image rendering for smoothness */
+img {
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  /* Smooth loading */
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  will-change: opacity, transform;
+}
+
+/* Better paint performance for cards */
+.card,
+.ai-answer-card,
+.ai-card-header {
+  /* Optimize rendering layers */
+  isolation: isolate;
+  contain: layout style paint;
+}
+
+/* Smooth dark mode transitions */
+body.dark {
+  transition: background-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Optimize table scrolling */
+.ai-markdown .table-wrapper {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  scroll-behavior: smooth;
+}
+
+/* High refresh rate optimization for touch devices */
+@media (hover: none) and (pointer: coarse) {
+  * {
+    /* Optimize touch interactions */
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  /* Faster touch response */
+  button,
+  a,
+  input,
+  .card,
+  .history-list li,
+  .suggestions-list li {
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+}
+
+/* Optimize for high refresh rate displays (120Hz+) */
+@media (min-resolution: 2dppx) {
+  * {
+    /* Enhanced smoothness for high-DPI displays */
+    -webkit-font-smoothing: subpixel-antialiased;
+    text-rendering: geometricPrecision;
+  }
+  
+  /* Faster transitions on high refresh displays */
+  .card:hover,
+  button:hover,
+  a:hover {
+    transition-duration: 0.2s;
+  }
+}
+
+/* Force composition layers for better performance */
+.hero-content,
+.results-section,
+.history-section,
+.about-content {
+  -webkit-transform: translate3d(0, 0, 0);
