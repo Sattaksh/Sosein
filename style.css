@@ -1950,6 +1950,6 @@ body.dark .ai-markdown pre {
 .card img {
   display: block;
   opacity: 1;
-  max-width: 100%;
+  max-width: 39%;
   height: auto;
 }
