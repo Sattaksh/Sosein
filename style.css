@@ -1836,4 +1836,86 @@ body.dark .ai-markdown .table-wrapper::after {
   100% { opacity: 1; }
 }
 
+/* ===============================
+   YOUR EXISTING CSS ENDS HERE
+   =============================== */
 
+
+
+/* ===============================
+   120HZ / APPLE SMOOTHNESS PATCH
+   (PASTE EVERYTHING BELOW)
+   =============================== */
+
+html, body {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* GPU acceleration */
+.hero,
+.hero-content,
+.search-wrapper,
+.results-section,
+.card,
+.ai-answer-card {
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Apple easing */
+:root {
+  --apple-ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+* {
+  transition-timing-function: var(--apple-ease);
+}
+
+/* Hero collapse */
+.hero {
+  transition:
+    transform 420ms var(--apple-ease),
+    opacity 320ms ease;
+}
+
+body.searching .hero {
+  transform: translateY(-40px) scale(0.96);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Card animation */
+.card {
+  opacity: 0;
+  transform: translateY(14px);
+  animation: cardFadeIn 420ms var(--apple-ease) forwards;
+}
+
+@keyframes cardFadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Momentum scroll */
+.table-wrapper {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
