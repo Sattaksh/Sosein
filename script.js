@@ -331,18 +331,18 @@ searchBox.addEventListener("keypress", e => {
 aiContainer.offsetHeight;  
 
 // 3️⃣ Render math AFTER layout is locked  
-if (window.renderMathInElement) {
-  renderMathInElement(aiContainer, {
-    delimiters: [
-      { left: "$$", right: "$$", display: true },
-      { left: "\\[", right: "\\]", display: true },
-      { left: "$", right: "$", display: false },
-      { left: "\\(", right: "\\)", display: false }
-    ],
-    throwOnError: false
-  });
+if (window.renderMathInElement) {  
+  renderMathInElement(aiContainer, {  
+    delimiters: [  
+      { left: "$$", right: "$$", display: true },  
+      { left: "$", right: "$", display: false }  
+    ],  
+    throwOnError: false  
+  });  
 }
-    
+});
+}
+          
 function formatAIAnswer(text) {
   if (!text) return "";
 
@@ -1150,4 +1150,4 @@ initiateSearch = function() {
   originalInitiateSearch();
 };
 */
-
+                           
