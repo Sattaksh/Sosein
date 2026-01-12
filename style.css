@@ -1947,3 +1947,10 @@ body.dark .ai-markdown pre {
               0 12px 40px rgba(0,0,0,0.6);
 }
 
+/* === WIKI / RESULT IMAGES — HARD SIZE CAP === */
+.card img {
+  max-width: 160px !important;
+  width: auto !important;
+  height: auto !important;
+  display: block;
+}
