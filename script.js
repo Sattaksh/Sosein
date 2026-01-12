@@ -650,7 +650,7 @@ if (enhance) {
 async function fetchAIAnswer(question, imageData) {
   const FALLBACK_MODELS = [
     CURRENT_MODEL,// whatever user selected
-    "allenai/molmo-2-8b:free"
+    "allenai/molmo-2-8b:free", 
     "nvidia/nemotron-nano-12b-v2-vl:free",
     "z-ai/glm-4.5-air:free",
     "tngtech/deepseek-r1t2-chimera:free",
