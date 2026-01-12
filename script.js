@@ -307,21 +307,17 @@ searchBox.addEventListener("keypress", e => {
             const formattedAnswer = formatAIAnswer(aiAnswer);
             // Your complete AI card and copy button logic remains here
             results.innerHTML = `
-            <div class="card wiki-card">
-          </div>
-  <div class="card ai-answer-card">
-    <div class="ai-card-header">
-      <h3>✦︎ Sosein AI</h3>
-      <div class="copy-container">
-        <button class="copy-btn" title="Copy Answer">🗒</button>
-      </div>
-    </div>
-
-    <div class="ai-markdown">
-      ${formattedAnswer}
-    </div>
-  </div>
-`;
+                <div class="card ai-answer-card">
+                  <div class="ai-card-header">
+                    <h3>✦︎ Sosein AI</h3>
+                    <div class="copy-container">
+                        <span class="copy-btn" title="Copy Answer">🗒</span>
+                    </div>
+                  </div>
+                  <div id="ai-answer-text" 
+                  class="ai-markdown">${formattedAnswer}</div>
+                </div>
+            `;
           
   const aiContainer = 
   document.getElementById("ai-answer-text");
