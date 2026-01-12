@@ -1947,9 +1947,13 @@ body.dark .ai-markdown pre {
               0 12px 40px rgba(0,0,0,0.6);
 }
 
+/* Wikipedia / normal result images */
 .card img {
-  display: block;
-  opacity: 1;
-  max-width: 39%;
+  max-width: 180px;        /* ← adjust: 150–200px sweet spot */
+  width: auto;
   height: auto;
+  display: block;
+  margin: 1rem 0;
+  border-radius: 12px;
+  object-fit: cover;
 }
