@@ -318,6 +318,7 @@ searchBox.addEventListener("keypress", e => {
                   class="ai-markdown">${formattedAnswer}</div>
                 </div>
             `;
+             addCopyButtons(); // ✅ MUST be here
           
   const aiContainer = 
   document.getElementById("ai-answer-text");
@@ -1103,7 +1104,30 @@ if (clearHistoryBtn) {
     resetSearchState();
   });
 }
+function addCopyButtons() {
+  document.querySelectorAll(".ai-markdown pre").forEach(pre => {
+    if (pre.querySelector(".code-copy-btn")) return;
 
+    const btn = document.createElement("button");
+    btn.className = "code-copy-btn";
+    btn.textContent = "Copy";
+
+    btn.addEventListener("click", () => {
+      const code = pre.innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        btn.textContent = "Copied";
+        btn.classList.add("copied");
+
+        setTimeout(() => {
+          btn.textContent = "Copy";
+          btn.classList.remove("copied");
+        }, 1500);
+      });
+    });
+
+    pre.appendChild(btn);
+  });
+}
 // ========================================
 // INTEGRATE WITH YOUR EXISTING CODE
 // ========================================
