@@ -64,7 +64,7 @@ const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
     messages: [
       {
         role: "system",
-        content: "Answer clearly and directly. Do not show reasoning or step-by-step thinking."
+        content: "Answer clearly and give satisfying answers but don't turn on reasoning"
       },
       {
         role: "user",
