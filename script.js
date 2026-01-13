@@ -1110,12 +1110,12 @@ function addCopyButtons() {
 
     const btn = document.createElement("button");
     btn.className = "code-copy-btn";
-    btn.textContent = "Copy";
+    btn.innerHTML = "⧉ Copy";
 
     btn.addEventListener("click", () => {
       const code = pre.innerText;
       navigator.clipboard.writeText(code).then(() => {
-        btn.textContent = "Copied";
+        btn.innerHTML = "✓ Copied";
         btn.classList.add("copied");
 
         setTimeout(() => {
