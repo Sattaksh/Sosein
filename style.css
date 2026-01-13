@@ -1956,32 +1956,73 @@ body.dark .ai-markdown pre {
 }
 
 /* ===============================
-   CODE BLOCK COPY BUTTON
+   CODE BLOCK COPY BUTTON (POLISHED)
    =============================== */
-
-
 
 .ai-markdown pre {
   position: relative;
-  padding-top: 3rem;
+  padding-top: 2.5rem;
   overflow: auto;
 }
 
+/* Button base */
 .code-copy-btn {
   position: absolute;
-  top: 0.6rem;
-  right: 0.6rem;
-  background: rgba(0, 0, 0, 0.75);
-  color: #fff;
-  border: none;
-  padding: 0.35rem 0.7rem;
-  font-size: 0.75rem;
-  border-radius: 6px;
+  top: 0.65rem;
+  right: 0.65rem;
+
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+
+  background: rgba(15, 23, 42, 0.6); /* slate glass */
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+
+  color: #e5e7eb;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+
+  padding: 0.3rem 0.55rem;
+  font-size: 0.7rem;
+  font-weight: 500;
+  border-radius: 8px;
+
   cursor: pointer;
-  opacity: 1;            /* 👈 FORCE visible for now */
-  z-index: 999;
+  opacity: 0;
+  transform: translateY(-4px);
+
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease;
+
+  z-index: 10;
 }
 
+/* Show on hover (desktop) */
+.ai-markdown pre:hover .code-copy-btn {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Hover */
+.code-copy-btn:hover {
+  background: rgba(30, 41, 59, 0.8);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Copied state */
 .code-copy-btn.copied {
-  background: #059669;
+  background: rgba(5, 150, 105, 0.9);
+  border-color: rgba(5, 150, 105, 1);
+  color: #ecfdf5;
+}
+
+/* Mobile: always visible (no hover) */
+@media (hover: none) and (pointer: coarse) {
+  .code-copy-btn {
+    opacity: 1;
+    transform: none;
+  }
 }
