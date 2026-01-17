@@ -508,7 +508,7 @@ async function fetchAll(term) {
       results.innerHTML += buildTMDBMovieCard(tmdbMovie);
     }
     
-    results.innerHTML += buildWikiCard(wikiData, term);
+    results.innerHTML += buildWikiCard(wikiData, wikiData.title);
     
     let entityType = null;
     if (wikiData.wikibase_item) {
