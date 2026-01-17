@@ -675,16 +675,32 @@ if (enhance) {
 
   // 🧠 Detect Entity Type from Wikidata
   async function fetchEntityType(qid) {
-    try {
-      const res = await fetch(`https://www.wikidata.org/wiki/Special:EntityData/${qid}.json`);
-      const data = await res.json();
-      const entity = data.entities[qid];
-      const P31 = entity.claims.P31?.[0]?.mainsnak.datavalue.value.id;
-      return data.entities[P31]?.labels?.en?.value.toLowerCase() || null;
-    } catch {
-      return null;
-    }
+  try {
+    // 1️⃣ Fetch the page entity
+    const res = await fetch(
+      `https://www.wikidata.org/wiki/Special:EntityData/${qid}.json`
+    );
+    const data = await res.json();
+    const entity = data.entities[qid];
+
+    // 2️⃣ Get P31 (instance of)
+    const P31 = entity.claims.P31?.[0]?.mainsnak?.datavalue?.value?.id;
+    if (!P31) return null;
+
+    // 3️⃣ Fetch the P31 entity itself
+    const res2 = await fetch(
+      `https://www.wikidata.org/wiki/Special:EntityData/${P31}.json`
+    );
+    const data2 = await res2.json();
+
+    return (
+      data2.entities[P31]?.labels?.en?.value?.toLowerCase() || null
+    );
+  } catch (err) {
+    console.warn("Entity type fetch failed", err);
+    return null;
   }
+}
 
   // 📄 Build Wiki Card (with news-wrapper container)
   function buildWikiCard(d, term) {
