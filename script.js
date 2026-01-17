@@ -489,7 +489,10 @@ async function fetchAll(term) {
 
 
   try {
-    const cleanTerm = term.replace(/\?/g, "").trim();  
+    const cleanTerm = term
+   .replace(/\?/g, "")
+   .replace(/\s*\(.*?film.*?\)$/i, "")// 👈 THIS FIX
+   .trim();
     const wikiURL = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(cleanTerm)}`;
 
     const wikiRes = await fetch(wikiURL);
