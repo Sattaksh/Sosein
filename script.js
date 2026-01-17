@@ -226,32 +226,19 @@ function buildTMDBMovieCard(movie) {
     </div>
   `;
 }
-  
-async function fetchTMDBMovie(title, year) {
+async function fetchTMDBMovie(title) {
   try {
     const res = await fetch(
-      `/.netlify/functions/tmdb?q=${encodeURIComponent(title)}${year ? `&year=${year}` : ""}`
+      `/.netlify/functions/tmdb?q=${encodeURIComponent(title)}`
     );
 
     if (!res.ok) return null;
 
-    const data = await res.json();
-    return data && data.id ? data : null;
-
-  } catch {
+    return await res.json();
+  } catch (err) {
+    console.warn("TMDB frontend fetch failed", err);
     return null;
   }
-}
-  
-function normalizeMovieTitle(title) {
-  return title
-    .replace(/\s*\(.*?\)\s*/g, "") // remove "(film)", "(2012 film)"
-    .trim();
-}
-
-function extractYear(text) {
-  const match = text?.match(/\b(19|20)\d{2}\b/);
-  return match ? match[0] : null;
 }
 
 // Alternative positioning method if the above doesn't work perfectly
@@ -509,29 +496,13 @@ async function fetchAll(term) {
     if (!wikiRes.ok) throw "Wiki Not Found";
     const wikiData = await wikiRes.json();
     // ================================
-    // 2️⃣ DETECT IF THIS IS A FILM
+    // 🎬 TMDB MOVIE CARD (FIRST)
     // ================================
-    const isFilm =
-      /film|movie|cinema/i.test(wikiData.description || "") ||
-      /\bfilm\b/i.test(wikiData.extract || "");
+    const tmdbMovie = await fetchTMDBMovie(cleanTerm);
+    console.log("TMDB RESULT:", tmdbMovie);
 
-    // ================================
-    // 3️⃣ TMDB (ENRICHMENT, OPTIONAL)
-    // ================================
-    if (isFilm) {
-      const cleanTitle = normalizeMovieTitle(wikiData.title);
-      const year = extractYear(wikiData.extract);
-
-      const tmdbMovie = await fetchTMDBMovie(cleanTitle, year);
-      console.log("TMDB RESULT:", tmdbMovie);
-
-      if (
-        tmdbMovie &&
-        tmdbMovie.title &&
-        isConfidentTMDBMatch(tmdbMovie, wikiData.title)
-      ) {
-        results.innerHTML += buildTMDBMovieCard(tmdbMovie);
-      }
+    if (tmdbMovie && tmdbMovie.title) {
+      results.innerHTML += buildTMDBMovieCard(tmdbMovie);
     }
     
     results.innerHTML += buildWikiCard(wikiData, term);
