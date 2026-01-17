@@ -192,23 +192,16 @@ function clearUploadedImage() {
 }
 
 function isMovieResult(wikiData, entityType) {
-  if (!entityType) return false;
+  if (!wikiData) return false;
 
-  const type = entityType.toLowerCase();
   const desc = (wikiData.description || "").toLowerCase();
+  const title = (wikiData.title || "").toLowerCase();
 
-  // HARD filters: reject people
-  if (type.includes("human")) return false;
-  if (desc.includes("actor") || desc.includes("director") || desc.includes("producer")) {
-    return false;
-  }
+  if (desc.includes("film") || desc.includes("movie")) return true;
+  if (title.endsWith("(film)")) return true;
+  if (entityType?.includes("film")) return true;
 
-  // Accept real films
-  return (
-    type.includes("film") ||
-    desc.includes("film") ||
-    desc.includes("movie")
-  );
+  return false;
 }
 
 function buildTMDBMovieCard(movie) {
@@ -535,7 +528,7 @@ async function fetchAll(term) {
         .map(p => p.name)
         .join(", ") || "Unknown";
 
-    results.innerHTML += buildMovieCard({
+    results.innerHTML += buildTMDBMovieCard({
       title: tmdbMovie.title,
       year: tmdbMovie.release_date?.slice(0, 4),
       description: tmdbMovie.overview,
