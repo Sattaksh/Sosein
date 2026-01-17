@@ -192,16 +192,23 @@ function clearUploadedImage() {
 }
 
 function isMovieResult(wikiData, entityType) {
-  if (!wikiData) return false;
+  if (!entityType) return false;
 
+  const type = entityType.toLowerCase();
   const desc = (wikiData.description || "").toLowerCase();
-  const title = (wikiData.title || "").toLowerCase();
 
-  if (desc.includes("film") || desc.includes("movie")) return true;
-  if (title.endsWith("(film)")) return true;
-  if (entityType?.includes("film")) return true;
+  // HARD filters: reject people
+  if (type.includes("human")) return false;
+  if (desc.includes("actor") || desc.includes("director") || desc.includes("producer")) {
+    return false;
+  }
 
-  return false;
+  // Accept real films
+  return (
+    type.includes("film") ||
+    desc.includes("film") ||
+    desc.includes("movie")
+  );
 }
 
 function buildTMDBMovieCard(movie) {
@@ -507,43 +514,29 @@ async function fetchAll(term) {
     const wikiRes = await fetch(wikiURL);
     if (!wikiRes.ok) throw "Wiki Not Found";
     const wikiData = await wikiRes.json();
+    // ================================
+    // 🎬 TMDB MOVIE CARD (FIRST)
+    // ================================
+    const isMovie = isMovieResult(wikiData);
 
+    if (isMovie) {
+      const tmdbMovie = await fetchTMDBMovie(cleanTerm);
+
+      console.log("TMDB RESULT:", tmdbMovie);
+
+      if (tmdbMovie && tmdbMovie.title) {
+        results.innerHTML += buildTMDBMovieCard(tmdbMovie);
+      }
+    }
     
+    
+    
+    results.innerHTML += buildWikiCard(wikiData, term);
+
     let entityType = null;
     if (wikiData.wikibase_item) {
       entityType = await fetchEntityType(wikiData.wikibase_item);
     }
-    // 🎬 TMDB MOVIE CARD (BEFORE WIKIPEDIA)
-    // After wikiData + entityType are known
-    if (isMovieResult(wikiData, entityType)) {
-    const tmdbMovie = await fetchTMDBMovie(wikiData.title);
-
-    if (tmdbMovie && tmdbMovie.title) {
-    const director =
-      tmdbMovie.credits?.crew?.find(p => p.job === "Director")?.name || "Unknown";
-
-    const cast =
-      tmdbMovie.credits?.cast
-        ?.slice(0, 5)
-        .map(p => p.name)
-        .join(", ") || "Unknown";
-
-    results.innerHTML += buildTMDBMovieCard({
-      title: tmdbMovie.title,
-      year: tmdbMovie.release_date?.slice(0, 4),
-      description: tmdbMovie.overview,
-      poster: tmdbMovie.poster_path
-        ? `https://image.tmdb.org/t/p/w500${tmdbMovie.poster_path}`
-        : "",
-      director,
-      cast
-    });
-  }
-}
-    
-    results.innerHTML += buildWikiCard(wikiData, term);
-
-    
     // 🧩 Additional Media Enrichment
     if (entityType === "human") {
       if (/singer|musician|vocalist/i.test(wikiData.description)) {
