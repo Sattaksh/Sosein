@@ -213,54 +213,37 @@ function isMovieResult(wikiData, entityType) {
 }
 
 
-async function fetchMovieExtraDetails(title) {
-  try {
-    const res = await fetch(
-      `https://en.wikipedia.org/w/api.php?origin=*&action=query&prop=extracts&format=json&explaintext=true&titles=${encodeURIComponent(title)}`
-    );
-    const data = await res.json();
-    const page = Object.values(data.query.pages)[0];
-    const text = page.extract || "";
-
-    const directorMatch = text.match(/directed by ([^.]+)/i);
-    const castMatch = text.match(/starring ([^.]+)/i);
-
-    return {
-      director: directorMatch ? directorMatch[1] : "Not listed",
-      cast: castMatch ? castMatch[1] : "Not listed"
-    };
-  } catch {
-    return { director: "Not listed", cast: "Not listed" };
-  }
-}
 
 
-function buildMovieCard({
-  title,
-  year,
-  description,
-  poster,
-  director,
-  cast
-}) {
+function buildTMDBMovieCard(movie) {
+  const poster = movie.poster_path
+    ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+    : "";
+
+  const director =
+    movie.credits.crew.find(p => p.job === "Director")?.name || "Not listed";
+
+  const cast = movie.credits.cast
+    .slice(0, 5)
+    .map(c => c.name)
+    .join(", ");
+
   return `
     <div class="card movie-card">
       <div class="movie-card-inner">
-        ${poster ? `<img src="${poster}" alt="${title} poster">` : ""}
+        ${poster ? `<img src="${poster}" alt="${movie.title} poster">` : ""}
 
         <div class="movie-meta">
-          <h2>🎬 ${title}${year ? ` (${year})` : ""}</h2>
+          <h2>🎬 ${movie.title} (${movie.release_date?.slice(0, 4) || "—"})</h2>
 
-          <p class="movie-desc">${description}</p>
+          <p class="movie-desc">${movie.overview || "No description available."}</p>
 
           <p><strong>Director:</strong> ${director}</p>
           <p><strong>Cast:</strong> ${cast}</p>
 
-          <div class="movie-links">
-            <a href="https://www.imdb.com/find?q=${encodeURIComponent(title)}&s=tt" target="_blank">
-              ⭐ IMDb
-            </a>
-          </div>
+          <a href="https://www.imdb.com/title/${movie.imdb_id}" target="_blank">
+            ⭐ IMDb
+          </a>
         </div>
       </div>
     </div>
@@ -515,42 +498,23 @@ async function fetchAll(term) {
 
 
   try {
-    const cleanTerm = term.replace(/\?/g, "").trim();
+    const cleanTerm = term.replace(/\?/g, "").trim();  
     const wikiURL = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(cleanTerm)}`;
 
     const wikiRes = await fetch(wikiURL);
     if (!wikiRes.ok) throw "Wiki Not Found";
     const wikiData = await wikiRes.json();
+    // 🎬 TMDB MOVIE CARD (SOURCE OF TRUTH)
+    const tmdbMovie = await fetchTMDBMovie(cleanTerm);
+    if (tmdbMovie) {
+    results.innerHTML += buildTMDBMovieCard(tmdbMovie);
+    }
     
     let entityType = null;
     if (wikiData.wikibase_item) {
       entityType = await fetchEntityType(wikiData.wikibase_item);
     }
-    // 🎬 MOVIE DETAIL CARD (BEFORE WIKIPEDIA)
-    if (isMovieResult(wikiData, entityType)) {
-    const yearMatch = wikiData.extract?.match(/\b(19|20)\d{2}\b/);
-    const year = yearMatch ? yearMatch[0] : "";
-
-    let director = "Unknown";
-    let cast = [];
-
-    try {
-     const extra = await fetchMovieExtraDetails(wikiData.title);
-     director = extra.director || director;
-     cast = extra.cast || cast;
-   } catch (e) {
-     console.warn("Movie extra fetch failed", e);
-   }
-
-    results.innerHTML += buildMovieCard({
-     title: wikiData.title,
-     year,
-     description: wikiData.description || "Film",
-     poster: wikiData.thumbnail?.source || "",
-     director,
-     cast
-  });
-}
+    
     results.innerHTML += buildWikiCard(wikiData, term);
 
     
