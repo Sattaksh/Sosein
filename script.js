@@ -510,6 +510,32 @@ async function fetchAll(term) {
     const wikiRes = await fetch(wikiURL);
     if (!wikiRes.ok) throw "Wiki Not Found";
     const wikiData = await wikiRes.json();
+    // 🎬 MOVIE DETAIL CARD (BEFORE WIKIPEDIA)
+    if (isMovieResult(wikiData)) {
+    const yearMatch = wikiData.extract?.match(/\b(19|20)\d{2}\b/);
+    const year = yearMatch ? yearMatch[0] : "";
+
+    let director = "Unknown";
+    let cast = [];
+
+    try {
+     const extra = await fetchMovieExtraDetails(wikiData.title);
+     director = extra.director || director;
+     cast = extra.cast || cast;
+   } catch (e) {
+     console.warn("Movie extra fetch failed", e);
+   }
+
+    results.innerHTML += buildMovieCard({
+     title: wikiData.title,
+     year,
+     description: wikiData.description || "Film",
+     poster: wikiData.thumbnail?.source || "",
+     director,
+     cast
+  });
+}
+    results.innerHTML += buildWikiCard(wikiData, term);
 
     let entityType = null;
     if (wikiData.wikibase_item) {
@@ -546,7 +572,7 @@ async function fetchAll(term) {
     </div>`;
 }
 
-    results.innerHTML += buildWikiCard(wikiData, term);
+    
     setTimeout(() => {
     const readMoreLink = document.getElementById("readMoreLink");
     const collapseLink = document.getElementById("collapseLink");
@@ -631,22 +657,7 @@ if (enhance) {
     loading.classList.remove("show");
   }
 }
-   if (isMovieResult(wikiData)) {
-  const yearMatch = wikiData.extract.match(/\b(19|20)\d{2}\b/);
-  const year = yearMatch ? yearMatch[0] : "";
-
-  const extra = await fetchMovieExtraDetails(wikiData.title);
-
-  results.innerHTML += buildMovieCard({
-    title: wikiData.title,
-    year,
-    description: wikiData.description || "Film",
-    poster: wikiData.thumbnail?.source || "",
-    director: extra.director,
-    cast: extra.cast
-  });
-}
-
+  
 
 
   // 🧠 Detect Entity Type from Wikidata
