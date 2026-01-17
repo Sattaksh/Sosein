@@ -517,21 +517,23 @@ async function fetchAll(term) {
     // ================================
     // 🎬 TMDB MOVIE CARD (FIRST)
     // ================================
-    const isMovie = isMovieResult(wikiData);
+    const tmdbMovie = await fetchTMDBMovie(cleanTerm);
+    console.log("TMDB RESULT:", tmdbMovie);
 
-    if (isMovie) {
-      const tmdbMovie = await fetchTMDBMovie(cleanTerm);
-
-      console.log("TMDB RESULT:", tmdbMovie);
-
-      if (tmdbMovie && tmdbMovie.title) {
-        results.innerHTML += buildTMDBMovieCard(tmdbMovie);
-      }
+    if (tmdbMovie && tmdbMovie.title) {
+      results.innerHTML += buildTMDBMovieCard(tmdbMovie);
     }
     
-    
-    
     results.innerHTML += buildWikiCard(wikiData, term);
+    
+    } catch (err) {
+    console.warn("Search failed:", err);
+    results.innerHTML = "";
+    suggestCorrection(term);
+  } finally {
+    loading.classList.remove("show");
+  }
+}
 
     let entityType = null;
     if (wikiData.wikibase_item) {
