@@ -191,7 +191,23 @@ function clearUploadedImage() {
     }
 }
 
+function isMovieResult(wikiData, entityType) {
+  if (!wikiData) return false;
 
+  const desc = (wikiData.description || "").toLowerCase();
+  const title = (wikiData.title || "").toLowerCase();
+
+  // Wikipedia REST already classifies films well
+  if (desc.includes("film") || desc.includes("movie")) return true;
+
+  // Strong title hints
+  if (title.endsWith("film")) return true;
+
+  // Wikidata instance-of
+  if (entityType && entityType.toLowerCase().includes("film")) return true;
+
+  return false;
+} 
  
 
 function buildTMDBMovieCard(movie) {
@@ -504,28 +520,31 @@ async function fetchAll(term) {
       entityType = await fetchEntityType(wikiData.wikibase_item);
     }
     // 🎬 TMDB MOVIE CARD (BEFORE WIKIPEDIA)
-    const tmdbMovie = await fetchTMDBMovie(cleanTerm);
+    // After wikiData + entityType are known
+    if (isMovieResult(wikiData, entityType)) {
+    const tmdbMovie = await fetchTMDBMovie(wikiData.title);
 
-    if (tmdbMovie) {
+    if (tmdbMovie && tmdbMovie.title) {
     const director =
-    tmdbMovie.credits?.crew?.find(p => p.job === "Director")?.name || "Unknown";
+      tmdbMovie.credits?.crew?.find(p => p.job === "Director")?.name || "Unknown";
 
     const cast =
-    tmdbMovie.credits?.cast
-      ?.slice(0, 5)
-      .map(p => p.name)
-      .join(", ") || "Unknown";
+      tmdbMovie.credits?.cast
+        ?.slice(0, 5)
+        .map(p => p.name)
+        .join(", ") || "Unknown";
 
     results.innerHTML += buildMovieCard({
-    title: tmdbMovie.title,
-    year: tmdbMovie.release_date?.slice(0, 4),
-    description: tmdbMovie.overview,
-    poster: tmdbMovie.poster_path
-      ? `https://image.tmdb.org/t/p/w500${tmdbMovie.poster_path}`
-      : "",
-    director,
-    cast
-  });
+      title: tmdbMovie.title,
+      year: tmdbMovie.release_date?.slice(0, 4),
+      description: tmdbMovie.overview,
+      poster: tmdbMovie.poster_path
+        ? `https://image.tmdb.org/t/p/w500${tmdbMovie.poster_path}`
+        : "",
+      director,
+      cast
+    });
+  }
 }
     
     results.innerHTML += buildWikiCard(wikiData, term);
