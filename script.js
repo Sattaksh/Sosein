@@ -192,23 +192,24 @@ function clearUploadedImage() {
 }
 
 function isMovieResult(wikiData, entityType) {
-  if (!wikiData) return false;
+  if (!entityType) return false;
 
+  const type = entityType.toLowerCase();
   const desc = (wikiData.description || "").toLowerCase();
-  const title = (wikiData.title || "").toLowerCase();
 
-  // Wikipedia REST already classifies films well
-  if (desc.includes("film") || desc.includes("movie")) return true;
+  // HARD filters: reject people
+  if (type.includes("human")) return false;
+  if (desc.includes("actor") || desc.includes("director") || desc.includes("producer")) {
+    return false;
+  }
 
-  // Strong title hints
-  if (title.endsWith("film")) return true;
-
-  // Wikidata instance-of
-  if (entityType && entityType.toLowerCase().includes("film")) return true;
-
-  return false;
-} 
- 
+  // Accept real films
+  return (
+    type.includes("film") ||
+    desc.includes("film") ||
+    desc.includes("movie")
+  );
+}
 
 function buildTMDBMovieCard(movie) {
   const poster = movie.poster_path
