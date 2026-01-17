@@ -191,25 +191,6 @@ function clearUploadedImage() {
     }
 }
 
-function isMovieResult(wikiData, entityType) {
-  if (!entityType) return false;
-
-  const type = entityType.toLowerCase();
-  const desc = (wikiData.description || "").toLowerCase();
-
-  // HARD filters: reject people
-  if (type.includes("human")) return false;
-  if (desc.includes("actor") || desc.includes("director") || desc.includes("producer")) {
-    return false;
-  }
-
-  // Accept real films
-  return (
-    type.includes("film") ||
-    desc.includes("film") ||
-    desc.includes("movie")
-  );
-}
 
 function buildTMDBMovieCard(movie) {
   const poster = movie.poster_path
@@ -526,6 +507,11 @@ async function fetchAll(term) {
     
     results.innerHTML += buildWikiCard(wikiData, term);
     
+    let entityType = null;
+    if (wikiData.wikibase_item) {
+      entityType = await fetchEntityType(wikiData.wikibase_item);
+    }
+    
     } catch (err) {
     console.warn("Search failed:", err);
     results.innerHTML = "";
@@ -535,10 +521,7 @@ async function fetchAll(term) {
   }
 }
 
-    let entityType = null;
-    if (wikiData.wikibase_item) {
-      entityType = await fetchEntityType(wikiData.wikibase_item);
-    }
+    
     // 🧩 Additional Media Enrichment
     if (entityType === "human") {
       if (/singer|musician|vocalist/i.test(wikiData.description)) {
