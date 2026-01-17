@@ -191,6 +191,71 @@ function clearUploadedImage() {
     }
 }
 
+
+function isMovieResult(wikiData) {
+  if (!wikiData) return false;
+
+  const desc = wikiData.description?.toLowerCase() || "";
+  const extract = wikiData.extract?.toLowerCase() || "";
+
+  return desc.includes("film") || extract.includes(" film");
+}
+
+
+async function fetchMovieExtraDetails(title) {
+  try {
+    const res = await fetch(
+      `https://en.wikipedia.org/w/api.php?origin=*&action=query&prop=extracts&format=json&explaintext=true&titles=${encodeURIComponent(title)}`
+    );
+    const data = await res.json();
+    const page = Object.values(data.query.pages)[0];
+    const text = page.extract || "";
+
+    const directorMatch = text.match(/directed by ([^.]+)/i);
+    const castMatch = text.match(/starring ([^.]+)/i);
+
+    return {
+      director: directorMatch ? directorMatch[1] : "Not listed",
+      cast: castMatch ? castMatch[1] : "Not listed"
+    };
+  } catch {
+    return { director: "Not listed", cast: "Not listed" };
+  }
+}
+
+
+function buildMovieCard({
+  title,
+  year,
+  description,
+  poster,
+  director,
+  cast
+}) {
+  return `
+    <div class="card movie-card">
+      <div class="movie-card-inner">
+        ${poster ? `<img src="${poster}" alt="${title} poster">` : ""}
+
+        <div class="movie-meta">
+          <h2>🎬 ${title}${year ? ` (${year})` : ""}</h2>
+
+          <p class="movie-desc">${description}</p>
+
+          <p><strong>Director:</strong> ${director}</p>
+          <p><strong>Cast:</strong> ${cast}</p>
+
+          <div class="movie-links">
+            <a href="https://www.imdb.com/find?q=${encodeURIComponent(title)}&s=tt" target="_blank">
+              ⭐ IMDb
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
 // Alternative positioning method if the above doesn't work perfectly
 function showImagePreviewAlternative(imageSrc, fileName) {
     // Remove existing preview if any
@@ -566,7 +631,21 @@ if (enhance) {
     loading.classList.remove("show");
   }
 }
+   if (isMovieResult(wikiData)) {
+  const yearMatch = wikiData.extract.match(/\b(19|20)\d{2}\b/);
+  const year = yearMatch ? yearMatch[0] : "";
 
+  const extra = await fetchMovieExtraDetails(wikiData.title);
+
+  results.innerHTML += buildMovieCard({
+    title: wikiData.title,
+    year,
+    description: wikiData.description || "Film",
+    poster: wikiData.thumbnail?.source || "",
+    director: extra.director,
+    cast: extra.cast
+  });
+}
 
 
 
