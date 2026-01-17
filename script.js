@@ -540,7 +540,7 @@ async function fetchAll(term) {
 } else if (entityType === "film") {
   // IMDb Rating via unofficial OMDB API (or provide search link)
 
-  const imdbSearchUrl = `https://www.imdb.com/find?q=${encodeURIComponent(term)}&s=tt`;
+  const imdbSearchUrl = `https://www.imdb.com/find?q=${encodeURIComponent(wikiData.title)}&s=tt`;
   results.innerHTML += `
     <div class="card">
       <h3>🎞 IMDb Info</h3>
@@ -561,7 +561,7 @@ async function fetchAll(term) {
       readMoreLink.textContent = "Loading more...";
 
       try {
-        const res = await fetch(`https://en.wikipedia.org/w/api.php?origin=*&action=query&prop=extracts&format=json&explaintext=true&titles=${encodeURIComponent(term)}`);
+        const res = await fetch(`https://en.wikipedia.org/w/api.php?origin=*&action=query&prop=extracts&format=json&explaintext=true&titles=${encodeURIComponent(wikiData.title)}`);
         const data = await res.json();
         const page = Object.values(data.query.pages)[0];
         const fullExtract = page.extract;
