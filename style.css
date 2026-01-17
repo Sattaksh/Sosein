@@ -2027,3 +2027,63 @@ body.dark .ai-markdown pre {
   }
 }
 
+
+/* =========================
+   MOVIE DETAIL CARD
+   ========================= */
+
+.movie-card {
+  border-left: 4px solid #2563eb;
+}
+
+.movie-card-inner {
+  display: flex;
+  gap: 1.2rem;
+}
+
+.movie-card img {
+  width: 110px;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.movie-meta h2 {
+  margin: 0 0 0.4rem;
+}
+
+.movie-desc {
+  font-size: 0.95rem;
+  color: #555;
+}
+
+.movie-meta p {
+  margin: 0.2rem 0;
+  font-size: 0.9rem;
+}
+
+.movie-links {
+  margin-top: 0.6rem;
+}
+
+.movie-links a {
+  font-weight: 600;
+  color: #2563eb;
+  text-decoration: none;
+}
+
+.movie-links a:hover {
+  text-decoration: underline;
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .movie-card-inner {
+    flex-direction: column;
+  }
+
+  .movie-card img {
+    width: 100%;
+    max-height: 320px;
+  }
+}
+
