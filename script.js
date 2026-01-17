@@ -193,14 +193,23 @@ function clearUploadedImage() {
 
 
 function isMovieResult(wikiData, entityType) {
-  // STRICT: only actual films
-  if (entityType !== "film") return false;
+  if (!entityType) return false;
 
-  // Extra guard (some edge cases)
+  const type = entityType.toLowerCase();
   const desc = (wikiData.description || "").toLowerCase();
-  if (desc.includes("film")) return true;
 
-  return false;
+  // HARD filters: reject people
+  if (type.includes("human")) return false;
+  if (desc.includes("actor") || desc.includes("director") || desc.includes("producer")) {
+    return false;
+  }
+
+  // Accept real films
+  return (
+    type.includes("film") ||
+    desc.includes("film") ||
+    desc.includes("movie")
+  );
 }
 
 
