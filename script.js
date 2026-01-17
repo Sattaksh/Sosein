@@ -192,13 +192,15 @@ function clearUploadedImage() {
 }
 
 
-function isMovieResult(wikiData) {
-  if (!wikiData) return false;
+function isMovieResult(wikiData, entityType) {
+  // STRICT: only actual films
+  if (entityType !== "film") return false;
 
-  const desc = wikiData.description?.toLowerCase() || "";
-  const extract = wikiData.extract?.toLowerCase() || "";
+  // Extra guard (some edge cases)
+  const desc = (wikiData.description || "").toLowerCase();
+  if (desc.includes("film")) return true;
 
-  return desc.includes("film") || extract.includes(" film");
+  return false;
 }
 
 
@@ -510,8 +512,13 @@ async function fetchAll(term) {
     const wikiRes = await fetch(wikiURL);
     if (!wikiRes.ok) throw "Wiki Not Found";
     const wikiData = await wikiRes.json();
+    
+    let entityType = null;
+    if (wikiData.wikibase_item) {
+      entityType = await fetchEntityType(wikiData.wikibase_item);
+    }
     // 🎬 MOVIE DETAIL CARD (BEFORE WIKIPEDIA)
-    if (isMovieResult(wikiData)) {
+    if (isMovieResult(wikiData, entityType)) {
     const yearMatch = wikiData.extract?.match(/\b(19|20)\d{2}\b/);
     const year = yearMatch ? yearMatch[0] : "";
 
@@ -537,10 +544,7 @@ async function fetchAll(term) {
 }
     results.innerHTML += buildWikiCard(wikiData, term);
 
-    let entityType = null;
-    if (wikiData.wikibase_item) {
-      entityType = await fetchEntityType(wikiData.wikibase_item);
-    }
+    
     // 🧩 Additional Media Enrichment
     if (entityType === "human") {
       if (/singer|musician|vocalist/i.test(wikiData.description)) {
