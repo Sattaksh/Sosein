@@ -192,28 +192,7 @@ function clearUploadedImage() {
 }
 
 
-function isMovieResult(wikiData, entityType) {
-  if (!entityType) return false;
-
-  const type = entityType.toLowerCase();
-  const desc = (wikiData.description || "").toLowerCase();
-
-  // HARD filters: reject people
-  if (type.includes("human")) return false;
-  if (desc.includes("actor") || desc.includes("director") || desc.includes("producer")) {
-    return false;
-  }
-
-  // Accept real films
-  return (
-    type.includes("film") ||
-    desc.includes("film") ||
-    desc.includes("movie")
-  );
-}
-
-
-
+ 
 
 function buildTMDBMovieCard(movie) {
   const poster = movie.poster_path
@@ -248,6 +227,20 @@ function buildTMDBMovieCard(movie) {
       </div>
     </div>
   `;
+}
+async function fetchTMDBMovie(title) {
+  try {
+    const res = await fetch(
+      `/.netlify/functions/tmdb?q=${encodeURIComponent(title)}`
+    );
+
+    if (!res.ok) return null;
+
+    return await res.json();
+  } catch (err) {
+    console.warn("TMDB frontend fetch failed", err);
+    return null;
+  }
 }
 
 // Alternative positioning method if the above doesn't work perfectly
@@ -504,16 +497,36 @@ async function fetchAll(term) {
     const wikiRes = await fetch(wikiURL);
     if (!wikiRes.ok) throw "Wiki Not Found";
     const wikiData = await wikiRes.json();
-    // 🎬 TMDB MOVIE CARD (SOURCE OF TRUTH)
-    const tmdbMovie = await fetchTMDBMovie(cleanTerm);
-    if (tmdbMovie) {
-    results.innerHTML += buildTMDBMovieCard(tmdbMovie);
-    }
+
     
     let entityType = null;
     if (wikiData.wikibase_item) {
       entityType = await fetchEntityType(wikiData.wikibase_item);
     }
+    // 🎬 TMDB MOVIE CARD (BEFORE WIKIPEDIA)
+    const tmdbMovie = await fetchTMDBMovie(cleanTerm);
+
+    if (tmdbMovie) {
+    const director =
+    tmdbMovie.credits?.crew?.find(p => p.job === "Director")?.name || "Unknown";
+
+    const cast =
+    tmdbMovie.credits?.cast
+      ?.slice(0, 5)
+      .map(p => p.name)
+      .join(", ") || "Unknown";
+
+    results.innerHTML += buildMovieCard({
+    title: tmdbMovie.title,
+    year: tmdbMovie.release_date?.slice(0, 4),
+    description: tmdbMovie.overview,
+    poster: tmdbMovie.poster_path
+      ? `https://image.tmdb.org/t/p/w500${tmdbMovie.poster_path}`
+      : "",
+    director,
+    cast
+  });
+}
     
     results.innerHTML += buildWikiCard(wikiData, term);
 
