@@ -512,15 +512,7 @@ async function fetchAll(term) {
       entityType = await fetchEntityType(wikiData.wikibase_item);
     }
     
-    } catch (err) {
-    console.warn("Search failed:", err);
-    results.innerHTML = "";
-    suggestCorrection(term);
-  } finally {
-    loading.classList.remove("show");
-  }
-}
-
+    
     
     // 🧩 Additional Media Enrichment
     if (entityType === "human") {
