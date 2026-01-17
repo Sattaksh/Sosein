@@ -227,17 +227,18 @@ function buildTMDBMovieCard(movie) {
   `;
 }
   
-async function fetchTMDBMovie(title) {
+async function fetchTMDBMovie(title, year) {
   try {
     const res = await fetch(
-      `/.netlify/functions/tmdb?q=${encodeURIComponent(title)}`
+      `/.netlify/functions/tmdb?q=${encodeURIComponent(title)}${year ? `&year=${year}` : ""}`
     );
 
     if (!res.ok) return null;
 
-    return await res.json();
-  } catch (err) {
-    console.warn("TMDB frontend fetch failed", err);
+    const data = await res.json();
+    return data && data.id ? data : null;
+
+  } catch {
     return null;
   }
 }
