@@ -2134,3 +2134,18 @@ body.dark .ai-markdown pre {
 body.dark #searchBox {
   caret-color: #60a5fa; /* slightly brighter in dark mode */
 }
+
+.suggestions-list {
+  animation: fadeSlideUp 120ms ease-out;
+}
+
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
