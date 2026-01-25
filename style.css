@@ -2107,3 +2107,18 @@ body.dark .ai-markdown pre {
   position: absolute;
   left: -9999px;
 }
+
+#searchBox::placeholder {
+  font-style: italic;
+  opacity: 0.7;
+}
+
+#searchBox::-webkit-input-placeholder {
+  font-style: italic;
+  opacity: 0.7;
+}
+
+#searchBox::-moz-placeholder {
+  font-style: italic;
+  opacity: 0.7;
+}
