@@ -116,6 +116,22 @@ body.dark.home .navbar {
   align-items: center;
 }
 
+.share-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  margin-left: 8px;
+  color: inherit;
+  opacity: 0.7;
+  display: inline-flex;
+  align-items: center;
+}
+
+.share-btn:hover {
+  opacity: 1;
+}
+
 .logo-group {
   display: flex;
   align-items: center;
