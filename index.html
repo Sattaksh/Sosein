@@ -78,13 +78,6 @@
   
 </head>
 
- <!-- LOADING OVERLAY -->
-<div id="loading" class="loading-overlay" aria-live="polite">
-  <span class="loading-text">
-    Understanding intent<span class="dots"></span>
-  </span>
-</div>
-
 <body class="home">
 
   <!-- NAVBAR -->
@@ -175,7 +168,10 @@
 
     <!-- RESULTS -->
     <section class="results-section">
-      <div id="results"></div>
+    <div id="loading" class="loading" aria-live="polite">
+    Understanding intent<span class="dots"></span>
+    </div>
+    <div id="results"></div>
     </section>
 
     <!-- HISTORY -->
