@@ -2122,3 +2122,15 @@ body.dark .ai-markdown pre {
   font-style: italic;
   opacity: 0.7;
 }
+
+:root {
+  --accent: #3b82f6;
+}
+
+#searchBox {
+  caret-color: var(--accent);
+}
+
+body.dark #searchBox {
+  caret-color: #60a5fa; /* slightly brighter in dark mode */
+}
