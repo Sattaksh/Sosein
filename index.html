@@ -18,17 +18,50 @@
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
   
   <link rel="icon" href="favicon.ico" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+
   <link rel="stylesheet" href="style.css" />
+  <link rel="canonical" href="https://sosein.netlify.app/" />
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <!-- Schema -->
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    "name": "Sosein",
-    "url": "https://sosein.netlify.app",
-    "logo": "https://sosein.netlify.app/logo.png"
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Sosein",
+  "alternateName": "Sosein Search Engine",
+  "url": "https://sosein.netlify.app/",
+  "description": "Sosein is a minimalist AI-powered intelligent search engine focused on intent, meaning, and relevance.",
+  "publisher": {
+    "@type": "Person",
+    "name": "Sattaksh Ratan"
+  },
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://sosein.netlify.app/?q={search_term_string}",
+    "query-input": "required name=search_term_string"
   }
+}
+  </script>
+  
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Sosein",
+  "url": "https://sosein.netlify.app/",
+  "logo": {
+  "@type": "ImageObject",
+  "url": "https://sosein.netlify.app/logo.png",
+  "width": 512,
+  "height": 512
+  },
+  "sameAs": [
+    "https://sosein.netlify.app/"
+  ]
+}
   </script>
 </head>
 
@@ -60,10 +93,11 @@
     <section class="hero">
       <div class="hero-content">
 
-        <h1 class="hero-title">
-         <span id="typewriter"></span><span 
-        class="typewriter-cursor">|</span>
-        </h1>
+       <h1 class="hero-title">
+        <span class="sr-only">Sosein – A Minimalist Intelligent Search Engine</span>
+        <span id="typewriter" aria-hidden="true"></span>
+        <span class="typewriter-cursor" aria-hidden="true">|</span>
+       </h1>
         <p class="hero-subtitle">
           Sosein is a minimalist AI-powered search engine designed to understand intent,
           not just keywords.
