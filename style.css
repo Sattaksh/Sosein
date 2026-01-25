@@ -2087,3 +2087,7 @@ body.dark .ai-markdown pre {
   }
 }
 
+.sr-only {
+  position: absolute;
+  left: -9999px;
+}
