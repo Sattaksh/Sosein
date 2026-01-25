@@ -582,19 +582,6 @@ body.searching .search-wrapper {
   display: block;
 }
 
-.loading::after {
-  content: '';
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-  border: 3px solid var(--border);
-  border-top-color: var(--accent);
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-  margin-left: 0.75rem;
-  vertical-align: middle;
-}
-
 /* ============================================
    RESULTS SECTION
    ============================================ */
@@ -2149,3 +2136,42 @@ body.dark #searchBox {
     transform: translateY(0);
   }
   }
+
+/* ===== LOADING OVERLAY ===== */
+.loading-overlay {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: transparent; /* no dim unless you want it */
+  z-index: 9999;
+  pointer-events: none;
+}
+
+.loading-overlay.show {
+  display: flex;
+}
+
+.loading-text {
+  font-size: 1.05rem;
+  color: var(--muted);
+  letter-spacing: 0.3px;
+}
+
+/* Animated dots */
+.dots::after {
+  content: '';
+  display: inline-block;
+  width: 1.2em;
+  text-align: left;
+  animation: dots 1.4s steps(4, end) infinite;
+}
+
+@keyframes dots {
+  0%   { content: ''; }
+  25%  { content: '.'; }
+  50%  { content: '..'; }
+  75%  { content: '...'; }
+  100% { content: ''; }
+}
