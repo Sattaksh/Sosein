@@ -47,7 +47,26 @@ if (heroTitle && !document.body.classList.contains("searching")) {
   const clearBtn = document.getElementById("clearBtn");
   let CURRENT_MODEL = "mistralai/devstral-2512:free"; //xiaomi/mimo-v2-flash:free
   let uploadedImageData = null;
-  
+
+  const shareBtn = document.getElementById("shareBtn");
+  if (shareBtn && navigator.share) {
+  shareBtn.addEventListener("click", async () => {
+    try {
+      await navigator.share({
+        title: "Sosein – Intelligent Search Engine",
+        text: "A minimalist AI-powered search engine focused on meaning, not noise.",
+        url: "https://sosein.netlify.app/"
+      });
+    } catch (err) {
+      // user cancelled — ignore
+    }
+  });
+} else if (shareBtn) {
+  shareBtn.addEventListener("click", async () => {
+    await navigator.clipboard.writeText("https://sosein.netlify.app/");
+    alert("Link copied to clipboard");
+  });
+}
 
 // Show/hide ✖ when typing
 searchBox.addEventListener("input", () => {
