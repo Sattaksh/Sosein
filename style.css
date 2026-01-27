@@ -3,6 +3,11 @@ html, body {
   max-width: 100%;
 }
 
+html {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
 :root {
   --bg: #ffffff;
   --text: #1a1a1a;
@@ -2330,4 +2335,24 @@ body.dark ::-webkit-scrollbar-thumb {
 @keyframes shimmer {
   0% { background-position: 100% 0; }
   100% { background-position: 0 0; }
+}
+
+.results-section {
+  contain: layout paint;
+}
+
+.card {
+  contain: content;
+}
+
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 1ms !important;
+    transition-duration: 1ms !important;
+  }
+}
+
+body {
+  transition: background-color 120ms ease, color 120ms ease;
 }
