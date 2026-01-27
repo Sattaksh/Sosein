@@ -1039,7 +1039,7 @@ document.addEventListener("click", async (e) => {
 let isSpeaking = false;
 let activeWordIndex = -1;
 
-document.addEventListener("click", async (e) => {
+document.addEventListener("click", (e) => {
   const speakBtn = e.target.closest(".speak-btn");
   if (!speakBtn) return;
 
@@ -1049,13 +1049,21 @@ document.addEventListener("click", async (e) => {
 
   const card = speakBtn.closest(".card");
   const summaryEl = card.querySelector(".wiki-summary");
-  const words = [...summaryEl.querySelectorAll(".spoken-word")];
+
+  // Build word map fresh (important)
+  const rawText = summaryEl.textContent.trim();
+  const words = rawText.split(/\s+/);
+
+  summaryEl.innerHTML = words
+    .map(w => `<span class="spoken-word">${w}</span>`)
+    .join(" ");
+
+  const wordSpans = [...summaryEl.querySelectorAll(".spoken-word")];
 
   // STOP
   if (isSpeaking) {
     speechSynthesis.cancel();
-    cleanupHighlight(words);
-    isSpeaking = false;
+    cleanup();
     speakBtn.dataset.state = "idle";
     return;
   }
@@ -1064,40 +1072,39 @@ document.addEventListener("click", async (e) => {
   isSpeaking = true;
   speakBtn.dataset.state = "speaking";
 
-  const rawText = decodeURIComponent(summaryEl.dataset.rawText || "");
   const utterance = new SpeechSynthesisUtterance(rawText);
   utterance.lang = "en-US";
   utterance.rate = 1;
   utterance.pitch = 1;
 
   utterance.onboundary = (e) => {
-    if (e.name !== "word") return;
-
     const charIndex = e.charIndex;
+    if (charIndex == null) return;
+
     const upto = rawText.slice(0, charIndex);
     const index = upto.trim().split(/\s+/).length - 1;
 
-    if (index !== activeWordIndex) {
-      cleanupHighlight(words);
+    if (index !== activeWordIndex && wordSpans[index]) {
+      cleanup();
       activeWordIndex = index;
-      words[index]?.classList.add("active-word");
+      wordSpans[index].classList.add("active-word");
     }
   };
 
   utterance.onend = utterance.onerror = () => {
-    cleanupHighlight(words);
-    isSpeaking = false;
+    cleanup();
     speakBtn.dataset.state = "idle";
   };
 
   speechSynthesis.cancel();
   speechSynthesis.speak(utterance);
-});
 
-function cleanupHighlight(words) {
-  words.forEach(w => w.classList.remove("active-word"));
-  activeWordIndex = -1;
-}
+  function cleanup() {
+    wordSpans.forEach(w => w.classList.remove("active-word"));
+    activeWordIndex = -1;
+    isSpeaking = false;
+  }
+});
 
 // Add this code to your existing script.js file
 
