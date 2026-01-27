@@ -1018,33 +1018,54 @@ document.addEventListener("click", async (e) => {
 
 // 🔊 Handle 'Read the article' speak button
 // 🔊 Speak full Wikipedia extract when clicking "Read the article" button
+let isSpeaking = false;
+
 document.addEventListener("click", async (e) => {
-  if (e.target.classList.contains("speak-btn")) {
-    e.stopPropagation(); // Prevent global click from cancelling immediately
+  const speakBtn = e.target.closest(".speak-btn");
+  if (!speakBtn) return;
 
-    const title = e.target.dataset.title;
-    if (!title) return;
+  e.stopPropagation();
 
-    try {
-      const res = await fetch(`https://en.wikipedia.org/w/api.php?action=query&prop=extracts&format=json&explaintext=true&titles=${title}&origin=*`);
-      const data = await res.json();
-      const page = Object.values(data.query.pages)[0];
-      const fullText = page.extract;
+  const title = speakBtn.dataset.title;
+  if (!title) return;
 
-      if ('speechSynthesis' in window) {
-        speechSynthesis.cancel();
-        const utterance = new SpeechSynthesisUtterance(fullText);
-        utterance.lang = "en-US";
-        speechSynthesis.speak(utterance);
-      }
-    } catch (err) {
-      console.error("Speech fetch failed:", err);
-    }
-  } else {
-    // Stop speech if clicked anywhere else
-    if ('speechSynthesis' in window) {
-      speechSynthesis.cancel();
-    }
+  if (!("speechSynthesis" in window)) return;
+
+  // Toggle OFF if already speaking
+  if (isSpeaking) {
+    speechSynthesis.cancel();
+    isSpeaking = false;
+    speakBtn.textContent = "🔊";
+    return;
+  }
+
+  try {
+    const res = await fetch(
+      `https://en.wikipedia.org/w/api.php?action=query&prop=extracts&format=json&explaintext=true&titles=${title}&origin=*`
+    );
+
+    const data = await res.json();
+    const page = Object.values(data.query.pages)[0];
+    const text = page.extract;
+
+    speechSynthesis.cancel();
+
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = "en-US";
+
+    utterance.onend = () => {
+      isSpeaking = false;
+      speakBtn.textContent = "🔊";
+    };
+
+    isSpeaking = true;
+    speakBtn.textContent = "⏹";
+    speechSynthesis.speak(utterance);
+
+  } catch (err) {
+    console.error("Speech failed:", err);
+    isSpeaking = false;
+    speakBtn.textContent = "🔊";
   }
 });
 
