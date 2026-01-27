@@ -1057,23 +1057,36 @@ document.addEventListener("click", (e) => {
   fetch(
     `https://en.wikipedia.org/w/api.php?action=query&prop=extracts&format=json&explaintext=true&titles=${title}&origin=*`
   )
-    .then(res => res.json())
-    .then(data => {
-      const page = Object.values(data.query.pages)[0];
-      if (!page?.extract) return;
+  .then(data => {
+  const page = Object.values(data.query.pages)[0];
+  if (!page?.extract) return;
 
-      speechSynthesis.cancel();
+  const text = page.extract
+    .replace(/\n+/g, " ")
+    .slice(0, 4000); // HARD LIMIT (important)
 
-      const utterance = new SpeechSynthesisUtterance(page.extract);
-      utterance.lang = "en-US";
+  speechSynthesis.cancel();
 
-      utterance.onend = () => {
-        isSpeaking = false;
-        speakBtn.textContent = "🔊";
-      };
+  // ⏳ Yield one frame — critical for Android
+  setTimeout(() => {
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = "en-US";
+    utterance.rate = 1;
+    utterance.pitch = 1;
 
-      speechSynthesis.speak(utterance);
-    })
+    utterance.onend = () => {
+      isSpeaking = false;
+      speakBtn.textContent = "🔊";
+    };
+
+    utterance.onerror = () => {
+      isSpeaking = false;
+      speakBtn.textContent = "🔊";
+    };
+
+    speechSynthesis.speak(utterance);
+  }, 100);
+})
     .catch(err => {
       console.error(err);
       speechSynthesis.cancel();
