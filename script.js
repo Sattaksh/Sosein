@@ -1067,7 +1067,7 @@ document.addEventListener("click", (e) => {
 
   if (!("speechSynthesis" in window)) return;
 
-  // ⛔ STOP
+  // TOGGLE OFF
   if (isSpeaking) {
     speechSynthesis.cancel();
     isSpeaking = false;
@@ -1075,16 +1075,16 @@ document.addEventListener("click", (e) => {
     return;
   }
 
-  // ▶ START
+  // TOGGLE ON
   isSpeaking = true;
   speakBtn.dataset.state = "speaking";
 
-  speechSynthesis.cancel();
+  // Gesture-safe preload
+  currentUtterance = new SpeechSynthesisUtterance("Loading article.");
+  currentUtterance.lang = "en-US";
 
-  // Gesture-safe short utterance
-  speechSynthesis.speak(
-    new SpeechSynthesisUtterance("Loading article.")
-  );
+  speechSynthesis.cancel();
+  speechSynthesis.speak(currentUtterance);
 
   const title = speakBtn.dataset.title;
   if (!title) return;
@@ -1097,28 +1097,10 @@ document.addEventListener("click", (e) => {
       const page = Object.values(data.query.pages)[0];
       if (!page?.extract) throw new Error("No extract");
 
-      const text = page.extract
-        .replace(/\n+/g, " ")
-        .slice(0, 3500);
+      const text = page.extract.replace(/\n+/g, " ").slice(0, 3500);
 
       const articleUtterance = new SpeechSynthesisUtterance(text);
       articleUtterance.lang = "en-US";
-      articleUtterance.rate = 1;
-      articleUtterance.pitch = 1;
-
-      // 🔥 WORD HIGHLIGHT STARTS HERE
-      articleUtterance.onstart = () => {
-        const summaryEl = speakBtn
-          .closest(".card")
-          .querySelector(".wiki-summary");
-
-        if (summaryEl) {
-          highlightWordsSequentially(
-            summaryEl,
-            articleUtterance.text.length * 35
-          );
-        }
-      };
 
       articleUtterance.onend = () => {
         isSpeaking = false;
@@ -1138,7 +1120,6 @@ document.addEventListener("click", (e) => {
       speakBtn.dataset.state = "idle";
     });
 });
-
 // Add this code to your existing script.js file
 
 // Function to handle search initiation - called from all search triggers
