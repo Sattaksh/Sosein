@@ -704,14 +704,13 @@ if (enhance) {
    <button
   class="speak-btn"
   data-title="${encodeURIComponent(d.title)}"
+  data-state="idle"
   aria-label="Read aloud"
-  data-state="idle" >
-  <svg class="speak-icon" viewBox="0 0 24 24" width="16" height="16">
-    <path d="M11 5L6 9H3v6h3l5 4V5z"/>
-    <path class="wave" d="M15 9a4 4 0 010 6" />
-    <path class="wave" d="M17.5 6.5a7 7 0 010 11" />
+>
+  <svg viewBox="0 0 24 24" class="speak-icon">
+    <path d="M5 9v6h4l5 5V4L9 9H5z"></path>
   </svg>
-  </button>
+</button>
       </h2>
       <p class="wiki-summary">${d.extract || "No summary available."}</p>
       ${img}
