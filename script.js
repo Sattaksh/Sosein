@@ -1032,7 +1032,7 @@ document.addEventListener("click", (e) => {
     return;
   }
 
-  // Toggle off
+  // Toggle OFF
   if (isSpeaking) {
     speechSynthesis.cancel();
     isSpeaking = false;
@@ -1040,53 +1040,50 @@ document.addEventListener("click", (e) => {
     return;
   }
 
-  // 🔑 Start speaking IMMEDIATELY (gesture-safe)
+  isSpeaking = true;
+  speakBtn.textContent = "⏹";
+
+  // ✅ ONE utterance, started immediately (gesture-safe)
   currentUtterance = new SpeechSynthesisUtterance("Loading article.");
   currentUtterance.lang = "en-US";
 
   speechSynthesis.cancel();
   speechSynthesis.speak(currentUtterance);
 
-  isSpeaking = true;
-  speakBtn.textContent = "⏹";
-
-  // Now fetch real content
   const title = speakBtn.dataset.title;
   if (!title) return;
 
   fetch(
     `https://en.wikipedia.org/w/api.php?action=query&prop=extracts&format=json&explaintext=true&titles=${title}&origin=*`
   )
-  .then(data => {
-  const page = Object.values(data.query.pages)[0];
-  if (!page?.extract) return;
+    .then(res => res.json())
+    .then(data => {
+      const page = Object.values(data.query.pages)[0];
+      if (!page?.extract) throw new Error("No extract");
 
-  const text = page.extract
-    .replace(/\n+/g, " ")
-    .slice(0, 4000); // HARD LIMIT (important)
+      const text = page.extract
+        .replace(/\n+/g, " ")
+        .slice(0, 3500); // keep it safe
 
-  speechSynthesis.cancel();
+      // ⛔ DO NOT cancel
+      // ✅ Queue next utterance instead
+      const articleUtterance = new SpeechSynthesisUtterance(text);
+      articleUtterance.lang = "en-US";
+      articleUtterance.rate = 1;
+      articleUtterance.pitch = 1;
 
-  // ⏳ Yield one frame — critical for Android
-  setTimeout(() => {
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = "en-US";
-    utterance.rate = 1;
-    utterance.pitch = 1;
+      articleUtterance.onend = () => {
+        isSpeaking = false;
+        speakBtn.textContent = "🔊";
+      };
 
-    utterance.onend = () => {
-      isSpeaking = false;
-      speakBtn.textContent = "🔊";
-    };
+      articleUtterance.onerror = () => {
+        isSpeaking = false;
+        speakBtn.textContent = "🔊";
+      };
 
-    utterance.onerror = () => {
-      isSpeaking = false;
-      speakBtn.textContent = "🔊";
-    };
-
-    speechSynthesis.speak(utterance);
-  }, 100);
-})
+      speechSynthesis.speak(articleUtterance);
+    })
     .catch(err => {
       console.error(err);
       speechSynthesis.cancel();
