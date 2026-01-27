@@ -47,6 +47,7 @@ if (heroTitle && !document.body.classList.contains("searching")) {
   const clearBtn = document.getElementById("clearBtn");
   let CURRENT_MODEL = "mistralai/devstral-2512:free"; //xiaomi/mimo-v2-flash:free
   let uploadedImageData = null;
+  const aiIntentRegex = /\b(what|why|how|explain|analyze|analyse|create|generate|summarize|summarise|which|who|when|where|can|could|would|should|is|are|was|were|define|compare|list|tell|write)\b|\?/i;
 
   const shareBtn = document.getElementById("shareBtn");
   if (shareBtn && navigator.share) {
@@ -70,7 +71,17 @@ if (heroTitle && !document.body.classList.contains("searching")) {
 
 // Show/hide ✖ when typing
 searchBox.addEventListener("input", () => {
-  clearBtn.style.display = searchBox.value ? "block" : "none";
+  const value = searchBox.value.trim();
+
+  // Show / hide clear button
+  clearBtn.style.display = value ? "block" : "none";
+
+  // AI intent detection
+  if (aiIntentRegex.test(value)) {
+    searchBox.classList.add("ai-intent");
+  } else {
+    searchBox.classList.remove("ai-intent");
+  }
 });
 
 // Clear input when clicked
