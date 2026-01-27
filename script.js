@@ -47,7 +47,7 @@ if (heroTitle && !document.body.classList.contains("searching")) {
   const clearBtn = document.getElementById("clearBtn");
   let CURRENT_MODEL = "mistralai/devstral-2512:free"; //xiaomi/mimo-v2-flash:free
   let uploadedImageData = null;
-  const aiIntentRegex = /\b(what|why|how|explain|analyze|analyse|create|generate|summarize|summarise|which|who|when|where|can|could|would|should|is|are|was|were|define|compare|list|tell|write)\b|\?/i;
+  const aiIntentRegex = /\b(what|why|how|do|form|enlist|solve|tell me|facts about|recommend|detail|if|difference|explain|analyze|analyse|create|generate|summarize|summarise|which|who|when|where|can|could|would|should|is|are|was|were|define|compare|list|tell|write)\b|\?/i;
 
   const shareBtn = document.getElementById("shareBtn");
   if (shareBtn && navigator.share) {
@@ -373,7 +373,7 @@ searchBox.addEventListener("keypress", e => {
       "who", "?", "write", "review", "summary", "give", "will", "where", "was", "which", "explain", 
       "summarize", "compare", "list", "create", "generate", "suggest", "recommend", "calculate", 
       "translate", "solve", "draft", "outline", "analyze", "how to", "what is the", "what are the","best", "top", "vs", "difference between", 
-      "meaning of", "facts about", "tell me", "meaning", "state", "is there", "*"];
+      "meaning of", "facts about", "tell me", "meaning", "state", "is there", "*", "do", "enlist"];
      const isTextQuestion = questionWords.includes(term.split(" ")[0].toLowerCase());                       
     
     //const isTextQuestion = questionWords.some(w => term.toLowerCase().includes(w));
