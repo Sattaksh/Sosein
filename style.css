@@ -582,6 +582,13 @@ body.searching .search-wrapper {
   display: block;
 }
 
+:root {
+  --bg-soft: #f5f6f8;
+}
+
+body.dark {
+  --bg-soft: #1f1f1f;
+}
 /* ============================================
    RESULTS SECTION
    ============================================ */
@@ -1858,7 +1865,7 @@ html {
 .navbar,
 .card,
 #searchBox {
-  will-change: transform, opacity;
+  will-change: auto, opacity;
 }
 
 /* Consistent Apple-style easing */
@@ -1875,6 +1882,7 @@ a,
 .card:hover,
 button:hover {
   transform: translateY(-2px);
+  will-change: transform;
 }
 
 /* Respect reduced motion */
