@@ -2176,21 +2176,27 @@ body.dark #searchBox {
   100% { content: ''; }
 }
 
-/* Smooth intent emphasis */
 #searchBox {
   font-weight: 400;
-  transition: font-weight 220ms ease, color 220ms ease;
+  color: var(--text-primary);
+  transition: background 250ms ease, color 250ms ease;
 }
 
-/* AI intent detected */
 #searchBox.ai-intent {
-  font-weight: 600;
+  background: linear-gradient(
+    90deg,
+    #5b5b5b,
+    #1a1a1a
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 body.dark #searchBox.ai-intent {
-  color: #ffffff;
-}
-
-body:not(.dark) #searchBox.ai-intent {
-  color: #111;
+  background: linear-gradient(
+    90deg,
+    #d6d6d6,
+    #ffffff
+  );
 }
