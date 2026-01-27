@@ -584,79 +584,16 @@ body.searching .search-wrapper {
    LOADING STATE
    ============================================ */
 .loading {
-  margin-top: 4rem;
+  display: none;
   text-align: center;
-  font-size: 1rem;
-  letter-spacing: 0.3px;
-  color: rgba(255, 255, 255, 0.65);
-  opacity: 0.9;
-
-  /* Animation */
-  animation: intentFloat 2.6s ease-in-out infinite;
-  will-change: transform, opacity;
-}
-
-/* worm float*/
-
-@keyframes intentFloat {
-  0% {
-    transform: translateY(0);
-    opacity: 0.55;
-  }
-  50% {
-    transform: translateY(-6px);
-    opacity: 0.85;
-  }
-  100% {
-    transform: translateY(0);
-    opacity: 0.55;
-  }
-}
-
-.loading {
-  text-shadow:
-    0 0 0px rgba(100, 160, 255, 0.0);
-  animation:
-    intentFloat 2.6s ease-in-out infinite,
-    intentGlow 2.6s ease-in-out infinite;
-}
-
-@keyframes intentGlow {
-  0% {
-    text-shadow:
-      0 0 0px rgba(100, 160, 255, 0.0);
-  }
-  50% {
-    text-shadow:
-      0 0 12px rgba(100, 160, 255, 0.25);
-  }
-  100% {
-    text-shadow:
-      0 0 0px rgba(100, 160, 255, 0.0);
-  }
-}
-
-
-body:not(.dark) .loading {
-  color: rgba(0, 0, 0, 0.6);
-}
-
-body:not(.dark) .loading {
-  text-shadow:
-    0 0 10px rgba(0, 120, 255, 0.15);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .loading {
-    animation: none;
-    opacity: 0.7;
-  }
+  padding: 3rem;
+  font-size: 1.1rem;
+  color: var(--muted);
 }
 
 .loading.show {
   display: block;
 }
-
 
 /* ============================================
    RESULTS SECTION
@@ -2215,7 +2152,7 @@ body.dark #searchBox {
   }
 
 /* ===== LOADING OVERLAY ===== */
-/*
+
 .loading-overlay {
   position: fixed;
   inset: 0;
@@ -2223,7 +2160,7 @@ body.dark #searchBox {
   align-items: center;
   justify-content: center;
   background: transparent; /* no dim unless you want it */
- /* z-index: 9999;
+  z-index: 9999;
   pointer-events: none;
 }
 
@@ -2238,7 +2175,7 @@ body.dark #searchBox {
 }
 
 /* Animated dots */
-/*.dots::after {
+.dots::after {
   content: '';
   display: inline-block;
   width: 1.2em;
