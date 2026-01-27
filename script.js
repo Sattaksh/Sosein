@@ -221,6 +221,26 @@ function clearUploadedImage() {
     }
 }
 
+function highlightWordsSequentially(container, durationMs) {
+  const words = Array.from(container.querySelectorAll(".spoken-word"));
+  if (!words.length) return;
+
+  const perWord = Math.max(durationMs / words.length, 60);
+  let index = 0;
+
+  function step() {
+    if (index > 0) {
+      words[index - 1].classList.remove("active");
+    }
+    if (index >= words.length) return;
+
+    words[index].classList.add("active");
+    index++;
+    setTimeout(step, perWord);
+  }
+
+  step();
+}
 
 function buildTMDBMovieCard(movie) {
   const poster = movie.poster_path
@@ -1037,7 +1057,7 @@ document.addEventListener("click", async (e) => {
 // 🔊 Handle 'Read the article' speak button
 // 🔊 Speak full Wikipedia extract when clicking "Read the article" button
 let isSpeaking = false;
-let activeWordIndex = -1;
+let currentUtterance = null;
 
 document.addEventListener("click", (e) => {
   const speakBtn = e.target.closest(".speak-btn");
@@ -1047,63 +1067,76 @@ document.addEventListener("click", (e) => {
 
   if (!("speechSynthesis" in window)) return;
 
-  const card = speakBtn.closest(".card");
-  const summaryEl = card.querySelector(".wiki-summary");
-
-  // Build word map fresh (important)
-  const rawText = summaryEl.textContent.trim();
-  const words = rawText.split(/\s+/);
-
-  summaryEl.innerHTML = words
-    .map(w => `<span class="spoken-word">${w}</span>`)
-    .join(" ");
-
-  const wordSpans = [...summaryEl.querySelectorAll(".spoken-word")];
-
-  // STOP
+  // ⛔ STOP
   if (isSpeaking) {
     speechSynthesis.cancel();
-    cleanup();
+    isSpeaking = false;
     speakBtn.dataset.state = "idle";
     return;
   }
 
-  // START
+  // ▶ START
   isSpeaking = true;
   speakBtn.dataset.state = "speaking";
 
-  const utterance = new SpeechSynthesisUtterance(rawText);
-  utterance.lang = "en-US";
-  utterance.rate = 1;
-  utterance.pitch = 1;
-
-  utterance.onboundary = (e) => {
-    const charIndex = e.charIndex;
-    if (charIndex == null) return;
-
-    const upto = rawText.slice(0, charIndex);
-    const index = upto.trim().split(/\s+/).length - 1;
-
-    if (index !== activeWordIndex && wordSpans[index]) {
-      cleanup();
-      activeWordIndex = index;
-      wordSpans[index].classList.add("active-word");
-    }
-  };
-
-  utterance.onend = utterance.onerror = () => {
-    cleanup();
-    speakBtn.dataset.state = "idle";
-  };
-
   speechSynthesis.cancel();
-  speechSynthesis.speak(utterance);
 
-  function cleanup() {
-    wordSpans.forEach(w => w.classList.remove("active-word"));
-    activeWordIndex = -1;
-    isSpeaking = false;
-  }
+  // Gesture-safe short utterance
+  speechSynthesis.speak(
+    new SpeechSynthesisUtterance("Loading article.")
+  );
+
+  const title = speakBtn.dataset.title;
+  if (!title) return;
+
+  fetch(
+    `https://en.wikipedia.org/w/api.php?action=query&prop=extracts&format=json&explaintext=true&titles=${title}&origin=*`
+  )
+    .then(res => res.json())
+    .then(data => {
+      const page = Object.values(data.query.pages)[0];
+      if (!page?.extract) throw new Error("No extract");
+
+      const text = page.extract
+        .replace(/\n+/g, " ")
+        .slice(0, 3500);
+
+      const articleUtterance = new SpeechSynthesisUtterance(text);
+      articleUtterance.lang = "en-US";
+      articleUtterance.rate = 1;
+      articleUtterance.pitch = 1;
+
+      // 🔥 WORD HIGHLIGHT STARTS HERE
+      articleUtterance.onstart = () => {
+        const summaryEl = speakBtn
+          .closest(".card")
+          .querySelector(".wiki-summary");
+
+        if (summaryEl) {
+          highlightWordsSequentially(
+            summaryEl,
+            articleUtterance.text.length * 35
+          );
+        }
+      };
+
+      articleUtterance.onend = () => {
+        isSpeaking = false;
+        speakBtn.dataset.state = "idle";
+      };
+
+      articleUtterance.onerror = () => {
+        isSpeaking = false;
+        speakBtn.dataset.state = "idle";
+      };
+
+      speechSynthesis.speak(articleUtterance);
+    })
+    .catch(() => {
+      speechSynthesis.cancel();
+      isSpeaking = false;
+      speakBtn.dataset.state = "idle";
+    });
 });
 
 // Add this code to your existing script.js file
