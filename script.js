@@ -1019,19 +1019,20 @@ document.addEventListener("click", async (e) => {
 // 🔊 Handle 'Read the article' speak button
 // 🔊 Speak full Wikipedia extract when clicking "Read the article" button
 let isSpeaking = false;
+let currentUtterance = null;
 
-document.addEventListener("click", async (e) => {
+document.addEventListener("click", (e) => {
   const speakBtn = e.target.closest(".speak-btn");
   if (!speakBtn) return;
 
   e.stopPropagation();
 
-  const title = speakBtn.dataset.title;
-  if (!title) return;
+  if (!("speechSynthesis" in window)) {
+    alert("Speech not supported");
+    return;
+  }
 
-  if (!("speechSynthesis" in window)) return;
-
-  // Toggle OFF if already speaking
+  // Toggle off
   if (isSpeaking) {
     speechSynthesis.cancel();
     isSpeaking = false;
@@ -1039,34 +1040,46 @@ document.addEventListener("click", async (e) => {
     return;
   }
 
-  try {
-    const res = await fetch(
-      `https://en.wikipedia.org/w/api.php?action=query&prop=extracts&format=json&explaintext=true&titles=${title}&origin=*`
-    );
+  // 🔑 Start speaking IMMEDIATELY (gesture-safe)
+  currentUtterance = new SpeechSynthesisUtterance("Loading article.");
+  currentUtterance.lang = "en-US";
 
-    const data = await res.json();
-    const page = Object.values(data.query.pages)[0];
-    const text = page.extract;
+  speechSynthesis.cancel();
+  speechSynthesis.speak(currentUtterance);
 
-    speechSynthesis.cancel();
+  isSpeaking = true;
+  speakBtn.textContent = "⏹";
 
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = "en-US";
+  // Now fetch real content
+  const title = speakBtn.dataset.title;
+  if (!title) return;
 
-    utterance.onend = () => {
+  fetch(
+    `https://en.wikipedia.org/w/api.php?action=query&prop=extracts&format=json&explaintext=true&titles=${title}&origin=*`
+  )
+    .then(res => res.json())
+    .then(data => {
+      const page = Object.values(data.query.pages)[0];
+      if (!page?.extract) return;
+
+      speechSynthesis.cancel();
+
+      const utterance = new SpeechSynthesisUtterance(page.extract);
+      utterance.lang = "en-US";
+
+      utterance.onend = () => {
+        isSpeaking = false;
+        speakBtn.textContent = "🔊";
+      };
+
+      speechSynthesis.speak(utterance);
+    })
+    .catch(err => {
+      console.error(err);
+      speechSynthesis.cancel();
       isSpeaking = false;
       speakBtn.textContent = "🔊";
-    };
-
-    isSpeaking = true;
-    speakBtn.textContent = "⏹";
-    speechSynthesis.speak(utterance);
-
-  } catch (err) {
-    console.error("Speech failed:", err);
-    isSpeaking = false;
-    speakBtn.textContent = "🔊";
-  }
+    });
 });
 
 // Add this code to your existing script.js file
