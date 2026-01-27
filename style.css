@@ -2193,3 +2193,56 @@ body.dark #searchBox.ai-intent {
 body:not(.dark) #searchBox.ai-intent {
   color: #111;
 }
+
+/* Speak button container */
+.speak-btn {
+  background: none;
+  border: none;
+  padding: 0.35rem;
+  margin-left: 0.5rem;
+  cursor: pointer;
+  color: var(--muted);
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+  border-radius: 6px;
+  transition: color 180ms ease, background 180ms ease;
+}
+
+/* Hover */
+.speak-btn:hover {
+  background: rgba(0,0,0,0.05);
+  color: var(--accent);
+}
+
+body.dark .speak-btn:hover {
+  background: rgba(255,255,255,0.08);
+}
+
+/* Icon */
+.speak-icon {
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+}
+
+/* Sound waves */
+.speak-icon .wave {
+  opacity: 0;
+  transition: opacity 150ms ease;
+}
+
+/* Speaking state */
+.speak-btn[data-state="speaking"] {
+  color: var(--accent);
+}
+
+.speak-btn[data-state="speaking"] .wave {
+  opacity: 1;
+  animation: wavePulse 1.2s ease-in-out infinite;
+}
+
+@keyframes wavePulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
