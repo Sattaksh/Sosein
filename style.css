@@ -2177,13 +2177,13 @@ body.dark #searchBox {
 }
 
 #searchBox {
-  font-weight: 400;
+  font-weight: 450;
   transition: font-weight 200ms ease, letter-spacing 200ms ease;
 }
 
 #searchBox.ai-intent {
   font-weight: 550;
-  letter-spacing: 0.2px;
+  letter-spacing: -0.01em;
 }
 
 body.dark #searchBox.ai-intent {
