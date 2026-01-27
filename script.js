@@ -1037,23 +1037,21 @@ document.addEventListener("click", (e) => {
 
   e.stopPropagation();
 
-  if (!("speechSynthesis" in window)) {
-    alert("Speech not supported");
-    return;
-  }
+  if (!("speechSynthesis" in window)) return;
 
-  // Toggle OFF
+  // TOGGLE OFF
   if (isSpeaking) {
     speechSynthesis.cancel();
     isSpeaking = false;
-    speakBtn.textContent = "🔊";
+    speakBtn.dataset.state = "idle";
     return;
   }
 
+  // TOGGLE ON
   isSpeaking = true;
-  speakBtn.textContent = "⏹";
+  speakBtn.dataset.state = "speaking";
 
-  // ✅ ONE utterance, started immediately (gesture-safe)
+  // Gesture-safe preload
   currentUtterance = new SpeechSynthesisUtterance("Loading article.");
   currentUtterance.lang = "en-US";
 
@@ -1071,37 +1069,29 @@ document.addEventListener("click", (e) => {
       const page = Object.values(data.query.pages)[0];
       if (!page?.extract) throw new Error("No extract");
 
-      const text = page.extract
-        .replace(/\n+/g, " ")
-        .slice(0, 3500); // keep it safe
+      const text = page.extract.replace(/\n+/g, " ").slice(0, 3500);
 
-      // ⛔ DO NOT cancel
-      // ✅ Queue next utterance instead
       const articleUtterance = new SpeechSynthesisUtterance(text);
       articleUtterance.lang = "en-US";
-      articleUtterance.rate = 1;
-      articleUtterance.pitch = 1;
 
       articleUtterance.onend = () => {
         isSpeaking = false;
-        speakBtn.textContent = "🔊";
+        speakBtn.dataset.state = "idle";
       };
 
       articleUtterance.onerror = () => {
         isSpeaking = false;
-        speakBtn.textContent = "🔊";
+        speakBtn.dataset.state = "idle";
       };
 
       speechSynthesis.speak(articleUtterance);
     })
-    .catch(err => {
-      console.error(err);
+    .catch(() => {
       speechSynthesis.cancel();
       isSpeaking = false;
-      speakBtn.textContent = "🔊";
+      speakBtn.dataset.state = "idle";
     });
 });
-
 // Add this code to your existing script.js file
 
 // Function to handle search initiation - called from all search triggers
