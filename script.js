@@ -270,7 +270,14 @@ async function fetchTMDBMovie(title) {
     return null;
   }
 }
-
+  //wrap function hereee
+function wrapWords(text) {
+  return text
+    .split(/\s+/)
+    .map(word => `<span class="spoken-word">${word}</span>`)
+    .join(" ");
+}
+  
 // Alternative positioning method if the above doesn't work perfectly
 function showImagePreviewAlternative(imageSrc, fileName) {
     // Remove existing preview if any
@@ -712,7 +719,9 @@ if (enhance) {
   </svg>
 </button>
       </h2>
-      <p class="wiki-summary">${d.extract || "No summary available."}</p>
+      <p class="wiki-summary" data-raw-text="${encodeURIComponent(d.extract || "")}">
+      ${wrapWords(d.extract || "No summary available")}
+      </p>
       ${img}
       <div class="wiki-expand-control">
         <button class="read-more-btn" data-title="${encodeURIComponent(d.title)}">Read more</button>
@@ -1028,9 +1037,9 @@ document.addEventListener("click", async (e) => {
 // 🔊 Handle 'Read the article' speak button
 // 🔊 Speak full Wikipedia extract when clicking "Read the article" button
 let isSpeaking = false;
-let currentUtterance = null;
+let activeWordIndex = -1;
 
-document.addEventListener("click", (e) => {
+document.addEventListener("click", async (e) => {
   const speakBtn = e.target.closest(".speak-btn");
   if (!speakBtn) return;
 
@@ -1038,59 +1047,58 @@ document.addEventListener("click", (e) => {
 
   if (!("speechSynthesis" in window)) return;
 
-  // TOGGLE OFF
+  const card = speakBtn.closest(".card");
+  const summaryEl = card.querySelector(".wiki-summary");
+  const words = [...summaryEl.querySelectorAll(".spoken-word")];
+
+  // STOP
   if (isSpeaking) {
     speechSynthesis.cancel();
+    cleanupHighlight(words);
     isSpeaking = false;
     speakBtn.dataset.state = "idle";
     return;
   }
 
-  // TOGGLE ON
+  // START
   isSpeaking = true;
   speakBtn.dataset.state = "speaking";
 
-  // Gesture-safe preload
-  currentUtterance = new SpeechSynthesisUtterance("Loading article.");
-  currentUtterance.lang = "en-US";
+  const rawText = decodeURIComponent(summaryEl.dataset.rawText || "");
+  const utterance = new SpeechSynthesisUtterance(rawText);
+  utterance.lang = "en-US";
+  utterance.rate = 1;
+  utterance.pitch = 1;
+
+  utterance.onboundary = (e) => {
+    if (e.name !== "word") return;
+
+    const charIndex = e.charIndex;
+    const upto = rawText.slice(0, charIndex);
+    const index = upto.trim().split(/\s+/).length - 1;
+
+    if (index !== activeWordIndex) {
+      cleanupHighlight(words);
+      activeWordIndex = index;
+      words[index]?.classList.add("active-word");
+    }
+  };
+
+  utterance.onend = utterance.onerror = () => {
+    cleanupHighlight(words);
+    isSpeaking = false;
+    speakBtn.dataset.state = "idle";
+  };
 
   speechSynthesis.cancel();
-  speechSynthesis.speak(currentUtterance);
-
-  const title = speakBtn.dataset.title;
-  if (!title) return;
-
-  fetch(
-    `https://en.wikipedia.org/w/api.php?action=query&prop=extracts&format=json&explaintext=true&titles=${title}&origin=*`
-  )
-    .then(res => res.json())
-    .then(data => {
-      const page = Object.values(data.query.pages)[0];
-      if (!page?.extract) throw new Error("No extract");
-
-      const text = page.extract.replace(/\n+/g, " ").slice(0, 3500);
-
-      const articleUtterance = new SpeechSynthesisUtterance(text);
-      articleUtterance.lang = "en-US";
-
-      articleUtterance.onend = () => {
-        isSpeaking = false;
-        speakBtn.dataset.state = "idle";
-      };
-
-      articleUtterance.onerror = () => {
-        isSpeaking = false;
-        speakBtn.dataset.state = "idle";
-      };
-
-      speechSynthesis.speak(articleUtterance);
-    })
-    .catch(() => {
-      speechSynthesis.cancel();
-      isSpeaking = false;
-      speakBtn.dataset.state = "idle";
-    });
+  speechSynthesis.speak(utterance);
 });
+
+function cleanupHighlight(words) {
+  words.forEach(w => w.classList.remove("active-word"));
+  activeWordIndex = -1;
+}
+
 // Add this code to your existing script.js file
 
 // Function to handle search initiation - called from all search triggers
