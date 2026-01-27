@@ -2178,25 +2178,18 @@ body.dark #searchBox {
 
 #searchBox {
   font-weight: 400;
-  color: var(--text-primary);
-  transition: background 250ms ease, color 250ms ease;
+  transition: font-weight 200ms ease, letter-spacing 200ms ease;
 }
 
 #searchBox.ai-intent {
-  background: linear-gradient(
-    90deg,
-    #5b5b5b,
-    #1a1a1a
-  );
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  font-weight: 550;
+  letter-spacing: 0.2px;
 }
 
 body.dark #searchBox.ai-intent {
-  background: linear-gradient(
-    90deg,
-    #d6d6d6,
-    #ffffff
-  );
+  color: #f5f5f5;
+}
+
+body:not(.dark) #searchBox.ai-intent {
+  color: #111;
 }
