@@ -326,6 +326,7 @@ function renderDictionaryCard(data) {
 
   return `
     <div class="card dictionary-card">
+    <button class="card-dismiss" aria-label="Dismiss card">➖</button>
       <h2>${word}</h2>
 
       <div class="dict-pos">
@@ -361,6 +362,7 @@ function buildTMDBMovieCard(movie) {
 
   return `
     <div class="card movie-card">
+    <button class="card-dismiss" aria-label="Dismiss card">➖</button>
       <div class="movie-card-inner">
         ${poster ? `<img src="${poster}" alt="${movie.title} poster">` : ""}
 
@@ -534,6 +536,7 @@ searchBox.addEventListener("keypress", e => {
             // Your complete AI card and copy button logic remains here
             results.innerHTML = `
                 <div class="card ai-answer-card">
+                <button class="card-dismiss" aria-label="Dismiss card">➖</button>
                   <div class="ai-card-header">
                     <h3>✦︎ Sosein AI</h3>
                     <div class="copy-container">
@@ -708,6 +711,7 @@ async function fetchAll(term) {
     if (works) {
       results.innerHTML += `
         <div class="card">
+        <button class="card-dismiss" aria-label="Dismiss card">➖</button>
           <h3>🎬 Famous Works</h3>
           <p>${works[0]}</p>
         </div>`;
@@ -719,6 +723,7 @@ async function fetchAll(term) {
   const imdbSearchUrl = `https://www.imdb.com/find?q=${encodeURIComponent(wikiData.title)}&s=tt`;
   results.innerHTML += `
     <div class="card">
+    <button class="card-dismiss" aria-label="Dismiss card">➖</button>
       <h3>🎞 IMDb Info</h3>
       <p><a href="${imdbSearchUrl}" target="_blank">🔗 Search "${term}" on IMDb</a></p>
     </div>`;
@@ -775,12 +780,14 @@ if (enhance) {
     html = `<div class="card"><h3>🎵 Spotify</h3><a href="${enhance.spotifyLink}" target="_blank">${wikiData.title} on Spotify</a></div>`;
   } else if (enhance.type === "movie") {
     html = `<div class="card">
+              <button class="card-dismiss" aria-label="Dismiss card">➖</button>
               <h3>🎬 IMDb Info</h3>
               <p>Rating: ${enhance.imdbRating}</p>
               <a href="${enhance.imdbLink}" target="_blank">View on IMDb</a>
             </div>`;
   } else if (enhance.type === "actor") {
     html = `<div class="card">
+              <button class="card-dismiss" aria-label="Dismiss card">➖</button>
               <h3>🎭 Famous Works</h3>
               <ul>${enhance.famousWorks.map(work => `<li>${work}</li>`).join("")}</ul>
               <a href="${enhance.imdbLink}" target="_blank">View on IMDb</a>
@@ -846,6 +853,7 @@ if (enhance) {
   const img = d.thumbnail?.source ? `<img src="${d.thumbnail.source}" alt="${d.title}">` : "";
   return `
     <div class="card">
+    <button class="card-dismiss" aria-label="Dismiss card">➖</button>
       <h2>${d.title || term}
    <button
   class="speak-btn"
