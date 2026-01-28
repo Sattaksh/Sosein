@@ -83,7 +83,19 @@ searchBox.addEventListener("input", () => {
     searchBox.classList.remove("ai-intent");
   }
 });
+  
+document.addEventListener("click", (e) => {
+  const moreBtn = e.target.closest(".dict-more span");
+  if (!moreBtn) return;
 
+  const card = moreBtn.closest(".dictionary-card");
+  const extra = card.querySelector(".dict-extra-wrapper");
+
+  const isOpen = !extra.hasAttribute("hidden");
+
+  extra.toggleAttribute("hidden");
+  moreBtn.textContent = isOpen ? "More senses →" : "Hide senses ←";
+});
 // Clear input when clicked
 clearBtn.addEventListener("click", () => {
   searchBox.value = "";
@@ -294,13 +306,28 @@ function renderDictionaryCard(data) {
       </div>`
     : "";
 
+  const extraMeaningsHTML = meanings
+    .slice(1)
+    .map(m => {
+      const d = m.definitions[0];
+      return `
+        <div class="dict-extra">
+          <strong>${m.partOfSpeech}</strong> — ${d.definition}
+        </div>
+      `;
+    })
+    .join("");
+
   const senseHint = hasMultipleSenses
-    ? `<div class="dict-more">Multiple meanings exist · <span>More senses →</span></div>`
+    ? `<div class="dict-more">
+        Multiple meanings exist · <span>More senses →</span>
+      </div>`
     : "";
 
   return `
     <div class="card dictionary-card">
       <h2>${word}</h2>
+
       <div class="dict-pos">
         ${firstMeaning.partOfSpeech} — ${def.definition}
       </div>
@@ -308,7 +335,12 @@ function renderDictionaryCard(data) {
       ${examplesHTML}
       ${synonymsHTML}
       ${antonymsHTML}
+
       ${senseHint}
+
+      <div class="dict-extra-wrapper" hidden>
+        ${extraMeaningsHTML}
+      </div>
     </div>
   `;
 }
