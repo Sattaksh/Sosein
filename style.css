@@ -2458,3 +2458,43 @@ body {
 .dict-extra-wrapper {
   margin-top: 0.6rem;
 }
+
+/* ---------- Card dismiss button ---------- */
+
+.card {
+  position: relative;
+}
+
+.card-dismiss {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+
+  background: transparent;
+  border: none;
+  cursor: pointer;
+
+  font-size: 14px;
+  line-height: 1;
+  opacity: 0.25;
+
+  transition: opacity 160ms ease, transform 160ms ease;
+}
+
+.card:hover .card-dismiss,
+.card-dismiss:focus-visible {
+  opacity: 0.6;
+}
+
+.card-dismiss:hover {
+  opacity: 0.9;
+  transform: scale(1.05);
+}
+
+/* Smooth collapse animation */
+.card.closing {
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
