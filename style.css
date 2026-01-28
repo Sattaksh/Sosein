@@ -2265,10 +2265,10 @@ body.dark .spoken-word.active-word {
 }
 
 /*wiki answer curator*/
-.wiki-summary {
+/*.wiki-summary {
   line-height: 1.7;
   letter-spacing: 0.01em;
-}
+} */
 
 /* speak btn feedback*/
 .speak-btn {
