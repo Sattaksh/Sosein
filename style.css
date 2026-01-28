@@ -2499,58 +2499,57 @@ body {
 }
 
 
-/* Card dismiss RED (remove) button */
+/* Ensure card is anchor */
 .card {
-  position: relative; /* ensure button anchors correctly */
+  position: relative;
+  overflow: hidden; /* clips button into card edge */
 }
 
+/* Square dismiss button */
 .card-dismiss {
   position: absolute;
-  top: 10px;
-  left: 10px;
+  top: 0;
+  left: 0;
 
-  width: 32px;
-  height: 32px;
+  width: 40px;
+  height: 40px;
 
-  border-radius: 50%;
   border: none;
+  border-radius: 0 0 10px 0; /* connected corner */
 
-  background: rgba(220, 38, 38, 0.12); /* soft red */
-  color: #dc2626; /* clean red */
+  background: #dc2626; /* strong red */
+  color: #ffffff;
 
-  font-size: 18px;
-  font-weight: 600;
+  font-size: 20px;
+  font-weight: 700;
   line-height: 1;
-
-  cursor: pointer;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
+  cursor: pointer;
+
   transition:
-    background 180ms ease,
-    transform 160ms ease,
-    opacity 160ms ease;
+    background 160ms ease,
+    transform 140ms ease;
 }
 
-/* Hover (desktop) */
+/* Hover */
 .card-dismiss:hover {
-  background: rgba(220, 38, 38, 0.2);
-  transform: scale(1.08);
+  background: #b91c1c;
 }
 
-/* Active click */
+/* Press */
 .card-dismiss:active {
-  transform: scale(0.95);
+  transform: scale(0.96);
 }
 
-/* Dark mode refinement */
+/* Dark mode tuning */
 body.dark .card-dismiss {
-  background: rgba(248, 113, 113, 0.15);
-  color: #f87171;
+  background: #ef4444;
 }
 
 body.dark .card-dismiss:hover {
-  background: rgba(248, 113, 113, 0.25);
+  background: #dc2626;
 }
