@@ -718,6 +718,7 @@ async function fetchAll(term) {
     // Embed Spotify
       results.innerHTML += `
       <div class="card">
+      <button class="card-dismiss" aria-label="Dismiss card">➖</button>
         <h3>🎧 Listen on Spotify</h3>
         <iframe style="border-radius:12px" src="https://open.spotify.com/embed/search/${encodeURIComponent(term)}" width="100%" height="80" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture"></iframe>
       </div>`;
@@ -913,6 +914,7 @@ if (enhance) {
 
       const bookCard = `
         <div class="card">
+        <button class="card-dismiss" aria-label="Dismiss card">➖</button>
           <h2>📚 ${title}</h2>
           <p><strong>Author(s):</strong> ${authors}</p>
           <p>${description}</p>
@@ -1014,7 +1016,9 @@ async function fetchYouTube(term) {
         
         // The YouTube data is now directly available
         if (!data.items || data.items.length === 0) return "";
-        return `<div class="card"><h3>🎥 Related Videos</h3><ul>${data.items.map(v => `<li><a href="https://www.youtube.com/watch?v=${v.id.videoId}" target="_blank">${v.snippet.title}</a></li>`).join("")}</ul></div>`;
+        return `<div class="card"> 
+                <button class="card-dismiss" aria-label="Dismiss card">➖</button>
+                <h3>🎥 Related Videos</h3><ul>${data.items.map(v => `<li><a href="https://www.youtube.com/watch?v=${v.id.videoId}" target="_blank">${v.snippet.title}</a></li>`).join("")}</ul></div>`;
     } catch(err) {
         console.error("Error fetching YouTube videos:", err);
         return ""; // Return empty string on error
