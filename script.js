@@ -242,10 +242,18 @@ function clearUploadedImage() {
   step();
 }
   // dictionary logic
+
+function extractDictionaryWord(query) {
+  return query
+    .toLowerCase()
+    .replace(/meaning|definition|define|means|of/g, "")
+    .trim()
+    .split(/\s+/)[0];
+}
+
+  
 function isDictionaryQuery(q) {
-  const words = q.trim().split(/\s+/);
-  const aiIntent = /(what|why|how|explain|analyse|create|summarize|can|could|would|\?)/i;
-  return words.length <= 3 && !aiIntent.test(q);
+  return /\b(meaning|definition|define|means)\b/i.test(q);
 }
 
 function isWeatherQuery(q) {
@@ -423,23 +431,8 @@ searchBox.addEventListener("keypress", e => {
 
   async function triggerSearch(term) {
     // This check now prevents a search if both the text and image are empty
-    const query = searchBox.value.trim().toLowerCase();
-    results.innerHTML = "";
-
-    try {
-    if (isWeatherQuery(query)) {
-    const city = extractCity(query);
-    const weather = await fetchWeather(city);
-    results.innerHTML += renderWeatherCard(weather);
-  }
-
-    if (isDictionaryQuery(query)) {
-    const dict = await fetchDictionary(query);
-    results.innerHTML += renderDictionaryCard(dict);
-   }
- } catch (e) {
-  // silent fail — AI/Wiki will still handle it
- }
+    //const query = searchBox.value.trim().toLowerCase();
+  
     if (!term && !uploadedImageData) return;
     document.body.classList.add("search-active");
     
@@ -447,6 +440,19 @@ searchBox.addEventListener("keypress", e => {
     saveHistory(term);
     results.innerHTML = "";
     loading.classList.add("show");
+    // 📖 DICTIONARY (HIGH PRIORITY)
+    if (isDictionaryQuery(term)) {
+    try {
+    const word = extractDictionaryWord(term);
+    const dict = await fetchDictionary(word);
+
+    results.innerHTML = renderDictionaryCard(dict);
+    loading.classList.remove("show");
+    return; // ⛔ STOP AI + WIKI
+  } catch (err) {
+    // silent fail → fallback continues
+    }
+   }
 
     // --- THIS IS THE UPDATED LOGIC ---
     const isImageQuery = !!uploadedImageData; // Will be true if an image is uploaded
