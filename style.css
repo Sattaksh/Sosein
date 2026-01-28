@@ -2447,3 +2447,14 @@ body {
   cursor: pointer;
   text-decoration: underline;
 }
+
+.dict-extra {
+  margin-top: 0.5rem;
+  font-size: 0.95rem;
+  opacity: 0.85;
+  line-height: 1.45;
+}
+
+.dict-extra-wrapper {
+  margin-top: 0.6rem;
+}
