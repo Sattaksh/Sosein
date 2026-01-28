@@ -48,7 +48,23 @@ if (heroTitle && !document.body.classList.contains("searching")) {
   let CURRENT_MODEL = "mistralai/devstral-2512:free"; //xiaomi/mimo-v2-flash:free
   let uploadedImageData = null;
   const aiIntentRegex = /\b(what|why|how|do|form|enlist|solve|tell me|facts about|recommend|detail|if|difference|explain|analyze|analyse|create|generate|summarize|summarise|which|who|when|where|can|could|would|should|is|are|was|were|define|compare|list|tell|write)\b|\?/i;
+  
+  // card dismiss 
+  document.addEventListener("click", (e) => {
+  const btn = e.target.closest(".card-dismiss");
+  if (!btn) return;
 
+  const card = btn.closest(".card");
+  if (!card) return;
+
+  card.classList.add("closing");
+
+  setTimeout(() => {
+    card.remove();
+  }, 180);
+});
+
+  
   const shareBtn = document.getElementById("shareBtn");
   if (shareBtn && navigator.share) {
   shareBtn.addEventListener("click", async () => {
