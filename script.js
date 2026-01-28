@@ -267,21 +267,48 @@ async function fetchDictionary(query) {
  }
 
 function renderDictionaryCard(data) {
+  if (!data || !data[0]) return "";
+
   const entry = data[0];
-  const meaning = entry.meanings[0];
-  const def = meaning.definitions[0];
+  const word = entry.word;
+  const meanings = entry.meanings || [];
+
+  const hasMultipleSenses = meanings.length > 1;
+
+  const firstMeaning = meanings[0];
+  const def = firstMeaning.definitions[0];
+
+  const examplesHTML = def.example
+    ? `<div class="dict-example">“${def.example}”</div>`
+    : "";
+
+  const synonymsHTML = def.synonyms?.length
+    ? `<div class="dict-syn">
+        <strong>Synonyms:</strong> ${def.synonyms.slice(0, 6).join(", ")}
+      </div>`
+    : "";
+
+  const antonymsHTML = def.antonyms?.length
+    ? `<div class="dict-ant">
+        <strong>Antonyms:</strong> ${def.antonyms.slice(0, 6).join(", ")}
+      </div>`
+    : "";
+
+  const senseHint = hasMultipleSenses
+    ? `<div class="dict-more">Multiple meanings exist · <span>More senses →</span></div>`
+    : "";
 
   return `
     <div class="card dictionary-card">
-      <h2>${entry.word}</h2>
-      ${entry.phonetic ? `<div class="phonetic">${entry.phonetic}</div>` : ""}
-      <p><strong>${meaning.partOfSpeech}</strong> — ${def.definition}</p>
-      ${def.example ? `<p class="example">“${def.example}”</p>` : ""}
-      ${
-        def.synonyms?.length
-          ? `<p class="synonyms">Synonyms: ${def.synonyms.slice(0,5).join(", ")}</p>`
-          : ""
-      }
+      <h2>${word}</h2>
+      <div class="dict-pos">
+        ${firstMeaning.partOfSpeech} — ${def.definition}
+      </div>
+
+      ${examplesHTML}
+      ${synonymsHTML}
+      ${antonymsHTML}
+      ${senseHint}
     </div>
   `;
 }
