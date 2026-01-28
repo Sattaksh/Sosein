@@ -2405,7 +2405,7 @@ body {
   opacity: 0.8;
 }
 
-.weather-card .temp {
+/* .weather-card .temp {
   font-size: 1.3rem;
   font-weight: 600;
 }
@@ -2413,4 +2413,37 @@ body {
 .weather-card .meta {
   opacity: 0.7;
   font-size: 0.9rem;
+}*/
+
+/* Dictionary example styling */
+.dict-example {
+  margin-top: 0.6rem;
+  font-style: italic;
+  opacity: 0.75;
+  line-height: 1.4;
+}
+
+/* Synonyms / Antonyms */
+.dict-syn,
+.dict-ant {
+  margin-top: 0.6rem;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.dict-syn strong,
+.dict-ant strong {
+  font-weight: 500;
+  color: inherit;
+}
+
+.dict-more {
+  margin-top: 0.8rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.dict-more span {
+  cursor: pointer;
+  text-decoration: underline;
 }
