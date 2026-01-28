@@ -2507,15 +2507,15 @@ body {
 /* Minimal blue dot dismiss */
 .card-dismiss {
   position: absolute;
-  top: 12px;
-  left: 12px;
+  top: 13px;
+  left: 13px;
 
-  width: 10px;
-  height: 10px;
+  width: 12px;
+  height: 12px;
 
   padding: 0;
   border: none;
-  border-radius: 50%;
+  border-radius: 58%;
 
   background: #3b82f6; /* theme blue */
   cursor: pointer;
