@@ -2498,3 +2498,59 @@ body {
   transition: opacity 180ms ease, transform 180ms ease;
 }
 
+
+/* Card dismiss RED (remove) button */
+.card {
+  position: relative; /* ensure button anchors correctly */
+}
+
+.card-dismiss {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+
+  width: 32px;
+  height: 32px;
+
+  border-radius: 50%;
+  border: none;
+
+  background: rgba(220, 38, 38, 0.12); /* soft red */
+  color: #dc2626; /* clean red */
+
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1;
+
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transition:
+    background 180ms ease,
+    transform 160ms ease,
+    opacity 160ms ease;
+}
+
+/* Hover (desktop) */
+.card-dismiss:hover {
+  background: rgba(220, 38, 38, 0.2);
+  transform: scale(1.08);
+}
+
+/* Active click */
+.card-dismiss:active {
+  transform: scale(0.95);
+}
+
+/* Dark mode refinement */
+body.dark .card-dismiss {
+  background: rgba(248, 113, 113, 0.15);
+  color: #f87171;
+}
+
+body.dark .card-dismiss:hover {
+  background: rgba(248, 113, 113, 0.25);
+}
