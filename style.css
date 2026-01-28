@@ -2382,3 +2382,35 @@ body {
   opacity: 0.7;
   font-weight: 500;
 }
+
+/* =====================================
+   Faster light ↔ dark transition
+   ===================================== */
+
+/* Global text + background */
+body {
+  transition:
+    background-color 140ms linear,
+    color 120ms linear;
+}
+
+/* Large UI blocks */
+.navbar,
+.hero,
+.card,
+.results-section,
+.history-section {
+  transition:
+    background-color 140ms linear,
+    border-color 120ms linear,
+    box-shadow 120ms linear;
+}
+
+/* Inputs & buttons */
+input,
+button {
+  transition:
+    background-color 120ms linear,
+    color 120ms linear,
+    border-color 120ms linear;
+}
