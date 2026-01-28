@@ -274,7 +274,7 @@ function clearUploadedImage() {
 function extractDictionaryWord(query) {
   return query
     .toLowerCase()
-    .replace(/meaning|definition|define|means|of/g, "")
+    .replace(/meaning|mane|kya+hai|mean|definition|define|means|of/g, "")
     .trim()
     .split(/\s+/)[0];
 }
