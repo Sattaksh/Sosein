@@ -607,7 +607,8 @@ searchBox.addEventListener("keypress", e => {
   saveHistory(term);
   results.innerHTML = "";
   loading.classList.add("show");
-
+  let dictionaryRendered = false;
+    
   const firstWord = term.split(" ")[0]?.toLowerCase();
   const hasDictIntent = isDictionaryQuery(term);
   const hasAIIntent =
@@ -623,8 +624,10 @@ searchBox.addEventListener("keypress", e => {
       if (word) {
         const dict = await fetchDictionary(word);
         const datamuse = await fetchDatamuse(word);
+        if (!dictionaryRendered) {
         results.innerHTML += renderDictionaryCard(dict, datamuse);
-      }
+        dictionaryRendered = true;
+        }
     } catch (e) {
       console.warn("Dictionary failed", e);
     }
