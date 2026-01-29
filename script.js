@@ -99,12 +99,14 @@ searchBox.addEventListener("input", () => {
   } else {
     searchBox.classList.remove("ai-intent");
   }
-  // Dictionary intent → italic ONLY
-  if (dictIntentRegex.test(value)) {
-    searchBox.classList.add("dict-intent");
-  } else {
-    searchBox.classList.remove("dict-intent");
-  }
+  // Dictionary intent → italic ONLY (max 2 words)
+  const wordCount = value.trim().split(/\s+/).length;
+
+ if (dictIntentRegex.test(value) && wordCount <= 2) {
+  searchBox.classList.add("dict-intent");
+} else {
+  searchBox.classList.remove("dict-intent");
+}
 });
   
 document.addEventListener("click", (e) => {
