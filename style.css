@@ -2616,3 +2616,22 @@ body.dark .dm-words span {
   font-style: italic;
   transition: font-style 180ms ease;
   }
+
+/* =======================
+   Swipe-to-dismiss
+======================= */
+
+.card {
+  touch-action: pan-y;
+  transition: transform 220ms ease, opacity 220ms ease;
+  will-change: transform, opacity;
+}
+
+.card.swiping {
+  transition: none;
+}
+
+.card.dismissed {
+  transform: translateX(120%);
+  opacity: 0;
+}
