@@ -2557,3 +2557,26 @@ body.dark .card-dismiss:hover {
 .card-dismiss::after {
   content: none !important;
 }
+
+.dm-section {
+  margin-top: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.9rem;
+}
+
+.dm-group {
+  margin-bottom: 0.5rem;
+}
+
+.dm-label {
+  font-weight: 500;
+  color: var(--muted);
+  margin-bottom: 0.2rem;
+}
+
+.dm-words {
+  color: var(--text);
+  opacity: 0.85;
+  line-height: 1.4;
+}
