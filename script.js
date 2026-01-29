@@ -47,6 +47,7 @@ if (heroTitle && !document.body.classList.contains("searching")) {
   const clearBtn = document.getElementById("clearBtn");
   let CURRENT_MODEL = "mistralai/devstral-2512:free"; //xiaomi/mimo-v2-flash:free
   let uploadedImageData = null;
+  let searchInProgress = false;
   const aiIntentRegex = /\b(what|why|how|do|form|enlist|solve|tell me|facts about|recommend|detail|if|difference|explain|analyze|analyse|create|generate|summarize|summarise|which|who|when|where|can|could|would|should|is|are|was|were|define|compare|list|tell|write)\b|\?/i;
   const dictIntentRegex = /\b(meaning|means|definition|meaning of)\b/i;
   // card dismiss 
@@ -600,6 +601,8 @@ searchBox.addEventListener("keypress", e => {
       "meaning of", "facts about", "tell me", "meaning", "state", "is there", "*", "do", "enlist"];
 
   async function triggerSearch(term) {
+  if (searchInProgress) return;
+  searchInProgress = true;
   if (!term && !uploadedImageData) return;
 
   document.body.classList.add("search-active");
@@ -607,7 +610,6 @@ searchBox.addEventListener("keypress", e => {
   saveHistory(term);
   results.innerHTML = "";
   loading.classList.add("show");
-  let dictionaryRendered = false;
     
   const firstWord = term.split(" ")[0]?.toLowerCase();
   const hasDictIntent = isDictionaryQuery(term);
@@ -624,10 +626,8 @@ searchBox.addEventListener("keypress", e => {
       if (word) {
         const dict = await fetchDictionary(word);
         const datamuse = await fetchDatamuse(word);
-        if (!dictionaryRendered) {
         results.innerHTML += renderDictionaryCard(dict, datamuse);
-        dictionaryRendered = true;
-        }
+      }
     } catch (e) {
       console.warn("Dictionary failed", e);
     }
@@ -713,6 +713,8 @@ searchBox.addEventListener("keypress", e => {
   }
 
   loading.classList.remove("show");
+  searchInProgress = false;
+  };
 
   /* =======================
      🌐 FALLBACK SEARCH
