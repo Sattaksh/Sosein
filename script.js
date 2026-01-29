@@ -417,7 +417,7 @@ const oppositeHTML = datamuse?.opposites?.length
 
       ${hasDatamuse ? `
         <div class="dm-section">
-          <div class="dm-title">Semantic context</div>
+          <h3 class="dm-title">Semantic associations</h3>
           ${relatedHTML}
           ${contextualHTML}
           ${oppositeHTML}
