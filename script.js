@@ -555,33 +555,36 @@ searchBox.addEventListener("keypress", e => {
 });
 
   async function triggerSearch(term) {
-    // This check now prevents a search if both the text and image are empty
-    //const query = searchBox.value.trim().toLowerCase();
-  
-    if (!term && !uploadedImageData) return;
-    document.body.classList.add("search-active");
-    
-    suggUL.innerHTML = "";
-    saveHistory(term);
-    results.innerHTML = "";
-    loading.classList.add("show");
+  const query = term.toLowerCase();
+
+  if (!term && !uploadedImageData) return;
+
+  document.body.classList.add("search-active");
+  suggUL.innerHTML = "";
+  saveHistory(term);
+  results.innerHTML = "";
+  loading.classList.add("show");
+
+  try {
     // 📖 DICTIONARY (HIGH PRIORITY)
     if (isDictionaryQuery(query)) {
-    const word = extractDictionaryWord(query);
-
-    if (word) {
-    const dict = await fetchDictionary(word);
-    const datamuse = await fetchDatamuse(word);
-
-    results.innerHTML += renderDictionaryCard(dict, datamuse);
-  }
+      const word = extractDictionaryWord(query);
+      if (word) {
+        const dict = await fetchDictionary(word);
+        const datamuse = await fetchDatamuse(word);
+        results.innerHTML += renderDictionaryCard(dict, datamuse);
+        loading.classList.remove("show");
+        return; // ⛔ STOP rest
+      }
     }
-    loading.classList.remove("show");
-    return; // ⛔ STOP AI + WIKI
   } catch (err) {
-    // silent fail → fallback continues
-    }
-   }
+    console.warn("Dictionary failed", err);
+  }
+
+  // ⬇️ continue with AI / Wiki flow
+  await fetchAll(term);
+  loading.classList.remove("show");
+}
 
     // --- THIS IS THE UPDATED LOGIC ---
     const isImageQuery = !!uploadedImageData; // Will be true if an image is uploaded
