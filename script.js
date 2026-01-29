@@ -301,7 +301,7 @@ function extractDictionaryWord(query) {
 
   
 function isDictionaryQuery(q) {
-  return /\b(meaning|definition|define|means)\b/i.test(q);
+  return /\b(meaning|definition|mean|means)\b/i.test(q);
 }
 
 function isWeatherQuery(q) {
