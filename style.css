@@ -2612,14 +2612,7 @@ body.dark .dm-words span {
   text-transform: uppercase;
 }
 
-/* Smooth dictionary intent emphasis */
-#searchBox {
-  font-style: normal;
-  transition: font-style 200ms ease, color 200ms ease;
-}
-
-/* Dictionary intent detected */
 #searchBox.dict-intent {
   font-style: italic;
-  color: var(--text); /* stays neutral */
-}
+  transition: font-style 180ms ease;
+  }
