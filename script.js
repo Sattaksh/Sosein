@@ -626,7 +626,7 @@ searchBox.addEventListener("keypress", e => {
         if (aiAnswer && !aiAnswer.includes("Sorry")) {
             const formattedAnswer = formatAIAnswer(aiAnswer);
             // Your complete AI card and copy button logic remains here
-            results.innerHTML += `
+            results.innerHTML = `
                 <div class="card ai-answer-card">
                 <button class="card-dismiss" aria-label="Dismiss card">➖</button>
                   <div class="ai-card-header">
@@ -638,7 +638,7 @@ searchBox.addEventListener("keypress", e => {
                   <div id="ai-answer-text" 
                   class="ai-markdown">${formattedAnswer}</div>
                 </div>
-            `;
+               `+ results.innerHTML; // 👈 PREPEND
              addCopyButtons(); // ✅ MUST be here
           
   const aiContainer = 
