@@ -603,7 +603,7 @@ searchBox.addEventListener("keypress", e => {
     const datamuse = await fetchDatamuse(word);
 
     results.innerHTML += renderDictionaryCard(dict, datamuse);
-    //loading.classList.remove("show");
+    loading.classList.remove("show");
     //return; // ⛔ STOP AI + WIKI
   } catch (err) {
     console.warn("Dictionary/Datamuse failed", err);
@@ -711,7 +711,7 @@ function formatAIAnswer(text) {
             }, 2000);
         });
     };
-      //loading.classList.remove("show");
+      loading.classList.remove("show");
       return; // ✅ Skip wiki, cricket, book, etc.
     }
   } //
