@@ -584,12 +584,13 @@ searchBox.addEventListener("keypress", e => {
   document.body.classList.add("search-active");
   suggUL.innerHTML = "";
   saveHistory(term);
-  results.innerHTML = "";
+
+  results.innerHTML = "";        // ✅ clear ONCE
   loading.classList.add("show");
 
   const isImageQuery = !!uploadedImageData;
 
-  // --- AI intent detection ---
+  /* ---------- INTENT DETECTION ---------- */
   const questionWords = [
     "is","what","how","why","would","define","if","are","can","could","should",
     "when","who","write","review","summary","give","will","where","was","which",
@@ -598,11 +599,8 @@ searchBox.addEventListener("keypress", e => {
     "best","top","vs","difference","facts","tell","state","do","enlist"
   ];
 
-  const isTextQuestion = questionWords.includes(
-    term.split(" ")[0].toLowerCase()
-  );
-
-  const hasAIIntent = isTextQuestion || isImageQuery;
+  const firstWord = term.split(" ")[0].toLowerCase();
+  const hasAIIntent = questionWords.includes(firstWord) || isImageQuery;
   const hasDictIntent = isDictionaryQuery(term);
 
   /* ================= AI FIRST ================= */
@@ -610,7 +608,7 @@ searchBox.addEventListener("keypress", e => {
     try {
       const aiAnswer = await fetchAIAnswer(term, uploadedImageData);
       if (aiAnswer && !aiAnswer.includes("Sorry")) {
-        const formattedAnswer = formatAIAnswer(aiAnswer);
+        const formatted = formatAIAnswer(aiAnswer);
 
         results.insertAdjacentHTML("beforeend", `
           <div class="card ai-answer-card">
@@ -618,17 +616,17 @@ searchBox.addEventListener("keypress", e => {
             <div class="ai-card-header">
               <h3>✦︎ Sosein AI</h3>
               <div class="copy-container">
-                <span class="copy-btn" title="Copy Answer">🗒</span>
+                <span class="copy-btn">🗒</span>
               </div>
             </div>
-            <div class="ai-markdown">${formattedAnswer}</div>
+            <div class="ai-markdown">${formatted}</div>
           </div>
         `);
 
         addCopyButtons();
       }
-    } catch (err) {
-      console.warn("AI failed", err);
+    } catch (e) {
+      console.warn("AI failed", e);
     }
   }
 
@@ -636,18 +634,23 @@ searchBox.addEventListener("keypress", e => {
   if (hasDictIntent) {
     try {
       const word = extractDictionaryWord(term);
-      if (!word) throw new Error("No word extracted");
+      if (word) {
+        const dict = await fetchDictionary(word);
+        const datamuse = await fetchDatamuse(word);
 
-      const dict = await fetchDictionary(word);
-      const datamuse = await fetchDatamuse(word);
-
-      results.insertAdjacentHTML(
-        "beforeend",
-        renderDictionaryCard(dict, datamuse)
-      );
-    } catch (err) {
-      console.warn("Dictionary/Datamuse failed", err);
+        results.insertAdjacentHTML(
+          "beforeend",
+          renderDictionaryCard(dict, datamuse)
+        );
+      }
+    } catch (e) {
+      console.warn("Dictionary failed", e);
     }
+  }
+
+  /* ================= FALLBACK CONTENT ================= */
+  if (!hasAIIntent && !hasDictIntent) {
+    await fetchAll(term);
   }
 
   loading.classList.remove("show");
