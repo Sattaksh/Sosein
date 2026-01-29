@@ -577,155 +577,136 @@ function wrapTables(container) {
 searchBox.addEventListener("keypress", e => {
   if (e.key === "Enter") triggerSearch(searchBox.value.trim());
 });
-
-  async function triggerSearch(term) {
-    // This check now prevents a search if both the text and image are empty
-    //const query = searchBox.value.trim().toLowerCase();
-  
-    if (!term && !uploadedImageData) return;
-    document.body.classList.add("search-active");
-    
-    suggUL.innerHTML = "";
-    saveHistory(term);
-    //results.innerHTML = "";
-    loading.classList.add("show");
-    const hasDictIntent = isDictionaryQuery(term);
-    const hasAIIntent =
-    questionWords.includes(term.split(" ")[0]?.toLowerCase()) ||
-    !!uploadedImageData;
-    // 📖 DICTIONARY (HIGH PRIORITY)
-    if (hasDictIntent) {
-    try {
-    const word = extractDictionaryWord(term);
-    if (!word) throw new Error("No word extracted");
-
-    const dict = await fetchDictionary(word);
-    const datamuse = await fetchDatamuse(word);
-
-    results.innerHTML += renderDictionaryCard(dict, datamuse);
-    loading.classList.remove("show");
-    //return; // ⛔ STOP AI + WIKI
-  } catch (err) {
-    console.warn("Dictionary/Datamuse failed", err);
-    // silent fail → fallback continues
-  }
-    }
-
-    // --- THIS IS THE UPDATED LOGIC ---
-    const isImageQuery = !!uploadedImageData; // Will be true if an image is uploaded
-    const questionWords = ["is", "what", "how", "why", "would", "define", "if", "are", "can", "could", "should", "when", 
+  const questionWords = ["is", "what", "how", "why", "would", "define", "if", "are", "can", "could", "should", "when", 
       "who", "?", "write", "review", "summary", "give", "will", "where", "was", "which", "explain", 
       "summarize", "compare", "list", "create", "generate", "suggest", "recommend", "calculate", 
       "translate", "solve", "draft", "outline", "analyze", "how to", "what is the", "what are the","best", "top", "vs", "difference between", 
       "meaning of", "facts about", "tell me", "meaning", "state", "is there", "*", "do", "enlist"];
-     const isTextQuestion = questionWords.includes(term.split(" ")[0].toLowerCase());                       
-    
-    //const isTextQuestion = questionWords.some(w => term.toLowerCase().includes(w));
-    // The AI will now be called if it's a text question OR if an image has been uploaded
-    if (hasAIIntent) {
-        const aiAnswer = await fetchAIAnswer(term, uploadedImageData);
-        
-        // --- IMPORTANT: Reset image data after the search is done ---
-  
-        if (aiAnswer && !aiAnswer.includes("Sorry")) {
-            const formattedAnswer = formatAIAnswer(aiAnswer);
-            // Your complete AI card and copy button logic remains here
-            results.innerHTML += `
-                <div class="card ai-answer-card">
-                <button class="card-dismiss" aria-label="Dismiss card">➖</button>
-                  <div class="ai-card-header">
-                    <h3>✦︎ Sosein AI</h3>
-                    <div class="copy-container">
-                        <span class="copy-btn" title="Copy Answer">🗒</span>
-                    </div>
-                  </div>
-                  <div id="ai-answer-text" 
-                  class="ai-markdown">${formattedAnswer}</div>
-                </div>
-            `;
-             addCopyButtons(); 
-          
-  const aiContainer = 
-  document.getElementById("ai-answer-text");
+
+  async function triggerSearch(term) {
+  if (!term && !uploadedImageData) return;
+
+  document.body.classList.add("search-active");
+  suggUL.innerHTML = "";
+  saveHistory(term);
+  results.innerHTML = "";
+  loading.classList.add("show");
+
+  const firstWord = term.split(" ")[0]?.toLowerCase();
+  const hasDictIntent = isDictionaryQuery(term);
+  const hasAIIntent =
+    questionWords.includes(firstWord) || !!uploadedImageData;
+
+  /* =======================
+     📖 DICTIONARY
+  ======================= */
+  if (hasDictIntent) {
+    try {
+      const word = extractDictionaryWord(term);
+      if (word) {
+        const dict = await fetchDictionary(word);
+        const datamuse = await fetchDatamuse(word);
+        results.innerHTML += renderDictionaryCard(dict, datamuse);
+      }
+    } catch (e) {
+      console.warn("Dictionary failed", e);
+    }
+  }
+
+  /* =======================
+     🤖 AI (PRIORITY)
+  ======================= */
+  if (hasAIIntent) {
+    const aiAnswer = await fetchAIAnswer(term, uploadedImageData);
+
+    if (aiAnswer && !aiAnswer.includes("Sorry")) {
+      const formattedAnswer = formatAIAnswer(aiAnswer);
+
+      results.insertAdjacentHTML(
+        "afterbegin",
+        `
+        <div class="card ai-answer-card">
+          <button class="card-dismiss" aria-label="Dismiss card">➖</button>
+          <div class="ai-card-header">
+            <h3>✦︎ Sosein AI</h3>
+            <div class="copy-container">
+              <span class="copy-btn">🗒</span>
+            </div>
+          </div>
+          <div id="ai-answer-text" class="ai-markdown">${formattedAnswer}</div>
+        </div>
+        `
+      );
+
+      addCopyButtons();
+    }
+  }
+
+  /* =======================
+     📐 POST-RENDER FIXES
+  ======================= */
+  const aiContainer = document.getElementById("ai-answer-text");
 
   if (aiContainer) {
-  requestAnimationFrame(() => {
-// 1️⃣ Wrap tables so ONLY tables scroll
-  wrapTables(aiContainer);
+    requestAnimationFrame(() => {
+      // 1️⃣ Wrap tables
+      wrapTables(aiContainer);
 
-// 2️⃣ FORCE layout reflow (THIS fixes dark mode + mobile)  
-aiContainer.offsetHeight;  
+      // 2️⃣ Force layout reflow
+      aiContainer.offsetHeight;
 
-// 3️⃣ Render math AFTER layout is locked  
-if (window.renderMathInElement) {  
-  renderMathInElement(aiContainer, {  
-    delimiters: [  
-        { left: "$$", right: "$$", display: true },
-        { left: "\\[", right: "\\]", display: true },
-        { left: "$", right: "$", display: false },
-        { left: "\\(", right: "\\)", display: false }
-    ],  
-    throwOnError: false  
-  });  
-}
-});
-}
-          
-function formatAIAnswer(text) {
-  if (!text) return "";
-
-  let safeText = text
-    .replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, "")
-    .replace(/on\w+="[^"]*"/gi, "")
-    .replace(/<\/?(iframe|object|embed)[^>]*>/gi, "");
-
-  return marked.parse(safeText, {
-    gfm: true,
-    breaks: true,
-    headerIds: false,
-    mangle: false
-  });
-  }  
-          
-
-      // This is the NEW code
-       document.querySelector(".copy-btn").onclick = (e) => {
-        const copyButton = e.target;
-        const copyContainer = copyButton.parentElement; // This is our new container
-        const text = document.getElementById("ai-answer-text").innerText;
-
-        navigator.clipboard.writeText(text).then(() => {
-            // Prevent multiple "Copied!" messages
-            if (copyContainer.querySelector('.copy-feedback')) return;
-
-            const feedback = document.createElement('div'); // Use a div for better layout
-            feedback.textContent = 'Copied!';
-            feedback.className = 'copy-feedback';
-            
-            // Add the feedback text inside the container
-            copyContainer.append(feedback);
-            
-            // Remove it after 2 seconds
-            setTimeout(() => {
-                feedback.remove();
-            }, 2000);
+      // 3️⃣ Render math
+      if (window.renderMathInElement) {
+        renderMathInElement(aiContainer, {
+          delimiters: [
+            { left: "$$", right: "$$", display: true },
+            { left: "\\[", right: "\\]", display: true },
+            { left: "$", right: "$", display: false },
+            { left: "\\(", right: "\\)", display: false }
+          ],
+          throwOnError: false
         });
-    };
-      loading.classList.remove("show");
-      return; // ✅ Skip wiki, cricket, book, etc.
-    }
-  } //
+      }
+    });
+  }
 
-  // 📚 Normal search flow
-  await fetchAll(term);
-  
-  const lowerTerm = term.toLowerCase();
-  const bookKeywords = ["book", "novel", "by", "author", "volume", "literature"];
-  const isBookSearch = bookKeywords.some(k => lowerTerm.includes(k));
-  if (isBookSearch) detectAndFetchBook(term);
+  /* =======================
+     📋 COPY BUTTON
+  ======================= */
+  const copyBtn = document.querySelector(".copy-btn");
+  if (copyBtn) {
+    copyBtn.onclick = (e) => {
+      const copyContainer = e.target.parentElement;
+      const text = document.getElementById("ai-answer-text")?.innerText || "";
+
+      navigator.clipboard.writeText(text).then(() => {
+        if (copyContainer.querySelector(".copy-feedback")) return;
+
+        const feedback = document.createElement("div");
+        feedback.textContent = "Copied!";
+        feedback.className = "copy-feedback";
+        copyContainer.append(feedback);
+
+        setTimeout(() => feedback.remove(), 2000);
+      });
+    };
+  }
 
   loading.classList.remove("show");
-}
+
+  /* =======================
+     🌐 FALLBACK SEARCH
+  ======================= */
+  if (!hasAIIntent && !hasDictIntent) {
+    await fetchAll(term);
+
+    const lowerTerm = term.toLowerCase();
+    const bookKeywords = ["book", "novel", "by", "author", "volume", "literature"];
+    if (bookKeywords.some(k => lowerTerm.includes(k))) {
+      detectAndFetchBook(term);
+    }
+  }
+  }
 
 
   // 📦 Fetch Wikipedia + Entity + YouTube + News
