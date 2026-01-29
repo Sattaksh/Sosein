@@ -1397,7 +1397,7 @@ body {
 }
 
 /* Reduced motion support */
-@media (prefers-reduced-motion: reduce) {
+/*@media (prefers-reduced-motion: reduce) {
   *,
   *::before,
   *::after {
@@ -1405,7 +1405,7 @@ body {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
-}
+}*/
 
 /* Print styles */
 @media print {
@@ -1891,13 +1891,13 @@ button:hover {
   will-change: transform;
 }
 
-/* Respect reduced motion */
-@media (prefers-reduced-motion: reduce) {
+/* Respect reduced motion */ 
+/*@media (prefers-reduced-motion: reduce) {
   * {
     animation: none !important;
     transition: none !important;
   }
-  }
+  }*/
 
 /* ============================================
    AI CODE BLOCK — CHATGPT / CLAUDE STYLE
@@ -2296,12 +2296,12 @@ body.dark ::-webkit-scrollbar-thumb {
 }
 
 /* motion */
-@media (prefers-reduced-motion: reduce) {
+/*@media (prefers-reduced-motion: reduce) {
   * {
     animation: none !important;
     transition: none !important;
   }
-}
+}*/
 
 /* subtle result card entrance*/
 
@@ -2348,12 +2348,13 @@ body.dark ::-webkit-scrollbar-thumb {
 }
 
 
-@media (prefers-reduced-motion: reduce) {
+/*@media (prefers-reduced-motion: reduce) {
   * {
     animation-duration: 1ms !important;
     transition-duration: 1ms !important;
   }
-}
+}*/
+
 
 body {
   transition: background-color 120ms ease, color 120ms ease;
