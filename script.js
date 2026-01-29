@@ -600,7 +600,7 @@ searchBox.addEventListener("keypress", e => {
 
     results.innerHTML = renderDictionaryCard(dict, datamuse);
     loading.classList.remove("show");
-    return; // ⛔ STOP AI + WIKI
+    //return; // ⛔ STOP AI + WIKI
   } catch (err) {
     console.warn("Dictionary/Datamuse failed", err);
     // silent fail → fallback continues
