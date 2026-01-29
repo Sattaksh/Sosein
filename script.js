@@ -278,6 +278,19 @@ function clearUploadedImage() {
 
   step();
 }
+
+
+  function haptic(type = "light") {
+  if (!("vibrate" in navigator)) return;
+
+  const patterns = {
+    light: 10,
+    medium: 20,
+    heavy: 35
+  };
+
+  navigator.vibrate(patterns[type] || 10);
+  }
   // dictionary logic
   
 async function fetchDatamuse(word) {
@@ -1593,14 +1606,16 @@ document.addEventListener("pointerup", (e) => {
   activeCard.classList.remove("swiping");
 
   if (deltaX > 120) {
-    // ✅ Dismiss cleanly
-    activeCard.classList.add("dismissed");
-    activeCard.style.transform = "translateX(120%)";
-    activeCard.style.opacity = "0";
+  // 🔔 HAPTIC ON DISMISS
+  haptic("medium");
 
-    setTimeout(() => {
-      activeCard?.remove();
-    }, 220);
+  activeCard.classList.add("dismissed");
+  activeCard.style.transform = "translateX(120%)";
+  activeCard.style.opacity = "0";
+
+  setTimeout(() => {
+    activeCard?.remove();
+  }, 220);
   } else {
     // ❌ Snap back cleanly
     activeCard.style.transform = "";
