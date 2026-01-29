@@ -45,7 +45,7 @@ if (heroTitle && !document.body.classList.contains("searching")) {
   const q = id => document.getElementById(id);
   const searchBox = q("searchBox"), searchBtn = q("searchBtn"), voiceBtn = q("voiceBtn");
   const clearBtn = document.getElementById("clearBtn");
-  let CURRENT_MODEL = "mistralai/devstral-2512:free"; //xiaomi/mimo-v2-flash:free
+  let CURRENT_MODEL = "arcee-ai/trinity-large-preview:free"; //xiaomi/mimo-v2-flash:free
   let uploadedImageData = null;
   let searchInProgress = false;
   const aiIntentRegex = /\b(what|why|how|do|form|enlist|solve|tell me|facts about|recommend|detail|if|difference|explain|analyze|analyse|create|generate|summarize|summarise|which|who|when|where|can|could|would|should|is|are|was|were|define|compare|list|tell|write)\b|\?/i;
@@ -1036,14 +1036,16 @@ if (enhance) {
 async function fetchAIAnswer(question, imageData) {
   const FALLBACK_MODELS = [
     CURRENT_MODEL,// whatever user selected
-    "nvidia/nemotron-3-nano-30b-a3b:free", 
+    "nvidia/nemotron-nano-9b-v2:free",
+    "google/gemma-3n-e2b-it:free",
+    "liquid/lfm-2.5-1.2b-thinking:free",
     "nvidia/nemotron-nano-12b-v2-vl:free",
-    "z-ai/glm-4.5-air:free",
     "tngtech/deepseek-r1t2-chimera:free",
+    "nvidia/nemotron-3-nano-30b-a3b:free", 
     "gemini-3-flash-preview",
     "gemini-2.5-flash",
     "gemini-2.5-flash-lite",
-    "xiaomi/mimo-v2-flash:free"
+    "mistralai/devstral-2512:free"
      // fast & reliable
     // last-resort thinker
   ];
