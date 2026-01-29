@@ -49,7 +49,7 @@ if (heroTitle && !document.body.classList.contains("searching")) {
   let uploadedImageData = null;
   let searchInProgress = false;
   const aiIntentRegex = /\b(what|why|how|do|form|enlist|solve|tell me|facts about|recommend|detail|if|difference|explain|analyze|analyse|create|generate|summarize|summarise|which|who|when|where|can|could|would|should|is|are|was|were|define|compare|list|tell|write)\b|\?/i;
-  const dictIntentRegex = /\b(meaning|means|definition|meaning of)\b/i;
+  const dictIntentRegex = /\b(meaning|means|definition|mean)\b/i;
   // card dismiss 
   document.addEventListener("click", (e) => {
   const btn = e.target.closest(".card-dismiss");
@@ -295,7 +295,7 @@ async function fetchDatamuse(word) {
 function extractDictionaryWord(query) {
   return query
     .toLowerCase()
-    .replace(/meaning|mane|kya+hai|mean|definition|means|meaning of/g, "")
+    .replace(/meaning|mean|definition|means|/g, "")
     .trim()
     .split(/\s+/)[0];
 }
@@ -614,7 +614,8 @@ searchBox.addEventListener("keypress", e => {
   loading.classList.add("show");
     
   const firstWord = term.split(" ")[0]?.toLowerCase();
-  const hasDictIntent = isDictionaryQuery(term);
+  const wordCount = term.trim().split(/\s+/).length;
+  const hasDictIntent = isDictionaryQuery(term) && wordCount <= 2;
   const hasAIIntent =
   (Array.isArray(questionWords) && questionWords.includes(firstWord)) ||
   !!uploadedImageData;
