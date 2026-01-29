@@ -1547,6 +1547,52 @@ function addCopyButtons() {
     pre.appendChild(btn);
   });
 }
+
+
+let startX = 0;
+let currentCard = null;
+
+document.addEventListener("pointerdown", (e) => {
+  const card = e.target.closest(".card");
+  if (!card) return;
+
+  // Ignore interactive elements
+  if (e.target.closest("button, a, input, textarea")) return;
+
+  startX = e.clientX;
+  currentCard = card;
+  card.classList.add("swiping");
+});
+
+document.addEventListener("pointermove", (e) => {
+  if (!currentCard) return;
+
+  const deltaX = e.clientX - startX;
+  if (deltaX < 0) return; // 👈 only swipe RIGHT
+
+  currentCard.style.transform = `translateX(${deltaX}px)`;
+  currentCard.style.opacity = Math.max(0.3, 1 - deltaX / 300);
+});
+
+document.addEventListener("pointerup", () => {
+  if (!currentCard) return;
+
+  const movedX = parseFloat(
+    currentCard.style.transform.replace("translateX(", "")
+  ) || 0;
+
+  currentCard.classList.remove("swiping");
+
+  if (movedX > 120) {
+    currentCard.classList.add("dismissed");
+    setTimeout(() => currentCard.remove(), 220);
+  } else {
+    currentCard.style.transform = "";
+    currentCard.style.opacity = "";
+  }
+
+  currentCard = null;
+});
 // ========================================
 // INTEGRATE WITH YOUR EXISTING CODE
 // ========================================
