@@ -2580,3 +2580,14 @@ body.dark .card-dismiss:hover {
   opacity: 0.85;
   line-height: 1.4;
 }
+
+.dm-words span {
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 6px;
+  transition: background 0.2s ease;
+}
+
+.dm-words span:hover {
+  background: rgba(0, 123, 255, 0.08);
+}
