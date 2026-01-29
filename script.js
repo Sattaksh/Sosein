@@ -48,7 +48,7 @@ if (heroTitle && !document.body.classList.contains("searching")) {
   let CURRENT_MODEL = "mistralai/devstral-2512:free"; //xiaomi/mimo-v2-flash:free
   let uploadedImageData = null;
   const aiIntentRegex = /\b(what|why|how|do|form|enlist|solve|tell me|facts about|recommend|detail|if|difference|explain|analyze|analyse|create|generate|summarize|summarise|which|who|when|where|can|could|would|should|is|are|was|were|define|compare|list|tell|write)\b|\?/i;
-  const searchBox = document.getElementById("searchBox");
+  const dictIntentRegex = /\b(meaning|means|definition|meaning of)\b/i;
   // card dismiss 
   document.addEventListener("click", (e) => {
   const btn = e.target.closest(".card-dismiss");
@@ -97,6 +97,12 @@ searchBox.addEventListener("input", () => {
     searchBox.classList.add("ai-intent");
   } else {
     searchBox.classList.remove("ai-intent");
+  }
+  // Dictionary intent → italic ONLY
+  if (dictIntentRegex.test(value)) {
+    searchBox.classList.add("dict-intent");
+  } else {
+    searchBox.classList.remove("dict-intent");
   }
 });
   
@@ -288,7 +294,7 @@ async function fetchDatamuse(word) {
 function extractDictionaryWord(query) {
   return query
     .toLowerCase()
-    .replace(/meaning|mane|kya+hai|mean|definition|define|means|of/g, "")
+    .replace(/meaning|mane|kya+hai|mean|definition|means|meaning of/g, "")
     .trim()
     .split(/\s+/)[0];
 }
@@ -535,29 +541,6 @@ function clearImageOnNewSearch() {
     }
 }
 
-/* ===============================
-   SEARCH INPUT INTENT STYLING
-   =============================== */
-
-const searchBox = document.getElementById("searchBox");
-
-searchBox.addEventListener("input", () => {
-  const value = searchBox.value.trim();
-
-  // AI intent → bold
-  if (aiIntentRegex.test(value)) {
-    searchBox.classList.add("ai-intent");
-  } else {
-    searchBox.classList.remove("ai-intent");
-  }
-
-  // Dictionary intent → italic
-  if (isDictionaryQuery(value)) {
-    searchBox.classList.add("dict-intent");
-  } else {
-    searchBox.classList.remove("dict-intent");
-  }
-});
   
 function wrapTables(container) {
   const tables = container.querySelectorAll("table");
