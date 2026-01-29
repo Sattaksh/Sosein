@@ -279,18 +279,6 @@ function clearUploadedImage() {
   step();
 }
 
-
-  function haptic(type = "light") {
-  if (!("vibrate" in navigator)) return;
-
-  const patterns = {
-    light: 10,
-    medium: 20,
-    heavy: 35
-  };
-
-  navigator.vibrate(patterns[type] || 10);
-  }
   // dictionary logic
   
 async function fetchDatamuse(word) {
@@ -1606,9 +1594,6 @@ document.addEventListener("pointerup", (e) => {
   activeCard.classList.remove("swiping");
 
   if (deltaX > 120) {
-  // 🔔 HAPTIC ON DISMISS
-  haptic("medium");
-
   activeCard.classList.add("dismissed");
   activeCard.style.transform = "translateX(120%)";
   activeCard.style.opacity = "0";
