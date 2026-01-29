@@ -571,6 +571,22 @@ function wrapTables(container) {
     }
   });
 }
+  
+function formatAIAnswer(text) {
+  if (!text) return "";
+
+  let safeText = text
+    .replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, "")
+    .replace(/on\w+="[^"]*"/gi, "")
+    .replace(/<\/?(iframe|object|embed)[^>]*>/gi, "");
+
+  return marked.parse(safeText, {
+    gfm: true,
+    breaks: true,
+    headerIds: false,
+    mangle: false
+  });
+}
 
   // 🔍 Trigger search
   searchBtn.onclick = () => triggerSearch(searchBox.value.trim());
@@ -595,8 +611,9 @@ searchBox.addEventListener("keypress", e => {
   const firstWord = term.split(" ")[0]?.toLowerCase();
   const hasDictIntent = isDictionaryQuery(term);
   const hasAIIntent =
-    questionWords.includes(firstWord) || !!uploadedImageData;
-
+  (Array.isArray(questionWords) && questionWords.includes(firstWord)) ||
+  !!uploadedImageData;
+    
   /* =======================
      📖 DICTIONARY
   ======================= */
