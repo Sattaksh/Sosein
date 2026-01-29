@@ -602,8 +602,10 @@ searchBox.addEventListener("keypress", e => {
 
   async function triggerSearch(term) {
   if (searchInProgress) return;
-  searchInProgress = true;
+
   if (!term && !uploadedImageData) return;
+
+  searchInProgress = true;
 
   document.body.classList.add("search-active");
   suggUL.innerHTML = "";
@@ -712,10 +714,6 @@ searchBox.addEventListener("keypress", e => {
     };
   }
 
-  loading.classList.remove("show");
-  searchInProgress = false;
-  };
-
   /* =======================
      🌐 FALLBACK SEARCH
   ======================= */
@@ -728,6 +726,10 @@ searchBox.addEventListener("keypress", e => {
       detectAndFetchBook(term);
     }
   }
+
+  // ✅ ALWAYS unlock at the very end
+  loading.classList.remove("show");
+  searchInProgress = false;
   }
 
 
