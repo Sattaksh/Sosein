@@ -270,7 +270,21 @@ function clearUploadedImage() {
   step();
 }
   // dictionary logic
+  
+async function fetchDatamuse(word) {
+  const [ml, trg, ant] = await Promise.all([
+    fetch(`https://api.datamuse.com/words?ml=${word}&max=8`).then(r => r.json()),
+    fetch(`https://api.datamuse.com/words?rel_trg=${word}&max=8`).then(r => r.json()),
+    fetch(`https://api.datamuse.com/words?rel_ant=${word}&max=6`).then(r => r.json())
+  ]);
 
+  return {
+    related: ml,
+    contextual: trg,
+    opposites: ant
+  };
+}
+  
 function extractDictionaryWord(query) {
   return query
     .toLowerCase()
@@ -294,32 +308,30 @@ async function fetchDictionary(query) {
   return res.json();
  }
 
-function renderDictionaryCard(data) {
+function renderDictionaryCard(data, datamuse) {
   if (!data || !data[0]) return "";
 
   const entry = data[0];
   const word = entry.word;
   const meanings = entry.meanings || [];
 
-  const hasMultipleSenses = meanings.length > 1;
-
   const firstMeaning = meanings[0];
   const def = firstMeaning.definitions[0];
+
+  const hasMultipleSenses = meanings.length > 1;
+
+  /* ---------- Core dictionary ---------- */
 
   const examplesHTML = def.example
     ? `<div class="dict-example">“${def.example}”</div>`
     : "";
 
   const synonymsHTML = def.synonyms?.length
-    ? `<div class="dict-syn">
-        <strong>Synonyms:</strong> ${def.synonyms.slice(0, 6).join(", ")}
-      </div>`
+    ? `<div class="dict-syn"><strong>Synonyms:</strong> ${def.synonyms.slice(0, 6).join(", ")}</div>`
     : "";
 
   const antonymsHTML = def.antonyms?.length
-    ? `<div class="dict-ant">
-        <strong>Antonyms:</strong> ${def.antonyms.slice(0, 6).join(", ")}
-      </div>`
+    ? `<div class="dict-ant"><strong>Antonyms:</strong> ${def.antonyms.slice(0, 6).join(", ")}</div>`
     : "";
 
   const extraMeaningsHTML = meanings
@@ -335,14 +347,41 @@ function renderDictionaryCard(data) {
     .join("");
 
   const senseHint = hasMultipleSenses
-    ? `<div class="dict-more">
-        Multiple meanings exist · <span>More senses →</span>
-      </div>`
+    ? `<div class="dict-more">Multiple meanings exist · <span>More senses →</span></div>`
     : "";
+
+  /* ---------- Datamuse (semantic meaning) ---------- */
+
+  const relatedHTML = datamuse?.related?.length
+    ? `<div class="dm-group">
+         <div class="dm-label">Related concepts</div>
+         <div class="dm-words">${datamuse.related.slice(0, 8).map(w => w.word).join(", ")}</div>
+       </div>`
+    : "";
+
+  const contextualHTML = datamuse?.contextual?.length
+    ? `<div class="dm-group">
+         <div class="dm-label">Often associated with</div>
+         <div class="dm-words">${datamuse.contextual.slice(0, 8).map(w => w.word).join(", ")}</div>
+       </div>`
+    : "";
+
+  const oppositeHTML = datamuse?.opposites?.length
+    ? `<div class="dm-group">
+         <div class="dm-label">Opposite ideas</div>
+         <div class="dm-words">${datamuse.opposites.slice(0, 8).map(w => w.word).join(", ")}</div>
+       </div>`
+    : "";
+
+  const hasDatamuse =
+    relatedHTML || contextualHTML || oppositeHTML;
+
+  /* ---------- Final render ---------- */
 
   return `
     <div class="card dictionary-card">
-    <button class="card-dismiss" aria-label="Dismiss card">➖</button>
+      <button class="card-dismiss" aria-label="Dismiss card"></button>
+
       <h2>${word}</h2>
 
       <div class="dict-pos">
@@ -358,6 +397,15 @@ function renderDictionaryCard(data) {
       <div class="dict-extra-wrapper" hidden>
         ${extraMeaningsHTML}
       </div>
+
+      ${hasDatamuse ? `
+        <div class="dm-section">
+          <div class="dm-title">Semantic context</div>
+          ${relatedHTML}
+          ${contextualHTML}
+          ${oppositeHTML}
+        </div>
+      ` : ""}
     </div>
   `;
 }
@@ -518,12 +566,16 @@ searchBox.addEventListener("keypress", e => {
     results.innerHTML = "";
     loading.classList.add("show");
     // 📖 DICTIONARY (HIGH PRIORITY)
-    if (isDictionaryQuery(term)) {
-    try {
-    const word = extractDictionaryWord(term);
-    const dict = await fetchDictionary(word);
+    if (isDictionaryQuery(query)) {
+    const word = extractDictionaryWord(query);
 
-    results.innerHTML = renderDictionaryCard(dict);
+    if (word) {
+    const dict = await fetchDictionary(word);
+    const datamuse = await fetchDatamuse(word);
+
+    results.innerHTML += renderDictionaryCard(dict, datamuse);
+  }
+    }
     loading.classList.remove("show");
     return; // ⛔ STOP AI + WIKI
   } catch (err) {
