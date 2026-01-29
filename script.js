@@ -589,8 +589,12 @@ searchBox.addEventListener("keypress", e => {
     saveHistory(term);
     //results.innerHTML = "";
     loading.classList.add("show");
+    const hasDictIntent = isDictionaryQuery(term);
+    const hasAIIntent =
+    questionWords.includes(term.split(" ")[0]?.toLowerCase()) ||
+    !!uploadedImageData;
     // 📖 DICTIONARY (HIGH PRIORITY)
-    if (isDictionaryQuery(term)) {
+    if (hasDictIntent) {
     try {
     const word = extractDictionaryWord(term);
     if (!word) throw new Error("No word extracted");
@@ -599,7 +603,7 @@ searchBox.addEventListener("keypress", e => {
     const datamuse = await fetchDatamuse(word);
 
     results.innerHTML += renderDictionaryCard(dict, datamuse);
-    loading.classList.remove("show");
+    //loading.classList.remove("show");
     //return; // ⛔ STOP AI + WIKI
   } catch (err) {
     console.warn("Dictionary/Datamuse failed", err);
@@ -618,7 +622,7 @@ searchBox.addEventListener("keypress", e => {
     
     //const isTextQuestion = questionWords.some(w => term.toLowerCase().includes(w));
     // The AI will now be called if it's a text question OR if an image has been uploaded
-    if (isTextQuestion || isImageQuery) {
+    if (hasAIIntent) {
         const aiAnswer = await fetchAIAnswer(term, uploadedImageData);
         
         // --- IMPORTANT: Reset image data after the search is done ---
@@ -707,7 +711,7 @@ function formatAIAnswer(text) {
             }, 2000);
         });
     };
-      loading.classList.remove("show");
+      //loading.classList.remove("show");
       return; // ✅ Skip wiki, cricket, book, etc.
     }
   } //
