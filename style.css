@@ -2671,3 +2671,51 @@ body.dark .dm-words span {
     transform: translateY(0);
   }
 }
+
+/*ANIMATION CONTROL*/
+@media (prefers-reduced-motion: reduce) {
+
+  /* -----------------------------
+     🚫 Kill large / decorative motion
+  ------------------------------ */
+  .hero,
+  .hero-content,
+  .navbar {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  /* -----------------------------
+     🚫 Disable THEME transitions
+     (light ↔ dark)
+  ------------------------------ */
+  html,
+  body,
+  :root,
+  .app,
+  .container,
+  .card,
+  .navbar,
+  .search-wrapper,
+  #searchBox {
+    transition:
+      background-color 0s !important,
+      color 0s !important,
+      border-color 0s !important,
+      box-shadow 0s !important,
+      fill 0s !important,
+      stroke 0s !important;
+  }
+
+  /* -----------------------------
+     ✅ Keep micro-interactions alive
+     (intentional, small, useful)
+  ------------------------------ */
+  .card,
+  button,
+  #searchBox {
+    transition:
+      transform 160ms ease,
+      opacity 160ms ease !important;
+  }
+}
