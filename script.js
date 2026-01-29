@@ -1549,49 +1549,67 @@ function addCopyButtons() {
 }
 
 
-let startX = 0;
-let currentCard = null;
+let swipeStartX = 0;
+let swipeCurrentX = 0;
+let activeCard = null;
+let isSwiping = false;
 
 document.addEventListener("pointerdown", (e) => {
   const card = e.target.closest(".card");
   if (!card) return;
 
-  // Ignore interactive elements
+  // Don't interfere with buttons / inputs / blue dot
   if (e.target.closest("button, a, input, textarea")) return;
 
-  startX = e.clientX;
-  currentCard = card;
+  activeCard = card;
+  swipeStartX = e.clientX;
+  swipeCurrentX = swipeStartX;
+  isSwiping = true;
+
+  card.setPointerCapture(e.pointerId);
   card.classList.add("swiping");
 });
 
 document.addEventListener("pointermove", (e) => {
-  if (!currentCard) return;
+  if (!isSwiping || !activeCard) return;
 
-  const deltaX = e.clientX - startX;
-  if (deltaX < 0) return; // 👈 only swipe RIGHT
+  swipeCurrentX = e.clientX;
+  const deltaX = swipeCurrentX - swipeStartX;
 
-  currentCard.style.transform = `translateX(${deltaX}px)`;
-  currentCard.style.opacity = Math.max(0.3, 1 - deltaX / 300);
+  if (deltaX <= 0) return; // 👉 only RIGHT swipe
+
+  activeCard.style.transform = `translateX(${deltaX}px)`;
+  activeCard.style.opacity = String(Math.max(0.4, 1 - deltaX / 250));
 });
 
-document.addEventListener("pointerup", () => {
-  if (!currentCard) return;
+document.addEventListener("pointerup", (e) => {
+  if (!activeCard) return;
 
-  const movedX = parseFloat(
-    currentCard.style.transform.replace("translateX(", "")
-  ) || 0;
+  const deltaX = swipeCurrentX - swipeStartX;
 
-  currentCard.classList.remove("swiping");
+  activeCard.releasePointerCapture(e.pointerId);
+  activeCard.classList.remove("swiping");
 
-  if (movedX > 120) {
-    currentCard.classList.add("dismissed");
-    setTimeout(() => currentCard.remove(), 220);
+  if (deltaX > 120) {
+    // ✅ Dismiss cleanly
+    activeCard.classList.add("dismissed");
+    activeCard.style.transform = "translateX(120%)";
+    activeCard.style.opacity = "0";
+
+    setTimeout(() => {
+      activeCard?.remove();
+    }, 220);
   } else {
-    currentCard.style.transform = "";
-    currentCard.style.opacity = "";
+    // ❌ Snap back cleanly
+    activeCard.style.transform = "";
+    activeCard.style.opacity = "";
   }
 
-  currentCard = null;
+  // 🔁 FULL RESET
+  activeCard = null;
+  isSwiping = false;
+  swipeStartX = 0;
+  swipeCurrentX = 0;
 });
 // ========================================
 // INTEGRATE WITH YOUR EXISTING CODE
