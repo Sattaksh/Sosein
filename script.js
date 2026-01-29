@@ -310,7 +310,9 @@ async function fetchDictionary(query) {
 
 function renderDictionaryCard(data, datamuse) {
   if (!data || !data[0]) return "";
-
+  function clean(arr = []) {
+  return arr.filter(w => /^[a-z]{3,}$/i.test(w.word));
+  }
   const entry = data[0];
   const word = entry.word;
   const meanings = entry.meanings || [];
@@ -353,25 +355,40 @@ function renderDictionaryCard(data, datamuse) {
   /* ---------- Datamuse (semantic meaning) ---------- */
 
   const relatedHTML = datamuse?.related?.length
-    ? `<div class="dm-group">
-         <div class="dm-label">Related concepts</div>
-         <div class="dm-words">${datamuse.related.slice(0, 8).map(w => w.word).join(", ")}</div>
-       </div>`
-    : "";
+  ? `<div class="dm-group">
+       <div class="dm-label">Related concepts</div>
+       <div class="dm-words">
+         ${clean(datamuse.related)
+           .slice(0, 7)
+           .map(w => `<span>${w.word}</span>`)
+           .join("")}
+       </div>
+     </div>`
+  : "";
 
-  const contextualHTML = datamuse?.contextual?.length
-    ? `<div class="dm-group">
-         <div class="dm-label">Often associated with</div>
-         <div class="dm-words">${datamuse.contextual.slice(0, 8).map(w => w.word).join(", ")}</div>
-       </div>`
-    : "";
+const contextualHTML = datamuse?.contextual?.length
+  ? `<div class="dm-group">
+       <div class="dm-label">Often associated with</div>
+       <div class="dm-words">
+         ${clean(datamuse.contextual)
+           .slice(0, 7)
+           .map(w => `<span>${w.word}</span>`)
+           .join("")}
+       </div>
+     </div>`
+  : "";
 
-  const oppositeHTML = datamuse?.opposites?.length
-    ? `<div class="dm-group">
-         <div class="dm-label">Opposite ideas</div>
-         <div class="dm-words">${datamuse.opposites.slice(0, 8).map(w => w.word).join(", ")}</div>
-       </div>`
-    : "";
+const oppositeHTML = datamuse?.opposites?.length
+  ? `<div class="dm-group">
+       <div class="dm-label">Opposite ideas</div>
+       <div class="dm-words">
+         ${clean(datamuse.opposites)
+           .slice(0, 7)
+           .map(w => `<span>${w.word}</span>`)
+           .join("")}
+       </div>
+     </div>`
+  : "";
 
   const hasDatamuse =
     relatedHTML || contextualHTML || oppositeHTML;
