@@ -587,7 +587,7 @@ searchBox.addEventListener("keypress", e => {
     
     suggUL.innerHTML = "";
     saveHistory(term);
-    results.innerHTML = "";
+    //results.innerHTML = "";
     loading.classList.add("show");
     // 📖 DICTIONARY (HIGH PRIORITY)
     if (isDictionaryQuery(term)) {
