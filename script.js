@@ -598,7 +598,7 @@ searchBox.addEventListener("keypress", e => {
     const dict = await fetchDictionary(word);
     const datamuse = await fetchDatamuse(word);
 
-    results.innerHTML = renderDictionaryCard(dict, datamuse);
+    results.innerHTML += renderDictionaryCard(dict, datamuse);
     loading.classList.remove("show");
     //return; // ⛔ STOP AI + WIKI
   } catch (err) {
