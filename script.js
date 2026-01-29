@@ -579,67 +579,79 @@ searchBox.addEventListener("keypress", e => {
 });
 
   async function triggerSearch(term) {
-    // This check now prevents a search if both the text and image are empty
-    //const query = searchBox.value.trim().toLowerCase();
-  
-    if (!term && !uploadedImageData) return;
-    document.body.classList.add("search-active");
-    
-    suggUL.innerHTML = "";
-    saveHistory(term);
-    results.innerHTML = "";
-    loading.classList.add("show");
-    // 📖 DICTIONARY (HIGH PRIORITY)
-    if (isDictionaryQuery(term)) {
+  if (!term && !uploadedImageData) return;
+
+  document.body.classList.add("search-active");
+  suggUL.innerHTML = "";
+  saveHistory(term);
+  results.innerHTML = "";
+  loading.classList.add("show");
+
+  const isImageQuery = !!uploadedImageData;
+
+  // --- AI intent detection ---
+  const questionWords = [
+    "is","what","how","why","would","define","if","are","can","could","should",
+    "when","who","write","review","summary","give","will","where","was","which",
+    "explain","summarize","compare","list","create","generate","suggest",
+    "recommend","calculate","translate","solve","draft","outline","analyze",
+    "best","top","vs","difference","facts","tell","state","do","enlist"
+  ];
+
+  const isTextQuestion = questionWords.includes(
+    term.split(" ")[0].toLowerCase()
+  );
+
+  const hasAIIntent = isTextQuestion || isImageQuery;
+  const hasDictIntent = isDictionaryQuery(term);
+
+  /* ================= AI FIRST ================= */
+  if (hasAIIntent) {
     try {
-    const word = extractDictionaryWord(term);
-    if (!word) throw new Error("No word extracted");
+      const aiAnswer = await fetchAIAnswer(term, uploadedImageData);
+      if (aiAnswer && !aiAnswer.includes("Sorry")) {
+        const formattedAnswer = formatAIAnswer(aiAnswer);
 
-    const dict = await fetchDictionary(word);
-    const datamuse = await fetchDatamuse(word);
+        results.insertAdjacentHTML("beforeend", `
+          <div class="card ai-answer-card">
+            <button class="card-dismiss" aria-label="Dismiss card">➖</button>
+            <div class="ai-card-header">
+              <h3>✦︎ Sosein AI</h3>
+              <div class="copy-container">
+                <span class="copy-btn" title="Copy Answer">🗒</span>
+              </div>
+            </div>
+            <div class="ai-markdown">${formattedAnswer}</div>
+          </div>
+        `);
 
-    results.innerHTML += renderDictionaryCard(dict, datamuse);
-    loading.classList.remove("show");
-    //return; // ⛔ STOP AI + WIKI
-  } catch (err) {
-    console.warn("Dictionary/Datamuse failed", err);
-    // silent fail → fallback continues
-  }
+        addCopyButtons();
+      }
+    } catch (err) {
+      console.warn("AI failed", err);
     }
+  }
 
-    // --- THIS IS THE UPDATED LOGIC ---
-    const isImageQuery = !!uploadedImageData; // Will be true if an image is uploaded
-    const questionWords = ["is", "what", "how", "why", "would", "define", "if", "are", "can", "could", "should", "when", 
-      "who", "?", "write", "review", "summary", "give", "will", "where", "was", "which", "explain", 
-      "summarize", "compare", "list", "create", "generate", "suggest", "recommend", "calculate", 
-      "translate", "solve", "draft", "outline", "analyze", "how to", "what is the", "what are the","best", "top", "vs", "difference between", 
-      "meaning of", "facts about", "tell me", "meaning", "state", "is there", "*", "do", "enlist"];
-     const isTextQuestion = questionWords.includes(term.split(" ")[0].toLowerCase());                       
-    
-    //const isTextQuestion = questionWords.some(w => term.toLowerCase().includes(w));
-    // The AI will now be called if it's a text question OR if an image has been uploaded
-    if (isTextQuestion || isImageQuery) {
-        const aiAnswer = await fetchAIAnswer(term, uploadedImageData);
-        
-        // --- IMPORTANT: Reset image data after the search is done ---
-  
-        if (aiAnswer && !aiAnswer.includes("Sorry")) {
-            const formattedAnswer = formatAIAnswer(aiAnswer);
-            // Your complete AI card and copy button logic remains here
-            results.innerHTML = `
-                <div class="card ai-answer-card">
-                <button class="card-dismiss" aria-label="Dismiss card">➖</button>
-                  <div class="ai-card-header">
-                    <h3>✦︎ Sosein AI</h3>
-                    <div class="copy-container">
-                        <span class="copy-btn" title="Copy Answer">🗒</span>
-                    </div>
-                  </div>
-                  <div id="ai-answer-text" 
-                  class="ai-markdown">${formattedAnswer}</div>
-                </div>
-               `+ results.innerHTML; // 👈 PREPEND
-             addCopyButtons(); // ✅ MUST be here
+  /* ================= DICTIONARY SECOND ================= */
+  if (hasDictIntent) {
+    try {
+      const word = extractDictionaryWord(term);
+      if (!word) throw new Error("No word extracted");
+
+      const dict = await fetchDictionary(word);
+      const datamuse = await fetchDatamuse(word);
+
+      results.insertAdjacentHTML(
+        "beforeend",
+        renderDictionaryCard(dict, datamuse)
+      );
+    } catch (err) {
+      console.warn("Dictionary/Datamuse failed", err);
+    }
+  }
+
+  loading.classList.remove("show");
+}
           
   const aiContainer = 
   document.getElementById("ai-answer-text");
