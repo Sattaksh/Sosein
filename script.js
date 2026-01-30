@@ -1075,7 +1075,7 @@ async function fetchAll(term) {
     celebrity?.known_for_department &&
     ["Acting", "Directing", "Production", "Writing", "Sound"]
       .includes(celebrity.known_for_department) &&
-    celebrity?.combined_credits?.cast?.length > 0 &&
+    celebrity?.combined_credits?.cast?.length > 0; 
     //celebrity?.popularity >= 4; // 👈 popularity filter added
 
     if (isFilmIndustryPerson) {
