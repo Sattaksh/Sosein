@@ -1041,8 +1041,7 @@ function classifyAndEnhance(title, summary) {
 
 async function fetchAll(term) {
   //results.innerHTML = "";
-  if (results.children.length > 0) return;
-  
+
   loading.classList.add("show");
   
   try {
@@ -1056,31 +1055,33 @@ async function fetchAll(term) {
     if (!wikiRes.ok) throw "Wiki Not Found";
     const wikiData = await wikiRes.json();
 
-    // 🚫 Skip movie search if it's a human name
-    if (entityType === "human") {
-  // do NOT fetch TMDB movie
-     } else {
-      const tmdbMovie = await fetchTMDBMovie(cleanTerm);
-      if (tmdbMovie?.title) {
-      results.innerHTML += buildTMDBMovieCard(tmdbMovie);
-     }
-  }
-    // ================================
-    // 🎬 TMDB MOVIE CARD (FIRST)
-    // ================================
-    const tmdbMovie = await fetchTMDBMovie(cleanTerm);
-    console.log("TMDB RESULT:", tmdbMovie);
-
-    if (tmdbMovie && tmdbMovie.title) {
-      results.innerHTML += buildTMDBMovieCard(tmdbMovie);
-    }
-    
-    results.innerHTML += buildWikiCard(wikiData, wikiData.title);
-    
     let entityType = null;
     if (wikiData.wikibase_item) {
       entityType = await fetchEntityType(wikiData.wikibase_item);
     }
+    
+    // 3️⃣ Fetch TMDB movie ONLY if NOT human
+    if (entityType !== "human") {
+    const tmdbMovie = await fetchTMDBMovie(cleanTerm);
+    console.log("🎬 TMDB MOVIE:", tmdbMovie);
+
+    if (tmdbMovie?.title) {
+   results.innerHTML += buildTMDBMovieCard(tmdbMovie);
+    }
+  }
+    // ================================
+    // 🎬 TMDB MOVIE CARD (FIRST)
+    // ================================
+    //const tmdbMovie = await fetchTMDBMovie(cleanTerm);
+   // console.log("TMDB RESULT:", tmdbMovie);
+
+  //  if (tmdbMovie && tmdbMovie.title) {
+ //     results.innerHTML += buildTMDBMovieCard(tmdbMovie);
+ //   }
+    
+    results.innerHTML += buildWikiCard(wikiData, wikiData.title);
+    
+    
     
     
     
