@@ -279,7 +279,7 @@ function clearUploadedImage() {
   step();
 }
 
-  // dictionary logic
+  // dictionary and weather logic 
   
 async function fetchDatamuse(word) {
   const [ml, trg, ant] = await Promise.all([
@@ -308,9 +308,64 @@ function isDictionaryQuery(q) {
   return /\b(meaning|definition|mean|means)\b/i.test(q);
 }
 
-function isWeatherQuery(q) {
-  return /(weather|temperature|temp|rain|forecast|climate)/i.test(q);
+function isWeatherQuery(query) {
+  return /\b(weather|temperature|forecast|climate)\b/i.test(query);
 }
+  
+function extractCity(query) {
+  return query
+    .toLowerCase()
+    .replace(/weather|temperature|forecast|in|of|today|now/g, "")
+    .trim();
+}
+
+async function fetchCoordinates(city) {
+  const res = await fetch(
+    `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1`
+  );
+  const data = await res.json();
+
+  if (!data.results || !data.results.length) return null;
+
+  return {
+    lat: data.results[0].latitude,
+    lon: data.results[0].longitude,
+    name: data.results[0].name,
+    country: data.results[0].country
+  };
+  }
+
+ async function fetchWeather(lat, lon) {
+  const res = await fetch(
+    `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`
+  );
+  return res.json();
+  }
+
+  function renderWeatherCard(city, country, weather) {
+  if (!weather?.current_weather) return "";
+
+  const temp = weather.current_weather.temperature;
+  const wind = weather.current_weather.windspeed;
+
+  return `
+    <div class="card weather-card">
+      <button class="card-dismiss" aria-label="Dismiss card"></button>
+
+      <h2>🌤 Weather</h2>
+      <div class="weather-location">${city}, ${country}</div>
+
+      <div class="weather-main">
+        <span class="weather-temp">${temp}°C</span>
+      </div>
+
+      <div class="weather-meta">
+        Wind: ${wind} km/h
+      </div>
+    </div>
+  `;
+  }
+  
 
 async function fetchDictionary(query) {
   const res = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${query}`);
@@ -639,6 +694,26 @@ searchBox.addEventListener("keypress", e => {
     }
   }
 
+  /* =======================
+   🌤 WEATHER
+======================= */
+ if (isWeatherQuery(term)) {
+   try {
+     const city = extractCity(term);
+     const coords = await fetchCoordinates(city);
+
+     if (coords) {
+       const weather = await fetchWeather(coords.lat, coords.lon);
+       results.innerHTML += renderWeatherCard(
+         coords.name,
+         coords.country,
+         weather
+        );
+      }
+    } catch (e) {
+      console.warn("Weather failed", e);
+    }
+  }
   /* =======================
      🤖 AI (PRIORITY)
   ======================= */
