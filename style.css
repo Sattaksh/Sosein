@@ -2692,19 +2692,20 @@ body.dark .dm-words span {
   html,
   body,
   :root,
+  [data-theme],
+  [data-theme="light"],
+  [data-theme="dark"],
   .app,
   .container,
   .card,
   .navbar,
-  .search-wrapper,
   #searchBox {
     transition:
       background-color 0s !important,
       color 0s !important,
       border-color 0s !important,
       box-shadow 0s !important,
-      fill 0s !important,
-      stroke 0s !important;
+      filter 0s !important;
   }
 
   /* -----------------------------
