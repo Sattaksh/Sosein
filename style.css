@@ -2741,12 +2741,3 @@ body,
   transform: scale(0.9);
   background-color: #ffebeb;
 }
-
-/*edge fade*/
-.card {
-  mask-image: linear-gradient(
-    to bottom,
-    black 92%,
-    transparent 100%
-  );
-}
