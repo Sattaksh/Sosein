@@ -1071,7 +1071,7 @@ async function fetchAll(term) {
     // 3️⃣ HUMAN → Celebrity card FIRST, Wiki AFTER
     // ================================
     if (entityType === "human") {
-    const celebrity = await fetchTMDBPerson(cleanTerm);
+    const celebrity = await fetchTMDBPerson(tmdbTerm);
 
     const isFilmIndustryPerson =
     celebrity?.known_for_department &&
