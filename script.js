@@ -673,6 +673,7 @@ searchBox.addEventListener("keypress", e => {
     
   const firstWord = term.split(" ")[0]?.toLowerCase();
   const wordCount = term.trim().split(/\s+/).length;
+  const hasWeatherIntent = isWeatherQuery(term);
   const hasDictIntent = isDictionaryQuery(term) && wordCount <= 2;
   const hasAIIntent =
   (Array.isArray(questionWords) && questionWords.includes(firstWord)) ||
@@ -796,7 +797,7 @@ searchBox.addEventListener("keypress", e => {
   /* =======================
      🌐 FALLBACK SEARCH
   ======================= */
-  if (!hasAIIntent && !hasDictIntent) {
+  if (!hasAIIntent && !hasDictIntent && !hasWeatherIntent) {
     await fetchAll(term);
 
     const lowerTerm = term.toLowerCase();
