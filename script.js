@@ -992,9 +992,10 @@ searchBox.addEventListener("keypress", e => {
   /* =======================
      🌐 FALLBACK SEARCH
   ======================= */
-  if (!hasAIIntent && !hasDictIntent && !hasWeatherIntent) {
+  if (
+  !hasAIIntent &&  !hasDictIntent &&  !hasWeatherIntent &&  !celebrityRendered) {
   await fetchAll(term);
-
+  
     const lowerTerm = term.toLowerCase();
     const bookKeywords = ["book", "novel", "by", "author", "volume", "literature"];
     if (bookKeywords.some(k => lowerTerm.includes(k))) {
@@ -1040,9 +1041,10 @@ function classifyAndEnhance(title, summary) {
 
 async function fetchAll(term) {
   //results.innerHTML = "";
+  if (results.children.length > 0) return;
+  
   loading.classList.add("show");
-
-
+  
   try {
     const cleanTerm = term
    .replace(/\?/g, "")
