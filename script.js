@@ -827,6 +827,7 @@ searchBox.addEventListener("keypress", e => {
   if (!term && !uploadedImageData) return;
 
   searchInProgress = true;
+  let celebrityRendered = false;
 
   document.body.classList.add("search-active");
   suggUL.innerHTML = "";
@@ -884,11 +885,14 @@ searchBox.addEventListener("keypress", e => {
    🎭 CELEBRITY
 ======================= */
   if (isCelebrityQuery(term)) {
-    const person = await fetchTMDBPerson(term);
+  const person = await fetchTMDBPerson(term);
+
   if (person?.name) {
     results.innerHTML += renderCelebrityCard(person);
-    }
+    celebrityRendered = true;
   }
+  }
+    
   /* =======================
      🤖 AI (PRIORITY)
   ======================= */
@@ -971,7 +975,7 @@ searchBox.addEventListener("keypress", e => {
   /* =======================
      🌐 FALLBACK SEARCH
   ======================= */
-  if (!hasAIIntent && !hasDictIntent && !hasWeatherIntent) {
+  if (!hasAIIntent && !hasDictIntent && !hasWeatherIntent && !celebrityRendered) {
     await fetchAll(term);
 
     const lowerTerm = term.toLowerCase();
@@ -1032,6 +1036,16 @@ async function fetchAll(term) {
     const wikiRes = await fetch(wikiURL);
     if (!wikiRes.ok) throw "Wiki Not Found";
     const wikiData = await wikiRes.json();
+
+    // 🚫 Skip movie search if it's a human name
+    if (entityType === "human") {
+  // do NOT fetch TMDB movie
+     } else {
+      const tmdbMovie = await fetchTMDBMovie(cleanTerm);
+      if (tmdbMovie?.title) {
+      results.innerHTML += buildTMDBMovieCard(tmdbMovie);
+     }
+  }
     // ================================
     // 🎬 TMDB MOVIE CARD (FIRST)
     // ================================
