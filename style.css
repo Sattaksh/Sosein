@@ -2807,16 +2807,3 @@ body,
   font-size: 13px;
   font-weight: 500;
 }
-
-/*Card parallax*/
-
-/* Card stack base */
-.card {
-  position: relative;
-  transform-style: preserve-3d;
-  will-change: transform;
-  transition:
-    transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1),
-    box-shadow 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-
