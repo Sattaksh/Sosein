@@ -898,7 +898,7 @@ searchBox.addEventListener("keypress", e => {
   /* =======================
    📘 WIKIPEDIA (ALWAYS)
 ======================= */
-  try {
+ /* try {
     const wikiURL = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(term)}`;
     const res = await fetch(wikiURL);
 
@@ -910,7 +910,7 @@ searchBox.addEventListener("keypress", e => {
     }
   } catch (e) {
     console.warn("Wiki failed", e);
-    }
+    } */
     
   /* =======================
      🤖 AI (PRIORITY)
@@ -1081,7 +1081,7 @@ async function fetchAll(term) {
  //     results.innerHTML += buildTMDBMovieCard(tmdbMovie);
  //   }
     
-    results.innerHTML += buildWikiCard(wikiData, wikiData.title);
+   results.innerHTML += buildWikiCard(wikiData, wikiData.title);
     
     
     
