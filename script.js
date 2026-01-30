@@ -892,6 +892,23 @@ searchBox.addEventListener("keypress", e => {
     celebrityRendered = true;
   }
   }
+
+  /* =======================
+   📘 WIKIPEDIA (ALWAYS)
+======================= */
+  try {
+    const wikiURL = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(term)}`;
+    const res = await fetch(wikiURL);
+
+  if (res.ok) {
+    const wikiData = await res.json();
+    if (wikiData?.extract?.length > 20) {
+      results.innerHTML += buildWikiCard(wikiData, wikiData.title);
+      }
+    }
+  } catch (e) {
+    console.warn("Wiki failed", e);
+  }
     
   /* =======================
      🤖 AI (PRIORITY)
@@ -1022,7 +1039,7 @@ function classifyAndEnhance(title, summary) {
 }
 
 async function fetchAll(term) {
-  results.innerHTML = "";
+  //results.innerHTML = "";
   loading.classList.add("show");
 
 
