@@ -336,32 +336,87 @@ async function fetchCoordinates(city) {
   }
 
  async function fetchWeather(lat, lon) {
-  const res = await fetch(
-    `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`
-  );
-  return res.json();
+  const url = `https://api.open-meteo.com/v1/forecast
+    ?latitude=${lat}
+    &longitude=${lon}
+    &current=temperature_2m,apparent_temperature,relative_humidity_2m,wind_speed_10m
+    &timezone=auto`;
+
+  const res = await fetch(url);
+  const data = await res.json();
+
+  if (!data.current) return null;
+
+  return {
+    temp: data.current.temperature_2m,
+    feelsLike: data.current.apparent_temperature,
+    humidity: data.current.relative_humidity_2m,
+    wind: data.current.wind_speed_10m
+  };
+  }
+  
+ async function fetchAQI(lat, lon) {
+  const url = `https://air-quality-api.open-meteo.com/v1/air-quality
+    ?latitude=${lat}
+    &longitude=${lon}
+    &current=us_aqi,pm2_5
+    &timezone=auto`;
+
+  const res = await fetch(url);
+  const data = await res.json();
+
+  if (!data.current) return null;
+
+  return {
+    aqi: data.current.us_aqi,
+    pm25: data.current.pm2_5
+  };
+}
+  
+  function getAQIInfo(aqi) {
+  if (aqi <= 50) return { label: "Good", color: "#2ecc71" };
+  if (aqi <= 100) return { label: "Moderate", color: "#f1c40f" };
+  if (aqi <= 150) return { label: "Unhealthy", color: "#e67e22" };
+  return { label: "Poor", color: "#e74c3c" };
   }
 
-  function renderWeatherCard(city, country, weather) {
-  if (!weather?.current_weather) return "";
+  
+  function renderWeatherCard(city, country, weather, aqiData) {
+  if (!weather) return "";
 
-  const temp = weather.current_weather.temperature;
-  const wind = weather.current_weather.windspeed;
+  const temp = weather.temp;
+  const feels = weather.feelsLike;
+  const humidity = weather.humidity;
+  const wind = weather.wind;
+
+  let aqiHTML = "";
+  if (aqiData && typeof aqiData.aqi === "number") {
+    const info = getAQIInfo(aqiData.aqi);
+    aqiHTML = `
+      <div class="weather-aqi" style="color:${info.color}">
+        AQI ${aqiData.aqi} · ${info.label}
+      </div>
+    `;
+  }
 
   return `
     <div class="card weather-card">
-      <button class="card-dismiss" aria-label="Dismiss card"></button>
+      <button class="card-dismiss" aria-label="Dismiss card">➖</button>
 
       <h2>🌤 Weather</h2>
       <div class="weather-location">${city}, ${country}</div>
 
       <div class="weather-main">
-        <span class="weather-temp">${temp}°C</span>
+        <span class="weather-temp">${temp.toFixed(1)}°C</span>
       </div>
 
       <div class="weather-meta">
-        Wind: ${wind} km/h
+        <div>Feels like <strong>${feels.toFixed(1)}°</strong></div>
+        <div>Humidity <strong>${humidity}%</strong></div>
+        <div>Wind <strong>${wind.toFixed(1)} km/h</strong></div>
       </div>
+
+      ${aqiHTML}
     </div>
   `;
   }
@@ -695,26 +750,27 @@ searchBox.addEventListener("keypress", e => {
     }
   }
 
-  /* =======================
-   🌤 WEATHER
-======================= */
+// 🌤 WEATHER
  if (isWeatherQuery(term)) {
-   try {
-     const city = extractCity(term);
-     const coords = await fetchCoordinates(city);
+    try {
+      const city = extractCity(term);
+      const coords = await fetchCoordinates(city);
 
-     if (coords) {
-       const weather = await fetchWeather(coords.lat, coords.lon);
-       results.innerHTML += renderWeatherCard(
-         coords.name,
-         coords.country,
-         weather
-        );
-      }
-    } catch (e) {
-      console.warn("Weather failed", e);
+    if (coords) {
+        const weather = await fetchWeather(coords.lat, coords.lon);
+        const aqiData = await fetchAQI(coords.lat, coords.lon); // ✅ ADD THIS
+
+      results.innerHTML += renderWeatherCard(
+        coords.name,
+        coords.country,
+        weather,
+        aqiData // ✅ AND THIS
+      );
     }
+  } catch (e) {
+    console.warn("Weather failed", e);
   }
+}
   /* =======================
      🤖 AI (PRIORITY)
   ======================= */
