@@ -2741,3 +2741,24 @@ body,
   transform: scale(0.9);
   background-color: #ffebeb;
 }
+
+.weather-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.weather-location {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.weather-temp {
+  font-size: 2.2rem;
+  font-weight: 600;
+}
+
+.weather-meta {
+  font-size: 0.85rem;
+  opacity: 0.8;
+}
