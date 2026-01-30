@@ -309,7 +309,7 @@ function isDictionaryQuery(q) {
 }
 
 function isWeatherQuery(query) {
-  return /\b(weather|temperature|forecast|climate)\b/i.test(query);
+  return /\b(weather|rain|temperature|forecast|climate)\b/i.test(query);
 }
   
 function extractCity(query) {
