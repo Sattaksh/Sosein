@@ -2732,3 +2732,12 @@ body,
 [data-theme="dark"] {
   transition: none !important;
 }
+
+.card-dismiss {
+  transition: transform 120ms ease, background-color 120ms ease;
+}
+
+.card-dismiss:active {
+  transform: scale(0.9);
+  background-color: #ffebeb;
+}
