@@ -562,35 +562,63 @@ function buildTMDBMovieCard(movie) {
     : "";
 
   const director =
-    movie.credits.crew.find(p => p.job === "Director")?.name || "Not listed";
+    movie.credits?.crew?.find(p => p.job === "Director")?.name || "Not listed";
 
-  const cast = movie.credits.cast
-    .slice(0, 5)
+  const cast = movie.credits?.cast
+    ?.slice(0, 5)
     .map(c => c.name)
-    .join(", ");
+    .join(", ") || "—";
+
+  const releaseDate = movie.release_date
+    ? new Date(movie.release_date).toLocaleDateString("en-IN", {
+        year: "numeric",
+        month: "short",
+        day: "numeric"
+      })
+    : "—";
+
+  const runtime = movie.runtime
+    ? `${movie.runtime} min`
+    : "—";
+
+  const rating = movie.vote_average
+    ? movie.vote_average.toFixed(1)
+    : "—";
 
   return `
     <div class="card movie-card">
-    <button class="card-dismiss" aria-label="Dismiss card">➖</button>
+      <button class="card-dismiss" aria-label="Dismiss card">➖</button>
+
       <div class="movie-card-inner">
         ${poster ? `<img src="${poster}" alt="${movie.title} poster">` : ""}
 
         <div class="movie-meta">
           <h2>🎬 ${movie.title} (${movie.release_date?.slice(0, 4) || "—"})</h2>
 
-          <p class="movie-desc">${movie.overview || "No description available."}</p>
+          <div class="movie-submeta">
+            <span>${releaseDate}</span>
+            <span>• ${runtime}</span>
+            <span class="tmdb-rating">TMDB ${rating}</span>
+          </div>
+
+          <p class="movie-desc">
+            ${movie.overview || "No description available."}
+          </p>
 
           <p><strong>Director:</strong> ${director}</p>
           <p><strong>Cast:</strong> ${cast}</p>
 
-          <a href="https://www.imdb.com/title/${movie.imdb_id}" target="_blank">
-            ⭐ IMDb
-          </a>
+          ${
+            movie.imdb_id
+              ? `<a href="https://www.imdb.com/title/${movie.imdb_id}" target="_blank">⭐ IMDb</a>`
+              : ""
+          }
         </div>
       </div>
     </div>
   `;
 }
+  
 async function fetchTMDBMovie(title) {
   try {
     const res = await fetch(
