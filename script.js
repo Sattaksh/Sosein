@@ -1069,7 +1069,6 @@ async function fetchAll(term) {
     // 3️⃣ HUMAN → Celebrity card FIRST, Wiki AFTER
     // ================================
     if (entityType === "human") {
-
     const celebrity = await fetchTMDBPerson(cleanTerm);
 
     const isFilmIndustryPerson =
@@ -1077,12 +1076,12 @@ async function fetchAll(term) {
     ["Acting", "Directing", "Production", "Writing", "Sound"]
       .includes(celebrity.known_for_department) &&
     celebrity?.combined_credits?.cast?.length > 0 &&
-    //celebrity?.popularity >= 4; // 👈 popularity filter added
+    celebrity?.popularity >= 4; // 👈 popularity filter added
 
     if (isFilmIndustryPerson) {
      results.innerHTML += renderCelebrityCard(celebrity);
     }
-
+      
   // ALWAYS show Wikipedia for people
     if (wikiData?.extract?.length > 20) {
     results.innerHTML += buildWikiCard(wikiData, wikiData.title);
