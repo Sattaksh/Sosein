@@ -279,6 +279,34 @@ function clearUploadedImage() {
   step();
 }
 
+  //card parallax
+  (function initCardParallax() {
+  let ticking = false;
+
+  window.addEventListener("scroll", () => {
+    if (ticking) return;
+    ticking = true;
+
+    requestAnimationFrame(() => {
+      const cards = document.querySelectorAll(".card");
+      const scrollY = window.scrollY;
+
+      cards.forEach((card, i) => {
+        const depth = Math.min(i, 4); // cap effect
+        const offset = scrollY * 0.015 * depth;
+
+        card.style.transform = `
+          translateY(${offset}px)
+          translateZ(${-depth * 4}px)
+        `;
+      });
+
+      ticking = false;
+    });
+  });
+})();
+
+  
   // dictionary and weather logic 
   
 async function fetchDatamuse(word) {
