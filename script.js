@@ -1042,17 +1042,19 @@ function classifyAndEnhance(title, summary) {
 
 async function fetchAll(term) {
   loading.classList.add("show");
+  const originalTerm = term.trim();
 
   try {
-    const cleanTerm = term
-      .replace(/\?/g, "")
-      .replace(/\s*\(.*?film.*?\)$/i, "")
-      .trim();
+    const tmdbTerm = originalTerm
+    .replace(/\?/g, "")
+    .replace(/\(\d{4}.*?\)/g, "")     // remove (2015), (2023 Tamil film)
+    .replace(/\bfilm\b/i, "")
+    .trim();
 
     // ================================
     // 1️⃣ Fetch Wiki FIRST (for entity detection only)
     // ================================
-    const wikiURL = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(cleanTerm)}`;
+    const wikiURL = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(originalTerm)}`;
     const wikiRes = await fetch(wikiURL);
     if (!wikiRes.ok) throw "Wiki Not Found";
     const wikiData = await wikiRes.json();
@@ -1092,7 +1094,7 @@ async function fetchAll(term) {
     // ================================
     // 4️⃣ MOVIE → TMDB Movie FIRST, Wiki AFTER
     // ================================
-    const tmdbMovie = await fetchTMDBMovie(cleanTerm);
+    const tmdbMovie = await fetchTMDBMovie(tmdbTerm);
     if (tmdbMovie?.title) {
       results.innerHTML += buildTMDBMovieCard(tmdbMovie);
       results.innerHTML += buildWikiCard(wikiData, wikiData.title);
