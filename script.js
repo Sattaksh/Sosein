@@ -829,7 +829,7 @@ searchBox.addEventListener("keypress", e => {
   if (!term && !uploadedImageData) return;
 
   searchInProgress = true;
-  let celebrityRendered = false;
+  //let celebrityRendered = false;
 
   document.body.classList.add("search-active");
   suggUL.innerHTML = "";
@@ -883,17 +883,16 @@ searchBox.addEventListener("keypress", e => {
     console.warn("Weather failed", e);
   }
 }
-  /* =======================
-   🎭 CELEBRITY
+    /* 🎭 CELEBRITY
 ======================= */
-  if (isCelebrityQuery(term)) {
+  /*if (isCelebrityQuery(term)) {
   const person = await fetchTMDBPerson(term);
 
   if (person?.name) {
     results.innerHTML += renderCelebrityCard(person);
     celebrityRendered = true;
   }
-  }
+  }*/
 
   /* =======================
    📘 WIKIPEDIA (ALWAYS)
@@ -995,7 +994,7 @@ searchBox.addEventListener("keypress", e => {
      🌐 FALLBACK SEARCH
   ======================= */
   if (
-  !hasAIIntent &&  !hasDictIntent &&  !hasWeatherIntent &&  !celebrityRendered) {
+  !hasAIIntent &&  !hasDictIntent &&  !hasWeatherIntent) {
   await fetchAll(term);
   
     const lowerTerm = term.toLowerCase();
@@ -1042,48 +1041,57 @@ function classifyAndEnhance(title, summary) {
 }
 
 async function fetchAll(term) {
-  //results.innerHTML = "";
-
   loading.classList.add("show");
-  
+
   try {
     const cleanTerm = term
-   .replace(/\?/g, "")
-   .replace(/\s*\(.*?film.*?\)$/i, "")// 👈 THIS FIX
-   .trim();
-    const wikiURL = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(cleanTerm)}`;
+      .replace(/\?/g, "")
+      .replace(/\s*\(.*?film.*?\)$/i, "")
+      .trim();
 
+    // ================================
+    // 1️⃣ Fetch Wiki FIRST (for entity detection only)
+    // ================================
+    const wikiURL = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(cleanTerm)}`;
     const wikiRes = await fetch(wikiURL);
     if (!wikiRes.ok) throw "Wiki Not Found";
     const wikiData = await wikiRes.json();
 
+    // ================================
+    // 2️⃣ Detect entity type
+    // ================================
     let entityType = null;
     if (wikiData.wikibase_item) {
       entityType = await fetchEntityType(wikiData.wikibase_item);
     }
-    
-    // 3️⃣ Fetch TMDB movie ONLY if NOT human
-    if (entityType !== "human") {
-    const tmdbMovie = await fetchTMDBMovie(cleanTerm);
-    console.log("🎬 TMDB MOVIE:", tmdbMovie);
 
-    if (tmdbMovie?.title) {
-   results.innerHTML += buildTMDBMovieCard(tmdbMovie);
+    // ================================
+    // 3️⃣ HUMAN → Celebrity card FIRST, Wiki AFTER
+    // ================================
+    if (entityType === "human") {
+      const celebrity = await fetchTMDBPerson(cleanTerm);
+      if (celebrity) {
+        results.innerHTML += buildCelebrityCard(celebrity);
+      }
+
+      results.innerHTML += buildWikiCard(wikiData, wikiData.title);
+      return;
     }
-  }
-    // ================================
-    // 🎬 TMDB MOVIE CARD (FIRST)
-    // ================================
-    //const tmdbMovie = await fetchTMDBMovie(cleanTerm);
-   // console.log("TMDB RESULT:", tmdbMovie);
 
-  //  if (tmdbMovie && tmdbMovie.title) {
- //     results.innerHTML += buildTMDBMovieCard(tmdbMovie);
- //   }
-    
-   results.innerHTML += buildWikiCard(wikiData, wikiData.title);
-    
-    
+    // ================================
+    // 4️⃣ MOVIE → TMDB Movie FIRST, Wiki AFTER
+    // ================================
+    const tmdbMovie = await fetchTMDBMovie(cleanTerm);
+    if (tmdbMovie?.title) {
+      results.innerHTML += buildTMDBMovieCard(tmdbMovie);
+      results.innerHTML += buildWikiCard(wikiData, wikiData.title);
+      return;
+    }
+
+    // ================================
+    // 5️⃣ FALLBACK → Wiki only
+    // ================================
+    results.innerHTML += buildWikiCard(wikiData, wikiData.title);
     
     
     
