@@ -2741,3 +2741,31 @@ body,
   transform: scale(0.9);
   background-color: #ffebeb;
 }
+
+/*edge fade*/
+.card {
+  mask-image: linear-gradient(
+    to bottom,
+    black 92%,
+    transparent 100%
+  );
+}
+/*Ios rubber*/
+html {
+  overscroll-behavior: none;
+}
+
+.results {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.card {
+  transition:
+    transform 140ms cubic-bezier(.22,1.28,.32,1),
+    box-shadow 140ms ease;
+}
+
+.card:active {
+  transform: scale(0.985);
+}
