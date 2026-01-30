@@ -304,7 +304,79 @@ function extractDictionaryWord(query) {
     .split(/\s+/)[0];
 }
 
-  
+function isCelebrityQuery(term) {
+  // No keywords → pure name search
+  const words = term.trim().split(/\s+/);
+  return words.length <= 3 && !isWeatherQuery(term) && !isDictionaryQuery(term);
+} 
+
+async function fetchTMDBPerson(name) {
+  try {
+    const res = await fetch(
+      `/.netlify/functions/tmdb-person?q=${encodeURIComponent(name)}`
+    );
+    if (!res.ok) return null;
+    return await res.json();
+  } catch (e) {
+    console.warn("TMDB person fetch failed", e);
+    return null;
+  }
+}
+
+function renderCelebrityCard(person) {
+  if (!person) return "";
+
+  const photo = person.profile_path
+    ? `https://image.tmdb.org/t/p/w500${person.profile_path}`
+    : "";
+
+  const birthYear = person.birthday
+    ? new Date(person.birthday).getFullYear()
+    : null;
+
+  const age = birthYear
+    ? new Date().getFullYear() - birthYear
+    : "—";
+
+  const profession =
+    person.known_for_department || "Film Industry";
+
+  const topWorks = person.combined_credits?.cast
+    ?.sort((a, b) => b.popularity - a.popularity)
+    .slice(0, 3)
+    .map(w => w.title || w.name)
+    .join(", ") || "—";
+
+  return `
+    <div class="card celebrity-card">
+      <button class="card-dismiss" aria-label="Dismiss card">➖</button>
+
+      <div class="celebrity-inner">
+        ${photo ? `<img src="${photo}" alt="${person.name}">` : ""}
+
+        <div class="celebrity-meta">
+          <h2>${person.name}</h2>
+
+          <div class="celebrity-sub">
+            <span>${profession}</span>
+            <span>• Age ${age}</span>
+          </div>
+
+          <p><strong>Famous for:</strong> ${topWorks}</p>
+
+          <a
+            href="https://www.themoviedb.org/person/${person.id}"
+            target="_blank"
+            class="filmography-link"
+          >
+            View full filmography →
+          </a>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
 function isDictionaryQuery(q) {
   return /\b(meaning|definition|mean|means)\b/i.test(q);
 }
@@ -808,6 +880,15 @@ searchBox.addEventListener("keypress", e => {
     console.warn("Weather failed", e);
   }
 }
+  /* =======================
+   🎭 CELEBRITY
+======================= */
+  if (isCelebrityQuery(term)) {
+    const person = await fetchTMDBPerson(term);
+  if (person?.name) {
+    results.innerHTML += renderCelebrityCard(person);
+    }
+  }
   /* =======================
      🤖 AI (PRIORITY)
   ======================= */
