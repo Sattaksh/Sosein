@@ -975,8 +975,8 @@ searchBox.addEventListener("keypress", e => {
   /* =======================
      🌐 FALLBACK SEARCH
   ======================= */
-  if (!hasAIIntent && !hasDictIntent && !hasWeatherIntent && !celebrityRendered) {
-    await fetchAll(term);
+  if (!hasAIIntent && !hasDictIntent && !hasWeatherIntent) {
+  await fetchAll(term);
 
     const lowerTerm = term.toLowerCase();
     const bookKeywords = ["book", "novel", "by", "author", "volume", "literature"];
