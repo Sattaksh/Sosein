@@ -1069,14 +1069,20 @@ async function fetchAll(term) {
     // 3️⃣ HUMAN → Celebrity card FIRST, Wiki AFTER
     // ================================
     if (entityType === "human") {
-      const celebrity = await fetchTMDBPerson(cleanTerm);
-      if (celebrity) {
-        results.innerHTML += buildCelebrityCard(celebrity);
-      }
+    let celebrityRendered = false;
 
-      results.innerHTML += buildWikiCard(wikiData, wikiData.title);
-      return;
+    const celebrity = await fetchTMDBPerson(cleanTerm);
+    if (celebrity?.name) {
+    results.innerHTML += renderCelebrityCard(celebrity);
+    celebrityRendered = true;
     }
+
+  // ALWAYS show Wikipedia for people
+    if (wikiData?.extract?.length > 20) {
+    results.innerHTML += buildWikiCard(wikiData, wikiData.title);
+     }
+    return;
+     }
 
     // ================================
     // 4️⃣ MOVIE → TMDB Movie FIRST, Wiki AFTER
