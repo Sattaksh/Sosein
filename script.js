@@ -336,11 +336,12 @@ async function fetchCoordinates(city) {
   }
 
  async function fetchWeather(lat, lon) {
-  const url = `https://api.open-meteo.com/v1/forecast
-    ?latitude=${lat}
-    &longitude=${lon}
-    &current=temperature_2m,apparent_temperature,relative_humidity_2m,wind_speed_10m
-    &timezone=auto`;
+  const url =
+    `https://api.open-meteo.com/v1/forecast` +
+    `?latitude=${lat}` +
+    `&longitude=${lon}` +
+    `&current=temperature_2m,apparent_temperature,relative_humidity_2m,wind_speed_10m` +
+    `&timezone=auto`;
 
   const res = await fetch(url);
   const data = await res.json();
@@ -353,14 +354,15 @@ async function fetchCoordinates(city) {
     humidity: data.current.relative_humidity_2m,
     wind: data.current.wind_speed_10m
   };
-  }
+    }
   
  async function fetchAQI(lat, lon) {
-  const url = `https://air-quality-api.open-meteo.com/v1/air-quality
-    ?latitude=${lat}
-    &longitude=${lon}
-    &current=us_aqi,pm2_5
-    &timezone=auto`;
+  const url =
+    `https://air-quality-api.open-meteo.com/v1/air-quality` +
+    `?latitude=${lat}` +
+    `&longitude=${lon}` +
+    `&current=us_aqi,pm2_5` +
+    `&timezone=auto`;
 
   const res = await fetch(url);
   const data = await res.json();
@@ -371,7 +373,7 @@ async function fetchCoordinates(city) {
     aqi: data.current.us_aqi,
     pm25: data.current.pm2_5
   };
-}
+ }
   
   function getAQIInfo(aqi) {
   if (aqi <= 50) return { label: "Good", color: "#2ecc71" };
