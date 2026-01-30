@@ -1094,12 +1094,27 @@ async function fetchAll(term) {
     // ================================
     // 4️⃣ MOVIE → TMDB Movie FIRST, Wiki AFTER
     // ================================
-    const tmdbMovie = await fetchTMDBMovie(tmdbTerm);
-    if (tmdbMovie?.title) {
-      results.innerHTML += buildTMDBMovieCard(tmdbMovie);
-      results.innerHTML += buildWikiCard(wikiData, wikiData.title);
-      return;
-    }
+   const tmdbMovie = await fetchTMDBMovie(tmdbTerm);
+
+// 🔐 STRONG validation
+   const wikiTitle = wikiData.title.toLowerCase();
+   const tmdbTitle = tmdbMovie?.title?.toLowerCase() || "";
+
+   const isLikelyMatch =
+    tmdbMovie &&
+    (
+      tmdbTitle === wikiTitle ||
+      tmdbTitle.includes(wikiTitle) ||
+      wikiTitle.includes(tmdbTitle)
+    );
+
+  if (isLikelyMatch) {
+    results.innerHTML += buildTMDBMovieCard(tmdbMovie);
+  }
+
+  // ✅ Wiki ALWAYS shows for films
+  results.innerHTML += buildWikiCard(wikiData, wikiData.title);
+  return;
 
     // ================================
     // 5️⃣ FALLBACK → Wiki only
