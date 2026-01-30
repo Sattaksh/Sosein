@@ -1069,7 +1069,7 @@ async function fetchAll(term) {
     // 3️⃣ HUMAN → Celebrity card FIRST, Wiki AFTER
     // ================================
     if (entityType === "human") {
-      let celebrityRendered = false;
+
     const celebrity = await fetchTMDBPerson(cleanTerm);
 
     const isFilmIndustryPerson =
@@ -1081,7 +1081,6 @@ async function fetchAll(term) {
 
     if (isFilmIndustryPerson) {
      results.innerHTML += renderCelebrityCard(celebrity);
-      celebrityRendered = true;
     }
 
   // ALWAYS show Wikipedia for people
