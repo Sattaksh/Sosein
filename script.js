@@ -321,19 +321,22 @@ function extractCity(query) {
 
 async function fetchCoordinates(city) {
   const res = await fetch(
-    `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1`
+    `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=en`
   );
   const data = await res.json();
 
   if (!data.results || !data.results.length) return null;
 
+  const place = data.results[0];
+
   return {
-    lat: data.results[0].latitude,
-    lon: data.results[0].longitude,
-    name: data.results[0].name,
-    country: data.results[0].country
+    lat: place.latitude,
+    lon: place.longitude,
+    name: place.name,
+    state: place.admin1 || "",   // ✅ STATE (e.g. Bihar, Uttar Pradesh)
+    country: place.country
   };
-  }
+   }
 
  async function fetchWeather(lat, lon) {
   const url =
@@ -383,7 +386,7 @@ async function fetchCoordinates(city) {
   }
 
   
-  function renderWeatherCard(city, country, weather, aqiData) {
+  function renderWeatherCard(city, state, country, weather, aqiData) {
   if (!weather) return "";
 
   const temp = weather.temp;
@@ -406,7 +409,9 @@ async function fetchCoordinates(city) {
       <button class="card-dismiss" aria-label="Dismiss card">➖</button>
 
       <h2>🌤 Weather</h2>
-      <div class="weather-location">${city}, ${country}</div>
+      <div class="weather-location">
+     ${city}${state ? `, ${state}` : ""}, ${country}
+      </div>
 
       <div class="weather-main">
         <span class="weather-temp">${temp.toFixed(1)}°C</span>
@@ -764,6 +769,7 @@ searchBox.addEventListener("keypress", e => {
 
       results.innerHTML += renderWeatherCard(
         coords.name,
+        coords.state,     // 👈 NEW
         coords.country,
         weather,
         aqiData // ✅ AND THIS
