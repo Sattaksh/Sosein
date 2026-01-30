@@ -2750,22 +2750,3 @@ body,
     transparent 100%
   );
 }
-/*Ios rubber*/
-html {
-  overscroll-behavior: none;
-}
-
-.results {
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-}
-
-.card {
-  transition:
-    transform 140ms cubic-bezier(.22,1.28,.32,1),
-    box-shadow 140ms ease;
-}
-
-.card:active {
-  transform: scale(0.985);
-}
