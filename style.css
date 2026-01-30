@@ -2823,3 +2823,23 @@ body,
   background: rgba(0,0,0,0.05);
   font-weight: 500;
 }
+
+
+.celebrity-card img {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.celebrity-sub {
+  opacity: 0.75;
+  font-size: 0.9rem;
+  margin-bottom: 0.4rem;
+}
+
+.filmography-link {
+  font-size: 0.9rem;
+  text-decoration: none;
+  color: var(--accent);
+}
