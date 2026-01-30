@@ -821,6 +821,13 @@ searchBox.addEventListener("keypress", e => {
       "translate", "solve", "draft", "outline", "analyze", "how to", "what is the", "what are the","best", "top", "vs", "difference between", 
       "meaning of", "facts about", "tell me", "meaning", "state", "is there", "*", "do", "enlist"];
 
+function isLikelyMovieQuery(term) {
+  return (
+    /\b(movie|film)\b/i.test(term) ||
+    term.length > 3 && !isCelebrityQuery(term)
+  );
+}
+  
   async function triggerSearch(term) {
   if (searchInProgress) return;
 
@@ -893,23 +900,28 @@ searchBox.addEventListener("keypress", e => {
   }
   }
 
-  /* =======================
-   📘 WIKIPEDIA (ALWAYS)
+/* =======================
+   📘 WIKIPEDIA (NON-MOVIE ONLY)
 ======================= */
-  try {
-    const wikiURL = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(term)}`;
-    const res = await fetch(wikiURL);
-
-  if (res.ok) {
-    const wikiData = await res.json();
-    if (wikiData?.extract?.length > 20) {
-      results.innerHTML += buildWikiCard(wikiData, wikiData.title);
+  if (
+    !hasWeatherIntent &&
+    !hasDictIntent &&
+    !celebrityRendered &&
+    !isLikelyMovieQuery(term)
+  ) {
+    try {
+      const wikiURL = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(term)}`;
+      const res = await fetch(wikiURL);
+      if (res.ok) {
+        const wikiData = await res.json();
+        if (wikiData?.extract?.length > 20) {
+        results.innerHTML += buildWikiCard(wikiData, wikiData.title);
+        }
       }
-    }
-  } catch (e) {
+    } catch (e) {
     console.warn("Wiki failed", e);
-  }
-    
+    }
+      }
   /* =======================
      🤖 AI (PRIORITY)
   ======================= */
