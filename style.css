@@ -2762,3 +2762,48 @@ body,
   font-size: 0.85rem;
   opacity: 0.8;
 }
+
+
+
+/*new weather card*/
+.weather-card {
+  padding: 16px 18px;
+}
+
+.weather-header {
+  font-size: 15px;
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+
+.weather-location {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.weather-temp {
+  font-size: 38px;
+  font-weight: 600;
+  line-height: 1;
+  margin-bottom: 10px;
+}
+
+.weather-meta {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.weather-meta strong {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.weather-aqi {
+  margin-top: 10px;
+  font-size: 13px;
+  font-weight: 500;
+}
