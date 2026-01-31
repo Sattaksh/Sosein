@@ -2826,10 +2826,25 @@ body,
 
 
 .celebrity-card img {
-  width: 88px;
-  height: 88px;
-  border-radius: 50%;
+  width: 120px;
+  height: 160px;
   object-fit: cover;
+
+  /* Premium editorial look */
+  border-radius: 14px;
+
+  /* Subtle depth, not glossy */
+  box-shadow: 
+    0 8px 24px rgba(0, 0, 0, 0.35);
+
+  /* Kill mirror/glass vibes */
+  background: #111;
+}
+
+.celebrity-inner {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
 }
 
 .celebrity-sub {
