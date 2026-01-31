@@ -2843,12 +2843,6 @@ body,
   clip-path: none;
 }
 
-.celebrity-inner {
-  display: flex;
-  align-items: flex-start;
-  gap: 1rem;
-}
-
 .celebrity-sub {
   opacity: 0.75;
   font-size: 0.9rem;
