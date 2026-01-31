@@ -279,88 +279,7 @@ function clearUploadedImage() {
   step();
 }
 
-  //Sportsperson card logic 
-  function getAgeAndStatus(birthDate, deathDate) {
-  if (!birthDate) return { age: null, status: "" };
-
-  const birth = new Date(birthDate);
-  const end = deathDate ? new Date(deathDate) : new Date();
-
-  let age = end.getFullYear() - birth.getFullYear();
-  const m = end.getMonth() - birth.getMonth();
-  if (m < 0 || (m === 0 && end.getDate() < birth.getDate())) age--;
-
-  return {
-    age,
-    status: deathDate ? " (deceased)" : ""
-  };
-  }
-
-  function extractSportsInfo(wikidata) {
-  if (!wikidata?.claims) return { sport: null, achievements: [] };
-
-  const sport =
-    wikidata.claims.P641?.[0]?.mainsnak?.datavalue?.value?.id || null;
-
-  const achievements =
-    wikidata.claims.P166
-      ?.slice(0, 4)
-      .map(a => a.mainsnak.datavalue?.value?.id)
-      .filter(Boolean) || [];
-
-  return { sport, achievements };
-  }
-
-
-  function renderSportsPersonCard({
-  name,
-  image,
-  bio,
-  age,
-  status,
-  sport,
-  achievements,
-  wikiURL
-}) {
-  const shortBio = bio?.split(". ").slice(0, 2).join(". ") + ".";
-
-  const achievementsHTML = achievements.length
-    ? achievements.map(a => `<li><em>${a}</em></li>`).join("")
-    : `<li><em>Career achievements and international records</em></li>`;
-
-  return `
-    <div class="card celebrity-card sports-card">
-      <button class="card-dismiss" aria-label="Dismiss card"></button>
-
-      <div class="celebrity-header">
-        ${image ? `<img src="${image}" alt="${name}">` : ""}
-        <div>
-          <h2>${name}</h2>
-          ${age ? `<div class="celebrity-meta">${age} years${status}</div>` : ""}
-          ${sport ? `<div class="celebrity-profession">${sport}</div>` : ""}
-        </div>
-      </div>
-
-      <p class="celebrity-bio">
-        ${shortBio}
-        <span class="read-more">Read more ↓</span>
-      </p>
-
-      <div class="celebrity-bio-full" hidden>
-        ${bio}
-      </div>
-
-      <div class="celebrity-famous-for">
-        <strong>Known for</strong>
-        <ul>${achievementsHTML}</ul>
-      </div>
-
-      <a href="${wikiURL}" target="_blank" class="filmography-link">
-        View full profile →
-      </a>
-    </div>
-  `;
-  }
+  
 
   
   // dictionary and weather logic 
@@ -1270,39 +1189,7 @@ async function fetchAll(term) {
      }
     return;
      }
-  //SPORTS PERSON
-    
-  if (entityType === "human") {
-  const isSportsPerson =
-    wikidata?.claims?.P641 || // has sport
-    ["cricketer", "footballer", "athlete", "sportsperson"].some(t =>
-      wikiData.extract?.toLowerCase().includes(t)
-    );
 
-  if (isSportsPerson) {
-    const { age, status } = getAgeAndStatus(
-      wikidata.claims.P569?.[0]?.mainsnak?.datavalue?.value?.time,
-      wikidata.claims.P570?.[0]?.mainsnak?.datavalue?.value?.time
-    );
-
-    const { sport, achievements } = extractSportsInfo(wikidata);
-
-    results.innerHTML += renderSportsPersonCard({
-      name: wikiData.title,
-      image: wikiData.thumbnail?.source,
-      bio: wikiData.extract,
-      age,
-      status,
-      sport,
-      achievements,
-      wikiURL: wikiData.content_urls.desktop.page
-    });
-  }
-
-  // Wiki card STILL shows
-  results.innerHTML += buildWikiCard(wikiData, wikiData.title);
-  return;
-    }
 
     // ================================
     // 4️⃣ MOVIE → TMDB Movie FIRST, Wiki AFTER
@@ -2150,13 +2037,7 @@ document.addEventListener("pointerup", (e) => {
 });
 
 
-document.addEventListener("click", e => {
-  if (!e.target.classList.contains("read-more")) return;
 
-  const card = e.target.closest(".card");
-  card.querySelector(".celebrity-bio-full").hidden = false;
-  e.target.remove();
-});
 // ========================================
 // INTEGRATE WITH YOUR EXISTING CODE
 // ========================================
