@@ -440,23 +440,12 @@ function renderCelebrityCard(person) {
          <em class="famous-works"> ${topWorks}</em>
          </p>
 
-          ${FULL_BIO ? `
-  <div class="celebrity-bio-wrapper" data-expanded="false">
-    <p class="celebrity-bio short-bio">
-      ${shortBio}
-    </p>
-
-    <p class="celebrity-bio full-bio" hidden>
-      ${FULL_BIO}
-    </p>
-
-    ${isExpandable ? `
-      <button class="bio-toggle" aria-expanded="false">
-        Read more ↓
-      </button>
-    ` : ""}
-  </div>
-` : ""}
+          ${bio ? `
+          <p class="celebrity-bio">
+          ${bio}
+          ${person.biography.length > MAX_BIO_LENGTH ? `<span class="bio-fade"></span>` : ""}
+          </p>
+         ` : ""}
          
          <a
          href="https://www.themoviedb.org/person/${person.id}"
