@@ -2851,3 +2851,9 @@ body,
   color: var(--text-muted, #9aa0a6);
   opacity: 0.85;
 }
+
+.imdb-tag {
+  font-size: 0.75em;
+  opacity: 0.7;
+  margin-left: 4px;
+}
