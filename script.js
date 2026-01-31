@@ -447,7 +447,7 @@ function renderCelebrityCard(person) {
        </p>
 
       <p class="celebrity-bio full-bio" hidden>
-        ${FULL_BIO}
+       ${FULL_BIO.replace(/\n+/g, "<br><br>")}
      </p>
 
       ${isExpandable ? `
