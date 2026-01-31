@@ -405,13 +405,12 @@ function renderCelebrityCard(person) {
   ?.join(", ")
   || "—";
   
-  const MAX_BIO_LENGTH = 540;
+  const MAX_BIO_LENGTH = 900; // sweet spot
 
-  const bio =
-  person.biography && person.biography.length > 120
-    ? person.biography.slice(0, MAX_BIO_LENGTH).trim()
-    : "";
+  const bio = person.biography?.trim() || "";
+  const isLongBio = bio.length > MAX_BIO_LENGTH;
 
+  
  /* const imdbLink = celebrity.imdb_id
   ? `https://www.imdb.com/name/${celebrity.imdb_id}/`
   : null;*/
@@ -437,11 +436,18 @@ function renderCelebrityCard(person) {
          </p>
 
           ${bio ? `
-          <p class="celebrity-bio">
-          ${bio}
-          ${person.biography.length > MAX_BIO_LENGTH ? `<span class="bio-fade"></span>` : ""}
-          </p>
-         ` : ""}
+         <div class="celebrity-bio-wrapper ${isLongBio ? "collapsed" : ""}">
+         <p class="celebrity-bio">
+         ${bio}
+         </p>
+ 
+       ${isLongBio ? `
+      <button class="bio-toggle" aria-expanded="false">
+        Read more ↓
+      </button>
+      ` : ""}
+       </div>
+     ` : ""}
          
          <a
          href="https://www.themoviedb.org/person/${person.id}"
@@ -2014,6 +2020,19 @@ document.addEventListener("pointerup", (e) => {
   swipeStartX = 0;
   swipeCurrentX = 0;
 });
+
+document.addEventListener("click", (e) => {
+  const btn = e.target.closest(".bio-toggle");
+  if (!btn) return;
+
+  const wrapper = btn.closest(".celebrity-bio-wrapper");
+  const expanded = wrapper.classList.toggle("expanded");
+
+  btn.textContent = expanded ? "Show less ↑" : "Read more ↓";
+  btn.setAttribute("aria-expanded", expanded);
+});
+
+
 // ========================================
 // INTEGRATE WITH YOUR EXISTING CODE
 // ========================================
