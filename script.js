@@ -370,9 +370,9 @@ function renderCelebrityCard(person) {
     ? person.biography.slice(0, 220).trim() + "…"
     : "";
 
-  const imdbLink = celebrity.imdb_id
+ /* const imdbLink = celebrity.imdb_id
   ? `https://www.imdb.com/name/${celebrity.imdb_id}/`
-  : null;
+  : null;*/
 
   return `
     <div class="card celebrity-card">
@@ -393,25 +393,17 @@ function renderCelebrityCard(person) {
 
           ${bio ? `<p class="celebrity-bio">${bio}</p>` : ""}
 
-           ${
-          person.imdb_id
-          ? `
-          <a
-          href="https://www.imdb.com/name/${person.imdb_id}/"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="filmography-link"
-          title="View full filmography on IMDb"
-        >
-        View full filmography →
-        </a>
-           `
-       : ""
-             }
+         <a
+         href="https://www.themoviedb.org/person/${person.id}"
+         target="_blank"
+         class="filmography-link"
+         >
+         View full filmography →
+         </a>
+         </div>
         </div>
-      </div>
-    </div>
-  `;
+       </div>
+       `;
 }
 
 function isDictionaryQuery(q) {
