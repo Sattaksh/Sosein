@@ -2830,15 +2830,17 @@ body,
   height: 160px;
   object-fit: cover;
 
-  /* Premium editorial look */
-  border-radius: 14px;
+  /* Editorial portrait shape */
+  border-radius: 12px; /* ← key change (no oval, no circle) */
 
-  /* Subtle depth, not glossy */
-  box-shadow: 
-    0 8px 24px rgba(0, 0, 0, 0.35);
+  /* Premium but restrained depth */
+  box-shadow:
+    0 6px 18px rgba(0, 0, 0, 0.25);
 
-  /* Kill mirror/glass vibes */
-  background: #111;
+  background-color: #111;
+
+  /* Prevent any leftover circular clipping */
+  clip-path: none;
 }
 
 .celebrity-inner {
