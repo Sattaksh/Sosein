@@ -2881,3 +2881,8 @@ body,
   );
   pointer-events: none;
 }
+
+.famous-works {
+  font-style: italic;
+  opacity: 0.85;
+}
