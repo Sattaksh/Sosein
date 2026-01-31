@@ -378,6 +378,22 @@ async function fetchTMDBPerson(name) {
   }
 }
 
+function calculateAge(birth, death = null) {
+  if (!birth) return "—";
+
+  const birthDate = new Date(birth);
+  const endDate = death ? new Date(death) : new Date();
+
+  let age = endDate.getFullYear() - birthDate.getFullYear();
+  const m = endDate.getMonth() - birthDate.getMonth();
+
+  if (m < 0 || (m === 0 && endDate.getDate() < birthDate.getDate())) {
+    age--;
+  }
+
+  return age;
+}
+  
 function renderCelebrityCard(person) {
   if (!person) return "";
 
@@ -385,13 +401,15 @@ function renderCelebrityCard(person) {
     ? `https://image.tmdb.org/t/p/w500${person.profile_path}`
     : "";
 
-  const birthYear = person.birthday
+  /*const birthYear = person.birthday
     ? new Date(person.birthday).getFullYear()
-    : null;
+    : null;*/
 
-  const age = birthYear
-    ? new Date().getFullYear() - birthYear
-    : "—";
+  const age = calculateAge(person.birthday, person.deathday);
+
+  const lifeStatus = person.deathday
+  ? ` (d. ${new Date(person.deathday).getFullYear()})`
+  : "";
 
   const profession =
     person.known_for_department || "Film Industry";
@@ -428,7 +446,7 @@ function renderCelebrityCard(person) {
 
           <div class="celebrity-sub">
             <span>${profession}</span>
-            <span>• Age ${age}</span>
+            <span>• Age ${age}${lifeStatus}</span>
           </div>
 
           <p>
