@@ -405,16 +405,12 @@ function renderCelebrityCard(person) {
   ?.join(", ")
   || "—";
   
-  const FULL_BIO = person.biography?.trim() || "";
-  const SHORT_BIO_LIMIT = 420;
+  const MAX_BIO_LENGTH = 920;
 
-  const shortBio =
-  FULL_BIO.length > SHORT_BIO_LIMIT
-    ? FULL_BIO.slice(0, SHORT_BIO_LIMIT).trim() + "…"
-    : FULL_BIO;
-
- const isExpandable = FULL_BIO.length > SHORT_BIO_LIMIT;
-
+  const bio =
+  person.biography && person.biography.length > 120
+    ? person.biography.slice(0, MAX_BIO_LENGTH).trim()
+    : "";
   
  /* const imdbLink = celebrity.imdb_id
   ? `https://www.imdb.com/name/${celebrity.imdb_id}/`
@@ -2019,28 +2015,7 @@ document.addEventListener("pointerup", (e) => {
   swipeCurrentX = 0;
 });
 
-document.addEventListener("click", (e) => {
-  const toggle = e.target.closest(".bio-toggle");
-  if (!toggle) return;
 
-  const wrapper = toggle.parentElement;
-  const shortBio = wrapper.querySelector(".short-bio");
-  const fullBio = wrapper.querySelector(".full-bio");
-
-  if (!shortBio || !fullBio) return;
-
-  const expanded = !fullBio.hasAttribute("hidden");
-
-  if (expanded) {
-    fullBio.setAttribute("hidden", "");
-    shortBio.removeAttribute("hidden");
-    toggle.textContent = "Read more ↓";
-  } else {
-    shortBio.setAttribute("hidden", "");
-    fullBio.removeAttribute("hidden");
-    toggle.textContent = "Show less ↑";
-  }
-});
 
 // ========================================
 // INTEGRATE WITH YOUR EXISTING CODE
