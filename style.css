@@ -2843,3 +2843,11 @@ body,
   text-decoration: none;
   color: var(--accent);
 }
+
+.celebrity-bio {
+  margin-top: 0.6rem;
+  font-size: 0.92rem;
+  line-height: 1.45;
+  color: var(--text-muted, #9aa0a6);
+  opacity: 0.85;
+}
