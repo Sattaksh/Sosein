@@ -365,9 +365,11 @@ function renderCelebrityCard(person) {
     .map(w => w.title || w.name)
     .join(", ") || "—";
   
+  const MAX_BIO_LENGTH = 420;
+
   const bio =
-  person.biography && person.biography.length > 80
-    ? person.biography.slice(0, 220).trim() + "…"
+  person.biography && person.biography.length > 120
+    ? person.biography.slice(0, MAX_BIO_LENGTH).trim()
     : "";
 
  /* const imdbLink = celebrity.imdb_id
@@ -391,8 +393,13 @@ function renderCelebrityCard(person) {
 
           <p><strong>Famous for:</strong> ${topWorks}</p>
 
-          ${bio ? `<p class="celebrity-bio">${bio}</p>` : ""}
-
+          ${bio ? `
+          <p class="celebrity-bio">
+          ${bio}
+          ${person.biography.length > MAX_BIO_LENGTH ? `<span class="bio-fade"></span>` : ""}
+          </p>
+         ` : ""}
+         
          <a
          href="https://www.themoviedb.org/person/${person.id}"
          target="_blank"
