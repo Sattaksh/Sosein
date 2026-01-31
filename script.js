@@ -304,6 +304,43 @@ function extractDictionaryWord(query) {
     .split(/\s+/)[0];
 }
 
+function isValidFamousWork(work) {
+  // ❌ Kill talk / reality / TV junk
+  const bannedKeywords = [
+    "kapil", "reality", "show", "award", "dance",
+    "bigg boss", "koffee", "interview", "comedy"
+  ];
+
+  const title = (work.title || work.name || "").toLowerCase();
+
+  if (bannedKeywords.some(k => title.includes(k))) return false;
+
+  // Prefer movies
+  if (work.media_type === "tv") return false;
+
+  return true;
+}
+  
+function scoreWork(work) {
+  let score = 0;
+
+  // 🎬 Movies > TV
+  if (work.media_type === "movie") score += 50;
+
+  // 🧠 Cultural impact proxy
+  score += Math.min(work.vote_count || 0, 5000) / 10;
+
+  // ⭐ Quality matters, but less than reach
+  score += (work.vote_average || 0) * 5;
+
+  // 🎭 Lead roles matter
+  if (work.character && !work.character.toLowerCase().includes("himself")) {
+    score += 15;
+  }
+
+  return score;
+}
+  
 function isCelebrityQuery(term) {
   // No keywords → pure name search
   const words = term.trim().split(/\s+/);
@@ -360,10 +397,13 @@ function renderCelebrityCard(person) {
     person.known_for_department || "Film Industry";
 
   const topWorks = person.combined_credits?.cast
-    ?.sort((a, b) => b.popularity - a.popularity)
-    .slice(0, 3)
-    .map(w => w.title || w.name)
-    .join(", ") || "—";
+  ?.filter(isValidFamousWork)
+  ?.map(w => ({ ...w, _score: scoreWork(w) }))
+  ?.sort((a, b) => b._score - a._score)
+  ?.slice(0, 4) // 👈 you wanted at least 4
+  ?.map(w => w.title || w.name)
+  ?.join(", ")
+  || "—";
   
   const MAX_BIO_LENGTH = 420;
 
