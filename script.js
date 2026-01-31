@@ -440,23 +440,19 @@ function renderCelebrityCard(person) {
          <em class="famous-works"> ${topWorks}</em>
          </p>
 
-          ${FULL_BIO ? `
-       <div class="celebrity-bio-wrapper" data-expanded="false">
-        <p class="celebrity-bio short-bio">
-        ${shortBio}
-       </p>
+          <div class="celebrity-bio-wrapper">
+         <p class="celebrity-bio short-bio">
+          ${SHORT_BIO}
+         </p>
 
-      <p class="celebrity-bio full-bio" hidden>
+         <p class="celebrity-bio full-bio" hidden>
        ${FULL_BIO.replace(/\n+/g, "<br><br>")}
-     </p>
+        </p>
 
-      ${isExpandable ? `
-        <button class="bio-toggle" aria-expanded="false">
-         Read more ↓
-        </button>
-      ` : ""}
-     </div>
-      ` : ""}
+       <button class="bio-toggle">
+        Read more ↓
+      </button>
+      </div>
          
          <a
          href="https://www.themoviedb.org/person/${person.id}"
@@ -2031,27 +2027,26 @@ document.addEventListener("pointerup", (e) => {
 });
 
 document.addEventListener("click", (e) => {
-  const btn = e.target.closest(".bio-toggle");
-  if (!btn) return;
+  const toggle = e.target.closest(".bio-toggle");
+  if (!toggle) return;
 
-  const wrapper = btn.closest(".celebrity-bio-wrapper");
+  const wrapper = toggle.parentElement;
   const shortBio = wrapper.querySelector(".short-bio");
   const fullBio = wrapper.querySelector(".full-bio");
 
-  const expanded = wrapper.dataset.expanded === "true";
+  if (!shortBio || !fullBio) return;
+
+  const expanded = !fullBio.hasAttribute("hidden");
 
   if (expanded) {
-    fullBio.hidden = true;
-    shortBio.hidden = false;
-    btn.textContent = "Read more ↓";
+    fullBio.setAttribute("hidden", "");
+    shortBio.removeAttribute("hidden");
+    toggle.textContent = "Read more ↓";
   } else {
-    fullBio.hidden = false;
-    shortBio.hidden = true;
-    btn.textContent = "Show less ↑";
+    shortBio.setAttribute("hidden", "");
+    fullBio.removeAttribute("hidden");
+    toggle.textContent = "Show less ↑";
   }
-
-  wrapper.dataset.expanded = String(!expanded);
-  btn.setAttribute("aria-expanded", String(!expanded));
 });
 
 // ========================================
