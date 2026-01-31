@@ -405,10 +405,15 @@ function renderCelebrityCard(person) {
   ?.join(", ")
   || "—";
   
-  const MAX_BIO_LENGTH = 900; // sweet spot
+  const FULL_BIO = person.biography?.trim() || "";
+  const SHORT_BIO_LIMIT = 420;
 
-  const bio = person.biography?.trim() || "";
-  const isLongBio = bio.length > MAX_BIO_LENGTH;
+  const shortBio =
+  FULL_BIO.length > SHORT_BIO_LIMIT
+    ? FULL_BIO.slice(0, SHORT_BIO_LIMIT).trim() + "…"
+    : FULL_BIO;
+
+ const isExpandable = FULL_BIO.length > SHORT_BIO_LIMIT;
 
   
  /* const imdbLink = celebrity.imdb_id
@@ -435,19 +440,23 @@ function renderCelebrityCard(person) {
          <em class="famous-works"> ${topWorks}</em>
          </p>
 
-          ${bio ? `
-         <div class="celebrity-bio-wrapper ${isLongBio ? "collapsed" : ""}">
-         <p class="celebrity-bio">
-         ${bio}
-         </p>
- 
-       ${isLongBio ? `
-      <button class="bio-toggle" aria-expanded="false">
-        Read more ↓
-      </button>
+          ${FULL_BIO ? `
+       <div class="celebrity-bio-wrapper" data-expanded="false">
+        <p class="celebrity-bio short-bio">
+        ${shortBio}
+       </p>
+
+      <p class="celebrity-bio full-bio" hidden>
+        ${FULL_BIO}
+     </p>
+
+      ${isExpandable ? `
+        <button class="bio-toggle" aria-expanded="false">
+         Read more ↓
+        </button>
       ` : ""}
-       </div>
-     ` : ""}
+     </div>
+      ` : ""}
          
          <a
          href="https://www.themoviedb.org/person/${person.id}"
@@ -2026,12 +2035,24 @@ document.addEventListener("click", (e) => {
   if (!btn) return;
 
   const wrapper = btn.closest(".celebrity-bio-wrapper");
-  const expanded = wrapper.classList.toggle("expanded");
+  const shortBio = wrapper.querySelector(".short-bio");
+  const fullBio = wrapper.querySelector(".full-bio");
 
-  btn.textContent = expanded ? "Show less ↑" : "Read more ↓";
-  btn.setAttribute("aria-expanded", expanded);
+  const expanded = wrapper.dataset.expanded === "true";
+
+  if (expanded) {
+    fullBio.hidden = true;
+    shortBio.hidden = false;
+    btn.textContent = "Read more ↓";
+  } else {
+    fullBio.hidden = false;
+    shortBio.hidden = true;
+    btn.textContent = "Show less ↑";
+  }
+
+  wrapper.dataset.expanded = String(!expanded);
+  btn.setAttribute("aria-expanded", String(!expanded));
 });
-
 
 // ========================================
 // INTEGRATE WITH YOUR EXISTING CODE
