@@ -315,8 +315,26 @@ async function fetchTMDBPerson(name) {
     const res = await fetch(
       `/.netlify/functions/tmdb-person?q=${encodeURIComponent(name)}`
     );
+
     if (!res.ok) return null;
-    return await res.json();
+
+    const person = await res.json();
+
+    // 🔗 Normalize critical fields (defensive)
+    return {
+      ...person,
+
+      // IMDb ID (needed for filmography link)
+      imdb_id: person.external_ids?.imdb_id || null,
+
+      // Biography / overview (for subtle about text)
+      biography: person.biography || "",
+
+      // Safety defaults
+      popularity: person.popularity || 0,
+      known_for_department: person.known_for_department || "",
+      combined_credits: person.combined_credits || { cast: [], crew: [] }
+    };
   } catch (e) {
     console.warn("TMDB person fetch failed", e);
     return null;
@@ -352,6 +370,10 @@ function renderCelebrityCard(person) {
     ? person.biography.slice(0, 220).trim() + "…"
     : "";
 
+  const imdbLink = celebrity.imdb_id
+  ? `https://www.imdb.com/name/${celebrity.imdb_id}/`
+  : null;
+
   return `
     <div class="card celebrity-card">
       <button class="card-dismiss" aria-label="Dismiss card">➖</button>
@@ -371,13 +393,21 @@ function renderCelebrityCard(person) {
 
           ${bio ? `<p class="celebrity-bio">${bio}</p>` : ""}
 
-           <a
-             href="https://www.themoviedb.org/person/${person.id}"
-             target="_blank"
-             class="filmography-link"
-             >
-            View full filmography →
-           </a>
+           ${
+          person.imdb_id
+          ? `
+          <a
+          href="https://www.imdb.com/name/${person.imdb_id}/"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="filmography-link"
+          title="View full filmography on IMDb"
+        >
+        View full filmography →
+        </a>
+           `
+       : ""
+             }
         </div>
       </div>
     </div>
