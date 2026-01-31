@@ -346,6 +346,11 @@ function renderCelebrityCard(person) {
     .slice(0, 3)
     .map(w => w.title || w.name)
     .join(", ") || "—";
+  
+  const bio =
+  person.biography && person.biography.length > 80
+    ? person.biography.slice(0, 220).trim() + "…"
+    : "";
 
   return `
     <div class="card celebrity-card">
@@ -364,13 +369,15 @@ function renderCelebrityCard(person) {
 
           <p><strong>Famous for:</strong> ${topWorks}</p>
 
-          <a
-            href="https://www.themoviedb.org/person/${person.id}"
-            target="_blank"
-            class="filmography-link"
-          >
+          ${bio ? `<p class="celebrity-bio">${bio}</p>` : ""}
+
+           <a
+             href="https://www.themoviedb.org/person/${person.id}"
+             target="_blank"
+             class="filmography-link"
+             >
             View full filmography →
-          </a>
+           </a>
         </div>
       </div>
     </div>
