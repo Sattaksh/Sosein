@@ -431,7 +431,10 @@ function renderCelebrityCard(person) {
             <span>• Age ${age}</span>
           </div>
 
-          <p><strong>Famous for:</strong> ${topWorks}</p>
+          <p>
+         <strong>Famous for:</strong>
+         <em class="famous-works"> ${topWorks}</em>
+         </p>
 
           ${bio ? `
           <p class="celebrity-bio">
