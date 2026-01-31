@@ -405,7 +405,7 @@ function renderCelebrityCard(person) {
   ?.join(", ")
   || "—";
   
-  const MAX_BIO_LENGTH = 420;
+  const MAX_BIO_LENGTH = 540;
 
   const bio =
   person.biography && person.biography.length > 120
