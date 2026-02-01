@@ -135,28 +135,33 @@
         <!-- SEARCH -->
          <div class="hero-search">
 
-         <div class="search-shell">
-    <!-- LEFT ICONS -->
-        <label for="imageUpload" class="search-icon left" title="Add image">+</label>
-        <button id="voiceBtn" class="search-icon left" title="Voice input">🎙️</button>
-
-        <input type="file" id="imageUpload" accept="image/*" hidden>
-  
-      <!-- INPUT -->
-        <input
+        <div class="search-wrapper">
+         <input
          type="text"
          id="searchBox"
-         placeholder="Ask anything"
+         placeholder="Try: explain demand · create a puzzle game"
          autocomplete="off"
         />
- 
-    <!-- SEARCH -->
-       <button id="searchBtn" class="search-action" aria-label="Search">
-        🔍
-       </button>
-    </div>
+        <button id="clearBtn" title="Clear">✖</button>
+        </div>
+   
+       <div class="buttons">
+       <div>
+         <label for="imageUpload" class="image-upload-btn">🖼️ Add Image</label>
+         <input type="file" id="imageUpload" accept="image/*" hidden>
+       </div>
 
-     <ul id="suggestions" class="suggestions-list"></ul>
+       <div class="right-buttons">
+       <button id="searchBtn" aria-label="Search">🔍</button>
+    
+        <div class="voice-wrapper">
+          <button id="voiceBtn" aria-label="Voice input">🎙️</button>
+          <span id="speakPrompt" class="fade-text">Speak</span>
+        </div>
+       </div>
+      </div>
+
+      <ul id="suggestions" class="suggestions-list"></ul>
 
      </div>
       </div>
