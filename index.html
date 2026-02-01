@@ -22,7 +22,7 @@
   <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style_updated.css" />
   <link rel="canonical" href="https://sosein.netlify.app/" />
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <!-- Schema -->
@@ -131,39 +131,61 @@
           not just keywords.
         </p>
 
-        <!-- SEARCH -->
-        <!-- SEARCH -->
-         <div class="hero-search">
+        <!-- NEW SEARCH BAR STRUCTURE -->
+        <div class="hero-search">
 
-        <div class="search-wrapper">
-         <input
-         type="text"
-         id="searchBox"
-         placeholder="Try: explain demand · create a puzzle game"
-         autocomplete="off"
-        />
-        <button id="clearBtn" title="Clear">✖</button>
+          <div class="search-container">
+            <input
+              type="text"
+              id="searchBox"
+              placeholder="Ask anything"
+              autocomplete="off"
+            />
+            <button id="clearBtn" class="clear-input-btn" title="Clear">✖</button>
+          </div>
+
+          <div class="search-actions">
+            <!-- Left side actions -->
+            <div class="action-left">
+              <label for="imageUpload" class="action-btn" title="Add Image">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+              </label>
+              <input type="file" id="imageUpload" accept="image/*" hidden>
+              
+              <button id="voiceBtn" class="action-btn" aria-label="Voice input" title="Voice Search">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                  <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                  <line x1="12" y1="19" x2="12" y2="23"></line>
+                  <line x1="8" y1="23" x2="16" y2="23"></line>
+                </svg>
+              </button>
+              
+              <button class="action-btn action-btn-more" title="More options">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="1"></circle>
+                  <circle cx="12" cy="5" r="1"></circle>
+                  <circle cx="12" cy="19" r="1"></circle>
+                </svg>
+              </button>
+            </div>
+
+            <!-- Right side search button -->
+            <button id="searchBtn" class="search-submit-btn" aria-label="Search">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <circle cx="11" cy="11" r="8"></circle>
+                <path d="m21 21-4.35-4.35"></path>
+              </svg>
+              <span>Search</span>
+            </button>
+          </div>
+
+          <ul id="suggestions" class="suggestions-list"></ul>
+
         </div>
-   
-       <div class="buttons">
-       <div>
-         <label for="imageUpload" class="image-upload-btn">🖼️ Add Image</label>
-         <input type="file" id="imageUpload" accept="image/*" hidden>
-       </div>
-
-       <div class="right-buttons">
-       <button id="searchBtn" aria-label="Search">🔍</button>
-    
-        <div class="voice-wrapper">
-          <button id="voiceBtn" aria-label="Voice input">🎙️</button>
-          <span id="speakPrompt" class="fade-text">Speak</span>
-        </div>
-       </div>
-      </div>
-
-      <ul id="suggestions" class="suggestions-list"></ul>
-
-     </div>
       </div>
     </section>
 
@@ -195,3 +217,4 @@
   <script src="script.js"></script>
 </body>
 </html>
+
