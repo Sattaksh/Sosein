@@ -1554,5 +1554,817 @@ body:not(.dark) #searchBox.ai-intent {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* ============================================
+   AI MARKDOWN CONTENT
+   ============================================ */
+.ai-markdown {
+  line-height: 1.7;
+  font-size: 1rem;
+}
+
+.ai-markdown h1,
+.ai-markdown h2,
+.ai-markdown h3 {
+  margin: 1.2rem 0 0.6rem;
+}
+
+/* AI Markdown Tables */
+.ai-markdown table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.ai-markdown .table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 1rem 0;
+}
+
+.ai-markdown th,
+.ai-markdown td {
+  border: 1px solid #ddd;
+  padding: 0.75rem;
+  text-align: left;
+  vertical-align: top;
+  white-space: normal;
+  word-break: normal;
+  overflow-wrap: break-word;
+}
+
+.ai-markdown th {
+  background: #f9fafb;
+  font-weight: 600;
+}
+
+.ai-markdown th:first-child,
+.ai-markdown td:first-child {
+  min-width: 140px;
+  font-weight: 600;
+  background: #fafafa;
+}
+
+/* Dark mode tables */
+body.dark .ai-markdown table {
+  background: #121212;
+}
+
+body.dark .ai-markdown th,
+body.dark .ai-markdown td {
+  background: #1a1a1a;
+  color: #e6e6e6;
+  border-color: #333;
+}
+
+body.dark .ai-markdown th {
+  background: #222;
+  color: #ffffff;
+}
+
+body.dark .ai-markdown th:first-child,
+body.dark .ai-markdown td:first-child {
+  background: #181818;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+/* KaTeX Math Rendering */
+.katex {
+  font-size: 1.05em;
+}
+
+.katex-display {
+  overflow-x: auto;
+  padding: 0.5rem 0;
+}
+
+/* Prevent page scroll */
+main,
+.results-section,
+#results,
+.card,
+.ai-answer-card,
+.ai-markdown {
+  overflow-x: hidden;
+}
+
+/* ============================================
+   AI CODE BLOCKS - ChatGPT/Claude Style
+   ============================================ */
+.ai-markdown pre {
+  background: #0f172a;
+  color: #e5e7eb;
+  border-radius: 14px;
+  padding: 1.25rem 1.5rem;
+  margin: 1.5rem 0;
+  overflow-x: auto;
+  overflow-y: auto;
+  max-height: 420px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+               "Liberation Mono", "Courier New", monospace;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.06),
+              0 10px 30px rgba(0,0,0,0.35);
+  position: relative;
+  padding-top: 2.5rem;
+}
+
+.ai-markdown pre code {
+  display: block;
+  white-space: pre;
+  word-wrap: normal;
+  tab-size: 2;
+}
+
+.ai-markdown pre::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
+}
+
+.ai-markdown pre::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.ai-markdown pre::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.15);
+  border-radius: 6px;
+}
+
+.ai-markdown pre::-webkit-scrollbar-thumb:hover {
+  background: rgba(255,255,255,0.25);
+}
+
+.ai-markdown code:not(pre code) {
+  background: rgba(0,0,0,0.08);
+  padding: 0.2em 0.45em;
+  border-radius: 6px;
+  font-size: 0.95em;
+  font-family: ui-monospace, monospace;
+}
+
+body.dark .ai-markdown pre {
+  background: #020617;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08),
+              0 12px 40px rgba(0,0,0,0.6);
+}
+
+body.dark .ai-markdown code:not(pre code) {
+  background: rgba(255,255,255,0.1);
+}
+
+/* Code Copy Button */
+.code-copy-btn {
+  position: absolute;
+  top: 0.65rem;
+  right: 0.65rem;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  color: #e5e7eb;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 0.3rem 0.55rem;
+  font-size: 0.7rem;
+  font-weight: 500;
+  border-radius: 8px;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity 0.2s ease, transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+  z-index: 10;
+}
+
+.ai-markdown pre:hover .code-copy-btn {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.code-copy-btn:hover {
+  background: rgba(30, 41, 59, 0.8);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.code-copy-btn.copied {
+  background: rgba(5, 150, 105, 0.9);
+  border-color: rgba(5, 150, 105, 1);
+  color: #ecfdf5;
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .code-copy-btn {
+    opacity: 1;
+    transform: none;
   }
+}
+
+/* ============================================
+   SPECIALIZED CARDS
+   ============================================ */
+
+/* Movie Card */
+.movie-card {
+  border-left: 4px solid #2563eb;
+}
+
+.movie-card-inner {
+  display: flex;
+  gap: 1.2rem;
+}
+
+.movie-card img {
+  width: 110px;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.movie-meta h2 {
+  margin: 0 0 0.4rem;
+}
+
+.movie-desc {
+  font-size: 0.95rem;
+  color: #555;
+}
+
+body.dark .movie-desc {
+  color: #aaa;
+}
+
+.movie-meta p {
+  margin: 0.2rem 0;
+  font-size: 0.9rem;
+}
+
+.movie-links {
+  margin-top: 0.6rem;
+}
+
+.movie-links a {
+  font-weight: 600;
+  color: #2563eb;
+  text-decoration: none;
+}
+
+.movie-links a:hover {
+  text-decoration: underline;
+}
+
+.movie-submeta {
+  margin: 0.35rem 0 0.6rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.tmdb-rating {
+  padding: 2px 6px;
+  border-radius: 6px;
+  background: rgba(0,0,0,0.05);
+  font-weight: 500;
+}
+
+body.dark .tmdb-rating {
+  background: rgba(255,255,255,0.1);
+}
+
+@media (max-width: 600px) {
+  .movie-card-inner {
+    flex-direction: column;
+  }
+
+  .movie-card img {
+    width: 100%;
+    max-height: 320px;
+  }
+}
+
+/* Celebrity Card */
+.celebrity-card img {
+  width: 120px;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+  background-color: #111;
+  clip-path: none;
+}
+
+.celebrity-sub {
+  opacity: 0.75;
+  font-size: 0.9rem;
+  margin-bottom: 0.4rem;
+}
+
+.filmography-link {
+  font-size: 0.9rem;
+  text-decoration: none;
+  color: var(--accent);
+}
+
+.celebrity-bio {
+  margin-top: 0.6rem;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+.celebrity-bio-wrapper {
+  position: relative;
+}
+
+.celebrity-bio-wrapper.collapsed .celebrity-bio {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  position: relative;
+}
+
+.celebrity-bio-wrapper.collapsed::after {
+  content: "";
+  position: absolute;
+  bottom: 2.2rem;
+  left: 0;
+  right: 0;
+  height: 2.5rem;
+  background: linear-gradient(to bottom, rgba(0,0,0,0), var(--card));
+  pointer-events: none;
+}
+
+body.dark .celebrity-bio-wrapper.collapsed::after {
+  background: linear-gradient(to bottom, rgba(0,0,0,0), var(--card));
+}
+
+.celebrity-bio-wrapper.expanded .celebrity-bio {
+  -webkit-line-clamp: unset;
+}
+
+.bio-toggle {
+  margin-top: 0.4rem;
+  background: none;
+  border: none;
+  color: var(--accent);
+  font-size: 0.9rem;
+  cursor: pointer;
+  padding: 0;
+}
+
+.bio-toggle:hover {
+  text-decoration: underline;
+}
+
+.famous-works {
+  font-style: italic;
+  opacity: 0.85;
+}
+
+.imdb-tag {
+  font-size: 0.75em;
+  opacity: 0.7;
+  margin-left: 4px;
+}
+
+/* Weather Card */
+.weather-card {
+  padding: 16px 18px;
+}
+
+.weather-header {
+  font-size: 15px;
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+
+.weather-location {
+  font-size: 14px;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+.weather-temp {
+  font-size: 38px;
+  font-weight: 600;
+  line-height: 1;
+  margin-bottom: 10px;
+}
+
+.weather-meta {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.weather-meta strong {
+  color: var(--text);
+  font-weight: 500;
+}
+
+.weather-aqi {
+  margin-top: 10px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* Dictionary Card */
+.dictionary-card .phonetic {
+  opacity: 0.6;
+  font-style: italic;
+}
+
+.dictionary-card .example {
+  opacity: 0.75;
+  margin-top: 0.4rem;
+}
+
+.dictionary-card .synonyms {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+.dict-example {
+  margin-top: 0.6rem;
+  font-style: italic;
+  opacity: 0.75;
+  line-height: 1.4;
+}
+
+.dict-syn,
+.dict-ant {
+  margin-top: 0.6rem;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.dict-syn strong,
+.dict-ant strong {
+  font-weight: 500;
+  color: inherit;
+}
+
+.dict-more {
+  margin-top: 0.8rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.dict-more span {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.dict-extra {
+  margin-top: 0.5rem;
+  font-size: 0.95rem;
+  opacity: 0.85;
+  line-height: 1.45;
+}
+
+.dict-extra-wrapper {
+  margin-top: 0.6rem;
+}
+
+/* Datamuse Section */
+.dm-section {
+  margin-top: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.9rem;
+}
+
+.dm-group {
+  margin-bottom: 0.5rem;
+}
+
+.dm-label {
+  font-weight: 500;
+  color: var(--muted);
+  margin-bottom: 0.2rem;
+}
+
+.dm-words {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.6rem;
+  margin-top: 0.25rem;
+}
+
+.dm-words span {
+  font-size: 0.85rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.05);
+  color: inherit;
+  white-space: nowrap;
+}
+
+body.dark .dm-words span {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.dm-words span:hover {
+  background: rgba(0, 123, 255, 0.08);
+}
+
+.dm-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  margin-top: 1.25rem;
+  margin-bottom: 0.5rem;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+/* ============================================
+   CARD DISMISS BUTTON
+   ============================================ */
+.card {
+  position: relative;
+}
+
+.card-dismiss {
+  position: absolute;
+  top: 13px;
+  left: 13px;
+  width: 12px;
+  height: 12px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: #3b82f6;
+  cursor: pointer;
+  opacity: 0.9;
+  transition: transform 160ms ease, opacity 160ms ease, box-shadow 160ms ease;
+  font-size: 0;
+}
+
+.card-dismiss:hover {
+  opacity: 1;
+  transform: scale(1.25);
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+}
+
+.card-dismiss:active {
+  transform: scale(1.1);
+}
+
+body.dark .card-dismiss {
+  background: #60a5fa;
+}
+
+body.dark .card-dismiss:hover {
+  box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.18);
+}
+
+.card.closing {
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
+/* Swipe to dismiss */
+.card {
+  touch-action: pan-y;
+  will-change: transform, opacity;
+}
+
+.card.swiping {
+  transition: none;
+}
+
+.card.dismissed {
+  transform: translateX(120%);
+  opacity: 0;
+}
+
+/* ============================================
+   SPEAK BUTTON & TEXT-TO-SPEECH
+   ============================================ */
+.speak-btn {
+  margin-left: 0.5rem;
+  border: none;
+  background: transparent;
+  padding: 6px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.6;
+  transition: opacity 160ms ease, transform 160ms ease;
+}
+
+.speak-btn:hover {
+  opacity: 1;
+}
+
+.speak-btn:active {
+  transform: scale(0.94);
+  opacity: 0.75;
+}
+
+.speak-icon {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+}
+
+.speak-btn[data-state="speaking"] {
+  opacity: 1;
+}
+
+.speak-btn[data-state="speaking"] .speak-icon {
+  animation: speakPulse 1.2s ease-in-out infinite;
+}
+
+@keyframes speakPulse {
+  0%   { transform: scale(1); opacity: 0.8; }
+  50%  { transform: scale(1.15); opacity: 1; }
+  100% { transform: scale(1); opacity: 0.8; }
+}
+
+.spoken-word {
+  transition: background-color 120ms ease, color 120ms ease;
+  padding: 0 2px;
+  border-radius: 4px;
+}
+
+.spoken-word.active-word {
+  background-color: rgba(0, 120, 255, 0.15);
+}
+
+body.dark .spoken-word.active-word {
+  background-color: rgba(120, 180, 255, 0.25);
+}
+
+/* ============================================
+   SEARCH INTENT INDICATORS
+   ============================================ */
+#searchBox.dict-intent {
+  font-style: italic;
+  transition: font-style 180ms ease;
+}
+
+/* ============================================
+   LOADING STATES
+   ============================================ */
+.loading-skeleton {
+  background: linear-gradient(
+    90deg,
+    #f0f0f0 25%,
+    #e6e6e6 37%,
+    #f0f0f0 63%
+  );
+  background-size: 400% 100%;
+  animation: shimmer 1.2s infinite;
+  border-radius: 14px;
+  height: 140px;
+}
+
+body.dark .loading-skeleton {
+  background: linear-gradient(
+    90deg,
+    #1a1a1a 25%,
+    #252525 37%,
+    #1a1a1a 63%
+  );
+}
+
+.skeleton {
+  height: 1rem;
+  background: linear-gradient(
+    90deg,
+    var(--border) 25%,
+    var(--bg-soft) 37%,
+    var(--border) 63%
+  );
+  background-size: 400% 100%;
+  animation: shimmer 1.2s infinite;
+  border-radius: 6px;
+}
+
+@keyframes shimmer {
+  0% { background-position: 100% 0; }
+  100% { background-position: -100% 0; }
+}
+
+/* ============================================
+   WIKI/RESULT IMAGES SIZE CAP
+   ============================================ */
+.card img {
+  max-width: 160px !important;
+  width: auto !important;
+  height: auto !important;
+  display: block;
+}
+
+/* ============================================
+   SEARCH ACTIVE STATE
+   ============================================ */
+body.search-active .hero {
+  min-height: auto;
+  padding-top: 7rem;
+  padding-bottom: 3rem;
+}
+
+body.search-active .hero-content {
+  transform: none;
+}
+
+body.search-active {
+  overflow-y: auto;
+}
+
+/* ============================================
+   PLACEHOLDER STYLING
+   ============================================ */
+#searchBox::placeholder {
+  font-style: italic;
+  opacity: 0.7;
+}
+
+#searchBox::-webkit-input-placeholder {
+  font-style: italic;
+  opacity: 0.7;
+}
+
+#searchBox::-moz-placeholder {
+  font-style: italic;
+  opacity: 0.7;
+}
+
+/* ============================================
+   SUGGESTIONS ANIMATION
+   ============================================ */
+.suggestions-list {
+  animation: fadeSlideUp 120ms ease-out;
+}
+
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================
+   PERFORMANCE OPTIMIZATIONS
+   ============================================ */
+.results-section {
+  contain: layout paint;
+}
+
+.card {
+  contain: content;
+}
+
+/* ============================================
+   REDUCED MOTION SUPPORT
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+  .hero,
+  .hero-content,
+  .navbar {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  html,
+  body,
+  :root,
+  .card,
+  .navbar,
+  .search-container,
+  #searchBox {
+    transition: background-color 0s !important,
+                color 0s !important,
+                border-color 0s !important,
+                box-shadow 0s !important,
+                fill 0s !important,
+                stroke 0s !important;
+  }
+
+  .card,
+  button,
+  #searchBox,
+  .search-container {
+    transition: transform 160ms ease, opacity 160ms ease !important;
+  }
+    }
   
