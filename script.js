@@ -481,13 +481,13 @@ function isDictionaryQuery(q) {
 }
 
 function isWeatherQuery(query) {
-  return /\b(weather|rain|temperature|forecast|climate)\b/i.test(query);
+  return /\b(weather|rain|aqi|temperature|forecast|climate)\b/i.test(query);
 }
   
 function extractCity(query) {
   return query
     .toLowerCase()
-    .replace(/weather|temperature|forecast|in|of|today|now/g, "")
+    .replace(/weather|aqi|rain|temperature|forecast|in|of|today|now/g, "")
     .trim();
 }
 
